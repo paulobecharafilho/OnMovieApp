@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "OnMovieJobs",
+    "slug": "OnMovieJobs",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
