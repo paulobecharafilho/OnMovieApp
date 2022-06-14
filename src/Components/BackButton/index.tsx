@@ -15,7 +15,7 @@ export function BackButton({ color, ...rest }: BackButtonProps) {
   const theme = useTheme();
   
   return (
-    <Container>
+    <Container {...rest}>
       <Icon 
         name="chevron-left"
         color={color ? color : theme.colors.shape}

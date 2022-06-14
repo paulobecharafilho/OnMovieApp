@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { TouchableOpacity } from 'react-native';
 
 import TextHighlightFrame from '../../assets/frames/textHighlightFrame.svg'
 
@@ -11,7 +12,6 @@ export const Container = styled.View`
 export const Header = styled.View`
   height: 15%;
   justify-content: flex-end;
-  z-index: 1;
 `;
 
 export const HeaderWrapper = styled.View`
@@ -21,11 +21,10 @@ export const HeaderWrapper = styled.View`
   align-items: center;
 `;
 
-export const Content = styled.KeyboardAvoidingView`
+export const Content = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  z-index: 1;
   /* background-color: red */
 `;
 
@@ -42,7 +41,7 @@ export const Shape = styled(TextHighlightFrame)`
 
 export const Title = styled.Text`
   font-family: ${({ theme }) => theme.fonts.poppins_medium};
-  font-size: ${RFValue(25)}px;
+  font-size: ${RFValue(20)}px;
   color: ${({ theme }) => theme.colors.shape};
 
   line-height: ${RFValue(45)}px;
@@ -52,10 +51,10 @@ export const Title = styled.Text`
 
 export const SubTitle = styled.Text`
   font-family: ${({ theme }) => theme.fonts.poppins_light};
-  font-size: ${RFValue(25)}px;
+  font-size: ${RFValue(15)}px;
   color: ${({ theme }) => theme.colors.shape};
 
-  line-height: ${RFValue(45)}px;
+  line-height: ${RFValue(20)}px;
 
   text-align: center;
 `;
@@ -69,11 +68,28 @@ export const InputWrapper = styled.View`
   /* background-color: orange; */
 `;
 
+export const ForgotButton = styled(TouchableOpacity)`
+    width: 70%;
+    background-color: ${({ theme }) => theme.colors.shape};
+
+    border-radius: 45px;
+
+    padding: 15px 60px;
+`;
+
+export const ButtonTitle = styled.Text`
+  font-family: ${({ theme }) => theme.fonts.poppins_semi_bold};
+  font-size: ${RFValue(15)}px;
+  color: ${({ theme }) => theme.colors.primary};
+
+  text-align: center;
+`;
+
 export const FooterTitleButton = styled.TouchableOpacity`
   width: 70%;
   background-color: transparent;
 
-  padding: 13px 40px;
+  padding: 13px 30px;
 
   margin-top: 100px;
 `;

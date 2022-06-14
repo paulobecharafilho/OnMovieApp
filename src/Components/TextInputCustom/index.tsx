@@ -1,33 +1,38 @@
-import React from 'react';
-import { TextInputProps } from 'react-native';
-import { useTheme } from 'styled-components';
+import React from "react";
+import { KeyboardType, TextInputProps, Touchable } from "react-native";
+import { useTheme } from "styled-components";
 
+import { Container, Icon, Input, VisibleButton, IconFinal } from "./styles";
 
-
-import {
-  Container,
-  Icon,
-  Title,
-} from './styles';
-
-interface InputProps extends TextInputProps{
+interface InputProps extends TextInputProps {
   icon?: string;
   text: string;
+  visibleButton?: boolean;
+  onVisibleButtonPress?: () => void;
 }
 
-export function TextInputCustom({icon, text, onChangeText}: InputProps) {
+export function TextInputCustom({
+  icon,
+  text,
+  visibleButton,
+  onVisibleButtonPress,
+  ...rest
+}: InputProps) {
   const theme = useTheme();
 
   return (
     <Container>
-      {icon ? (<Icon name={icon}/>)  : null}
-      <Title 
+      {icon ? <Icon name={icon} /> : null}
+      <Input
+        {...rest}
         placeholder={text}
         placeholderTextColor={theme.colors.shape}
-        keyboardType='email-address'
-        onChangeText={onChangeText}
-        
       />
+      {visibleButton ? (
+        <VisibleButton onPress={onVisibleButtonPress}>
+          <IconFinal name="eye" />
+        </VisibleButton>
+      ) : null}
     </Container>
   );
 }
