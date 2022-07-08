@@ -70,7 +70,7 @@ export function Typ({navigation}) {
   }
 
   function handlePressContinue() {
-    navigation.navigate('HomePage', {userId: userId});
+    navigation.navigate('Home', {userId: userId});
   }
 
 

@@ -1,7 +1,13 @@
 import styled from 'styled-components/native';
-import { TouchableOpacity } from 'react-native';
+import { FlatList, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { ProjectDTO } from '../../dtos/ProjectDTO';
+
+interface ProjectProps extends ProjectDTO {
+  newStatusProj: string;
+  highlightColor: string;
+}
 
 export const Container = styled.View`
     flex: 1;
@@ -9,7 +15,7 @@ export const Container = styled.View`
 `;
 
 export const Header = styled.View`
-  height: 15%;
+  height: 12%;
   justify-content: flex-end;
   align-items: center;
 `;
@@ -42,11 +48,7 @@ export const IconNotification = styled(Ionicons)`
 `;
 
 
-export const Content = styled.View`
-  flex: 1;
-  padding: 0 30px;
-  padding-top: 40px;
-  align-items: center;
+export const Content = styled.ScrollView`
 `;
 
 export const UserRow = styled.View`
@@ -105,6 +107,8 @@ export const MovieCloudContainer = styled.View`
 
   padding: 20px 20px 25px 20px;
   justify-content: space-between;
+
+  
 `;
 
 export const MovieCloudRow = styled.View`
@@ -139,4 +143,85 @@ export const MovieCloudDiskSpace = styled.Text`
   font-size: ${RFValue(10)}px;
   color: ${({ theme }) => theme.colors.shape};
 `;
+
+export const ButtonsContainer = styled.View`
+  flex-direction: row;
+  width: 100%;
+  height: 15%;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  margin-top: 40px;
+
+`;
+
+export const ButtonWrapper = styled.View`
+  padding: 0 10px 10px 10px;
+  height: 100%;
+  align-items: center;
+
+`;
+
+export const ButtonHome = styled(TouchableOpacity)`
+  width: 55px;
+  height: 55px;
+
+  border-radius: 15px;
+
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ButtonIconIonicons = styled(Ionicons)`
+  font-size: ${RFValue(25)}px;
+  color: ${({ theme }) => theme.colors.shape};
+`;
+export const ButtonIconMaterialCommunity = styled(MaterialCommunityIcons)`
+  font-size: ${RFValue(25)}px;
+  color: ${({ theme }) => theme.colors.shape};
+`;
+
+export const ButtonTitleWrapper = styled.View`
+
+  height: 70%;
+  justify-content: center;
+  align-items: center;
+`;
+
+
+export const ButtonTitle = styled.Text`
+  font-family: ${({ theme }) => theme.fonts.poppins_medium};
+  font-size: ${RFValue(12)}px;
+  color: ${({ theme }) => theme.colors.shape};
+
+  text-align: center;
+`;
+
+export const LastProjectsContainer = styled.View`
+  flex: 1;
+  width: 100%;
+  
+  margin-top: 40px;
+`;
+
+export const LastProjectsTitle = styled.Text`
+  font-family: ${({ theme }) => theme.fonts.poppins_semi_bold};
+  font-size: ${RFValue(14)}px;
+  color: ${({ theme }) => theme.colors.shape};
+`;
+
+export const LastProjectsSubtitle = styled.Text`
+  font-family: ${({ theme }) => theme.fonts.poppins_regular};
+  font-size: ${RFValue(12)}px;
+  color: ${({ theme }) => theme.colors.shape};
+`;
+
+
+export const LastProjectsListView = styled(FlatList as new () => FlatList<ProjectProps>)`
+  margin-top: 20px;
+`;
+
+
+
 

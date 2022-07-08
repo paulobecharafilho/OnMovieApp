@@ -1,9 +1,7 @@
 import React from 'react';
-import { FlatListProps, Image } from 'react-native';
-import { ProjectDTO } from '../../dtos/ProjectDTO';
+import { Image, TouchableOpacityProps } from 'react-native';
 import { ProgressBar } from '../ProgressBar';
 import ThumExample from '../../assets/png/image_thum_example.png';
-import ChevronRightIcon from '../../assets/icons/chevronRightIcon.svg';
 
 import {
   Container,
@@ -19,18 +17,21 @@ import {
   Icon,
 } from './styles';
 import { useTheme } from 'styled-components';
+import { ProjectProps } from '../../utils/Interfaces';
 
-interface Props {
-  project: ProjectDTO,
-  highlightColor?: string
-  new_status_proj?: string
+
+interface Props extends TouchableOpacityProps {
+  project: ProjectProps,
+  highlightColor?: string,
+  newStatusProj?: string,
+
 }
 
-export function ProjectListCard({project, highlightColor, new_status_proj}: Props) {
+export function ProjectListCard({project, highlightColor, newStatusProj, ...rest}: Props) {
   const theme = useTheme();
 
   return (
-    <Container>
+    <Container {...rest}>
       <ThumbnailsView>
         <Image source={ThumExample}/>
       </ThumbnailsView>
@@ -39,16 +40,15 @@ export function ProjectListCard({project, highlightColor, new_status_proj}: Prop
           <Title>{project.nome_proj}</Title>
           <InfoRow>
             <StatusView style={{backgroundColor: project.highlightColor ? project.highlightColor : theme.colors.attention_light}} >
-              <StatusText>{project.new_satus_proj}</StatusText>
+              <StatusText>{project.newStatusProj}</StatusText>
             </StatusView>
-            <Scenes>{project.progresso}</Scenes>
-            <Date>{project.data_criacao}</Date>
+            <Scenes>Id projeto: {project.id_proj}</Scenes>
+            <Date>Edição: {project.progresso}%</Date>
           </InfoRow>
         </InfoWrapper>
         {/* <ChevronRightIcon width={17} height={17} />  */}
         <Icon name="chevron-right"/>
       </Content>
-
       <ProgressBar progress={`${project.progresso}%`} widthCustom={'100%'} color={project.highlightColor ? project.highlightColor : theme.colors.highlight} />
     </Container>
   );

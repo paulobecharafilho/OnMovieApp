@@ -1,7 +1,10 @@
+import { FilesProps } from "../utils/Interfaces";
+
 export interface UserDTO {
   id_user: number,
   corp: string,
   id_corp: number,
+  created: string,
   nome: string,
   email: string,
   fone: string,
@@ -15,5 +18,14 @@ export interface UserDTO {
   avatar: string,
   id_grupo: number,
   status: string,
-  assinante: string
+  assinante: string,
+  saldo: number,
+  credito: number,
+  debito: number,
+  blocked: number,
+  uso_mb: number,
+  usoPercentual: number,
+  usoArred: number,
+  qtd_files: number,
+  files: FilesProps,
 }

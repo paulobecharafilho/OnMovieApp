@@ -2,8 +2,9 @@ import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
+import { TouchableOpacity } from 'react-native';
 
-export const Container = styled.View`
+export const Container = styled(TouchableOpacity)`
     width: 100%;
     padding: 20px 20px;
 

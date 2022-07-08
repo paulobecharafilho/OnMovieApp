@@ -5,10 +5,17 @@ import { ForgotPassword } from '../Screens/ForgotPassword';
 import { FirstPage } from '../Screens/FirstPage';
 import { Register } from '../Screens/Register';
 import { Typ } from '../Screens/Typ';
-import { MyProjects } from '../Screens/MyProjects';
 import { Home } from '../Screens/Home';
 import { TabRoutes } from './tabs.routes';
-
+import { MenuPage } from '../Screens/MenuPage';
+import { NewProject } from '../Screens/NewProject';
+import { MyProjects } from '../Screens/MyProjects';
+import { MyOrders } from '../Screens/MyOrders';
+import { ProjectDetails } from '../Screens/ProjectDetails';
+import { ProjectCloudMovie } from '../Screens/ProjectCloudMovie';
+import { FilesUploading } from '../Screens/FilesUploading';
+import { CloudMovie } from '../Screens/CloudMovie';
+import { ProjectDescriptionDetails } from '../Screens/ProjectDescriptionDetails';
 
 interface Props {
     initialPage: string;
@@ -18,7 +25,6 @@ interface Props {
 const { Navigator, Screen} = createNativeStackNavigator();
 
 function InitialStackRoutes({initialPage, userId}: Props) {
-    console.log(`Started Stack Routes with userId = ${(userId)} and InitialPage: ${initialPage}`)
 
     return (
         <Navigator screenOptions={{headerShown: false,}} initialRouteName={initialPage}>
@@ -47,8 +53,41 @@ function InitialStackRoutes({initialPage, userId}: Props) {
                 component={Home}
             />
             <Screen 
+                name='MenuPage'
+                component={MenuPage}
+            />
+            <Screen 
                 name='MyProjects'
                 component={MyProjects}
+            />
+            <Screen 
+                name='MyOrders'
+                component={MyOrders}
+            />
+            <Screen 
+                name='NewProject'
+                component={NewProject}
+            />
+            <Screen 
+                name='CloudMovie'
+                component={CloudMovie}
+            />
+            <Screen 
+                name='ProjectCloudMovie'
+                component={ProjectCloudMovie}
+            />
+            <Screen 
+                name='ProjectDetails'
+                component={ProjectDetails}
+            />
+            <Screen 
+                name='ProjectDescriptionDetails'
+                component={ProjectDescriptionDetails}
+            />
+            
+            <Screen 
+                name='FilesUploading'
+                component={FilesUploading}
             />
             
         </Navigator>

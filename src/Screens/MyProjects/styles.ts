@@ -1,8 +1,14 @@
 import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { Dimensions, FlatList, TouchableOpacity } from 'react-native';
+import { FlatList, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
+import { ProjectDTO } from '../../dtos/ProjectDTO';
+
+interface ProjectProps extends ProjectDTO {
+  new_satus_proj: string;
+  highlightColor: string;
+}
+
 
 export const Container = styled(LinearGradient)`
     flex: 1;
@@ -39,13 +45,20 @@ export const ContentHeader = styled.View`
   justify-content: space-between;
 `;
 
+export const IconButton = styled(TouchableOpacity)`
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 20px;
+`;
+
 export const ContentBody = styled.View`
   width: 100%;
   height: 100%;
-
   justify-content: flex-start;
   align-items: center;
-
+  margin-top: 50px;
 `;
 
 
@@ -101,7 +114,7 @@ export const ProjectsListView = styled.View`
     height: 90%;
 `;
 
-export const ProjectsList = styled(FlatList)`
+export const ProjectsList = styled(FlatList as new () => FlatList<ProjectProps>)`
   width: 100%;
   height: 100%;
 `;

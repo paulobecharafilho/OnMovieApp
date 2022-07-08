@@ -1,3 +1,5 @@
+import { FilesProps } from "../utils/Interfaces";
+
 export interface ProjectDTO {
   id_proj: string,
   id_usuario: number,
@@ -6,7 +8,7 @@ export interface ProjectDTO {
   nome_usuario: string,
   descri_proj: string,
   link_proj?: string,
-  video_format: string,
+  video_format: string[],
   duracao_proj: string,
   valor_proj?: number,
   data_criacao?: string,
@@ -33,5 +35,7 @@ export interface ProjectDTO {
   data_final_1?: string,
   data_final_2?: string,
   data_aprova?: string,
-  estrelas?: number
+  estrelas?: number,
+  qtd_files: number,
+  files: FilesProps[],
 }

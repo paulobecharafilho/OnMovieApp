@@ -13,18 +13,18 @@ export const ProgressBarEmpty = styled.View`
 
   flex-direction: row;
 
-  height: 10px;
+  height: 8px;
 
-  border-radius: 5%;
+  border-radius: 200px;
 
 `;
 
 export const ProgressBarFilled = styled.View`
   position: absolute;
 
-  height: 10px;
+  height: 8px;
 
-  border-radius: 5%;
+  border-radius: 200px;
 
   align-self: flex-start;
 `;

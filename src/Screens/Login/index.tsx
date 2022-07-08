@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Platform, StyleSheet } from "react-native";
+import { Platform, StatusBar, StyleSheet } from "react-native";
 import "react-native-url-polyfill/auto";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -114,6 +114,11 @@ export function Login({ navigation }) {
 
   return (
     <Container>
+      <StatusBar
+        barStyle='light-content'
+        backgroundColor="transparent"
+        translucent
+      />
       <VectorsLoginUp style={styles.vectorUp}/>
       <Header>
         <HeaderWrapper>
@@ -153,7 +158,6 @@ export function Login({ navigation }) {
               error={errors.password && errors.password.message}
               text="Senha"
               icon="lock"
-              keyboardType="visible-password"
               secureTextEntry={passwordSecurity}
               visibleButton={true}
               onVisibleButtonPress={() => handleChangleVisiblePassword()}

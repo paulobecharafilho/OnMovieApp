@@ -1,16 +1,22 @@
-import { TouchableOpacity } from 'react-native';
-import { RFValue } from 'react-native-responsive-fontsize';
-import styled from 'styled-components/native';
+import { TouchableOpacity } from "react-native";
+import { RFValue } from "react-native-responsive-fontsize";
+import styled from "styled-components/native";
 
+import { ButtonProps } from ".";
 
-export const Container = styled(TouchableOpacity)`
-    width: 70%;
+export const Container = styled(TouchableOpacity)<ButtonProps>`
+  width: 70%;
 
-    background-color: ${({ theme, disabled }) => disabled ? theme.colors.inactive : theme.colors.shape};
+  background-color: ${({ theme, disabled, highlightColor }) =>
+    disabled
+      ? theme.colors.inactive
+      : highlightColor
+        ? highlightColor
+        : theme.colors.shape};
 
-    border-radius: 45px;
+  border-radius: 45px;
 
-    padding: 15px 60px;
+  padding: 15px 60px;
 `;
 
 export const Title = styled.Text`

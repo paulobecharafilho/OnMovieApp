@@ -10,8 +10,9 @@ import { Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { HomeStackRoutes, InitialStackRoutes } from './stack.routes';
-import { MyProjects } from '../Screens/MyProjects';
+
 import { Home } from '../Screens/Home';
+import { MyProjects } from '../Screens/MyProjects';
 
 
 const { Navigator, Screen} = createBottomTabNavigator();

@@ -1,10 +1,26 @@
 {
   "expo": {
-    "name": "OnMovieJobs",
-    "slug": "OnMovieJobs",
+    "name": "OnMovieApp",
+    "slug": "OnMovieApp",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "ios": {
+      "usesIcloudStorage": true,
+      "bundleIdentifier": "com.onmovie.onmovieapp",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
+      }
+    },
+    "plugins": [
+      "expo-document-picker"
+    ],
+    "android": {
+      "package": "com.onmovie.onmovieapp"
+    }
   }
 }

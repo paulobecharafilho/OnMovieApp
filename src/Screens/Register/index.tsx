@@ -8,11 +8,8 @@ import {
   Alert,
   StatusBar,
 } from "react-native";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+
 import { ProgressBar } from "../../Components/ProgressBar";
-import { PageInputForm } from "../../Components/PageInputForm";
-import { useForm } from "react-hook-form";
 import { ButtonCustom } from "../../Components/ButtonCustom";
 
 import NewLogo from "../../assets/logos/newLogo.svg";
