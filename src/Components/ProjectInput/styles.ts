@@ -11,7 +11,7 @@ export const Container = styled.View`
 `;
 
 export const Input = styled(TextInput)`
-  width: ${Dimensions.get('window').width - 30};
+  width: ${Dimensions.get('window').width - 30}px;
   padding: 50px 50px;
   
   font-family: ${({ theme }) => theme.fonts.poppins_regular};

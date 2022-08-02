@@ -16,8 +16,6 @@ PODS:
     - ExpoModulesCore
   - EXDocumentPicker (10.2.1):
     - ExpoModulesCore
-  - EXErrorRecovery (3.1.0):
-    - ExpoModulesCore
   - EXFileSystem (14.0.0):
     - ExpoModulesCore
   - EXFont (10.1.0):
@@ -31,8 +29,82 @@ PODS:
   - EXMediaLibrary (14.1.0):
     - ExpoModulesCore
     - React-Core
+  - EXNotifications (0.15.4):
+    - ExpoModulesCore
   - Expo (45.0.5):
     - ExpoModulesCore
+  - expo-dev-client (1.0.1):
+    - EXManifests
+    - expo-dev-launcher
+    - expo-dev-menu
+    - expo-dev-menu-interface
+    - EXUpdatesInterface
+  - expo-dev-launcher (1.0.1):
+    - EXManifests
+    - expo-dev-launcher/Main (= 1.0.1)
+    - expo-dev-menu
+    - expo-dev-menu-interface
+    - ExpoModulesCore
+    - EXUpdatesInterface
+    - React-Core
+  - expo-dev-launcher/Main (1.0.1):
+    - EXManifests
+    - expo-dev-launcher/Unsafe
+    - expo-dev-menu
+    - expo-dev-menu-interface
+    - ExpoModulesCore
+    - EXUpdatesInterface
+    - React-Core
+  - expo-dev-launcher/Unsafe (1.0.1):
+    - EXManifests
+    - expo-dev-menu
+    - expo-dev-menu-interface
+    - ExpoModulesCore
+    - EXUpdatesInterface
+    - React-Core
+  - expo-dev-menu (1.0.1):
+    - expo-dev-menu/Main (= 1.0.1)
+  - expo-dev-menu-interface (0.7.0)
+  - expo-dev-menu/GestureHandler (1.0.1)
+  - expo-dev-menu/Main (1.0.1):
+    - EXManifests
+    - expo-dev-menu-interface
+    - expo-dev-menu/Vendored
+    - ExpoModulesCore
+    - React-Core
+  - expo-dev-menu/Reanimated (1.0.1):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - glog
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - React-RCTVibration
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - expo-dev-menu/SafeAreaView (1.0.1)
+  - expo-dev-menu/Vendored (1.0.1):
+    - expo-dev-menu/GestureHandler
+    - expo-dev-menu/Reanimated
+    - expo-dev-menu/SafeAreaView
   - ExpoClipboard (3.0.1):
     - ExpoModulesCore
   - ExpoImageManipulator (10.3.1):
@@ -54,7 +126,7 @@ PODS:
   - EXTaskManager (10.2.1):
     - ExpoModulesCore
     - UMAppLoader
-  - EXUpdates (0.13.2):
+  - EXUpdates (0.13.3):
     - ASN1Decoder (~> 1.8)
     - EASClient
     - EXManifests
@@ -280,6 +352,8 @@ PODS:
   - React-jsinspector (0.68.2)
   - React-logger (0.68.2):
     - glog
+  - react-native-date-picker (4.2.5):
+    - React-Core
   - react-native-document-picker (8.1.1):
     - React-Core
   - react-native-safe-area-context (4.2.4):
@@ -386,11 +460,61 @@ PODS:
     - React-Core
   - RNCPicker (2.4.0):
     - React-Core
+  - RNGestureHandler (2.2.1):
+    - React-Core
+  - RNReanimated (2.8.0):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - glog
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (3.11.1):
     - React-Core
     - React-RCTImage
   - RNSVG (12.3.0):
     - React-Core
+  - Stripe (22.5.1):
+    - Stripe/Stripe3DS2 (= 22.5.1)
+    - StripeApplePay (= 22.5.1)
+    - StripeCore (= 22.5.1)
+    - StripeUICore (= 22.5.1)
+  - stripe-react-native (0.15.0):
+    - React-Core
+    - Stripe (~> 22.5.1)
+    - StripeFinancialConnections (~> 22.5.1)
+  - Stripe/Stripe3DS2 (22.5.1):
+    - StripeApplePay (= 22.5.1)
+    - StripeCore (= 22.5.1)
+    - StripeUICore (= 22.5.1)
+  - StripeApplePay (22.5.1):
+    - StripeCore (= 22.5.1)
+  - StripeCore (22.5.1)
+  - StripeFinancialConnections (22.5.1):
+    - StripeCore (= 22.5.1)
+    - StripeUICore (= 22.5.1)
+  - StripeUICore (22.5.1):
+    - StripeCore (= 22.5.1)
   - UMAppLoader (3.1.0)
   - Yoga (1.14.0)
 
@@ -403,14 +527,18 @@ DEPENDENCIES:
   - EXBackgroundFetch (from `../node_modules/expo-background-fetch/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXDocumentPicker (from `../node_modules/expo-document-picker/ios`)
-  - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
   - EXManifests (from `../node_modules/expo-manifests/ios`)
   - EXMediaLibrary (from `../node_modules/expo-media-library/ios`)
+  - EXNotifications (from `../node_modules/expo-notifications/ios`)
   - Expo (from `../node_modules/expo/ios`)
+  - expo-dev-client (from `../node_modules/expo-dev-client/ios`)
+  - expo-dev-launcher (from `../node_modules/expo-dev-launcher`)
+  - expo-dev-menu (from `../node_modules/expo-dev-menu`)
+  - expo-dev-menu-interface (from `../node_modules/expo-dev-menu-interface/ios`)
   - ExpoClipboard (from `../node_modules/expo-clipboard/ios`)
   - ExpoImageManipulator (from `../node_modules/expo-image-manipulator/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
@@ -440,6 +568,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -456,8 +585,11 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
+  - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -465,6 +597,11 @@ SPEC REPOS:
   trunk:
     - ASN1Decoder
     - fmt
+    - Stripe
+    - StripeApplePay
+    - StripeCore
+    - StripeFinancialConnections
+    - StripeUICore
 
 EXTERNAL SOURCES:
   boost:
@@ -483,8 +620,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-constants/ios"
   EXDocumentPicker:
     :path: "../node_modules/expo-document-picker/ios"
-  EXErrorRecovery:
-    :path: "../node_modules/expo-error-recovery/ios"
   EXFileSystem:
     :path: "../node_modules/expo-file-system/ios"
   EXFont:
@@ -497,8 +632,18 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-manifests/ios"
   EXMediaLibrary:
     :path: "../node_modules/expo-media-library/ios"
+  EXNotifications:
+    :path: "../node_modules/expo-notifications/ios"
   Expo:
     :path: "../node_modules/expo/ios"
+  expo-dev-client:
+    :path: "../node_modules/expo-dev-client/ios"
+  expo-dev-launcher:
+    :path: "../node_modules/expo-dev-launcher"
+  expo-dev-menu:
+    :path: "../node_modules/expo-dev-menu"
+  expo-dev-menu-interface:
+    :path: "../node_modules/expo-dev-menu-interface/ios"
   ExpoClipboard:
     :path: "../node_modules/expo-clipboard/ios"
   ExpoImageManipulator:
@@ -553,6 +698,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-date-picker:
+    :path: "../node_modules/react-native-date-picker"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
   react-native-safe-area-context:
@@ -585,10 +732,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCPicker:
     :path: "../node_modules/@react-native-picker/picker"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
+  stripe-react-native:
+    :path: "../node_modules/@stripe/stripe-react-native"
   UMAppLoader:
     :path: "../node_modules/unimodules-app-loader/ios"
   Yoga:
@@ -604,14 +757,18 @@ SPEC CHECKSUMS:
   EXBackgroundFetch: f60cb23007beca0892997682d8ca40aca1e0c92e
   EXConstants: fdbe52259365b6a6faaa5e99a3b82cfa6bc2eb61
   EXDocumentPicker: cd34632ff465bfef63c9ff92b05b747665e21996
-  EXErrorRecovery: 3ce46e5d42e53c0371ff048a7f0cbc959968ef4a
   EXFileSystem: 2aa2d9289f84bca9532b9ccbd81504fa31eb1ded
   EXFont: 04235cc22e6fef86028feb67db452978dc6f240f
   EXImageLoader: b88e053d760f85a82405b1db2de4abf11978fc9f
   EXJSONUtils: 2a74b8f40f1523cc3f92af99c91aa78201737a77
   EXManifests: 0c6134b7b6f3236a93a778c3f44ba1cfb3f9fa3d
   EXMediaLibrary: 84cddf988a089e28070790438caf58d8b265b37a
+  EXNotifications: 297bb555bbd26fd7aa8ff3bf7e724d4d65f7e895
   Expo: b9fff0a1eac0f424fc68ea49b4347fb308e52e17
+  expo-dev-client: 56e713e8ab330e3d2522e4d1c568dc1f5e0116b1
+  expo-dev-launcher: 3c6059a3f2cc3093a2a22d23e57cb54bcba5b33f
+  expo-dev-menu: ba291761e0ffbdd7011fd33576687f939cadf044
+  expo-dev-menu-interface: db5495dd7206992a94ce35c51391f139ae26f2b7
   ExpoClipboard: e2dda22be0524595a5eeead51665f60729829123
   ExpoImageManipulator: b55580bbc7b10099c7707949903e7176a8542ee8
   ExpoKeepAwake: c0c494b442ecd8122974c13b93ccfb57bd408e88
@@ -621,7 +778,7 @@ SPEC CHECKSUMS:
   EXSplashScreen: 34f460788db8d682883871708dddbfac72095bb7
   EXStructuredHeaders: 5d86829469399370a9fc7cb1e4391b09de87681d
   EXTaskManager: 80829d015808bbac6a292f9a3b7adf801c72cce6
-  EXUpdates: 08d69031f9ed1e918d50f041fa505fe67d6b4809
+  EXUpdates: 084edfaac900e6bc77ab4027eaf7437a4236b8c3
   EXUpdatesInterface: 0b101ace1dbfa0f64260a5df31c71d03c66cca54
   FBLazyVector: a7a655862f6b09625d11c772296b01cd5164b648
   FBReactNativeSpec: 81ce99032d5b586fddd6a38d450f8595f7e04be4
@@ -640,6 +797,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b7b553412f2ec768fe6c8f27cd6bafdb9d8719e6
   React-jsinspector: c5989c77cb89ae6a69561095a61cce56a44ae8e8
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
+  react-native-date-picker: 55193347d8d0f40948f441ffd4e5db6f0a8fbe13
   react-native-document-picker: f68191637788994baed5f57d12994aa32cf8bf88
   react-native-safe-area-context: f98b0b16d1546d208fc293b4661e3f81a895afd9
   React-perflogger: a18b4f0bd933b8b24ecf9f3c54f9bf65180f3fe6
@@ -656,8 +814,16 @@ SPEC CHECKSUMS:
   ReactCommon: 095366164a276d91ea704ce53cb03825c487a3f2
   RNCAsyncStorage: 466b9df1a14bccda91da86e0b7d9a345d78e1673
   RNCPicker: 6d5d64e7b90c240c779ee0938ec433c11e2dd758
+  RNGestureHandler: 1dc1ea9d4b64f999042afafbaccf5b143f0b2fa2
+  RNReanimated: 64573e25e078ae6bec03b891586d50b9ec284393
   RNScreens: 4d83613b50b74ed277026375dc0810893b0c347f
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
+  Stripe: 2b2decd03146e08a350960966d41f3028c2eac29
+  stripe-react-native: 5817de3b998cf6ca2ccd4b91ce007b377398ecdd
+  StripeApplePay: b14f06ac6fc24b56704c1e598149ed0cc45e166f
+  StripeCore: 4833738f2ca4336712f279f3c2867a0a7eb67c93
+  StripeFinancialConnections: 982115b82af429968d8aa78d329a42ed7ba3feab
+  StripeUICore: 08c1efbd7e3c54ee7fa74334a37a1d4c08ba944d
   UMAppLoader: 6185e8c45922f187002b85afae097961c4781df4
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
 

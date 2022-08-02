@@ -16,6 +16,12 @@ import { ProjectCloudMovie } from '../Screens/ProjectCloudMovie';
 import { FilesUploading } from '../Screens/FilesUploading';
 import { CloudMovie } from '../Screens/CloudMovie';
 import { ProjectDescriptionDetails } from '../Screens/ProjectDescriptionDetails';
+import { Script } from '../Screens/Script';
+import { CheckoutDetails } from '../Screens/CheckoutDetails';
+import { CheckoutScreen } from '../Screens/CheckoutScreen';
+import { Chat } from '../Screens/Chat';
+import { PaymentDetails } from '../Screens/PaymentDetails';
+import { Approve } from '../Screens/Approve';
 
 interface Props {
     initialPage: string;
@@ -88,6 +94,30 @@ function InitialStackRoutes({initialPage, userId}: Props) {
             <Screen 
                 name='FilesUploading'
                 component={FilesUploading}
+            />
+            <Screen 
+                name='Script'
+                component={Script}
+            />
+            <Screen 
+                name='CheckoutDetails'
+                component={CheckoutDetails}
+            />
+            <Screen 
+                name='CheckoutScreen'
+                component={CheckoutScreen}
+            />
+            <Screen 
+                name='PaymentDetails'
+                component={PaymentDetails}
+            />
+            <Screen 
+                name='Chat'
+                component={Chat}
+            />
+            <Screen 
+                name='Approve'
+                component={Approve}
             />
             
         </Navigator>

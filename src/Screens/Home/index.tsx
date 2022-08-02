@@ -350,54 +350,56 @@ export function Home({ navigation }) {
             />
           </MovieCloudContainer>
 
-          <ButtonsContainer>
-            <ButtonWrapper>
-              <ButtonHome
-                onPress={handleNewProject}
-                style={{ backgroundColor: theme.colors.highlight }}
-              >
-                <ButtonIconIonicons name="add-circle-outline" />
-              </ButtonHome>
-              <ButtonTitleWrapper>
-                <ButtonTitle>Novo{"\n"}Projeto</ButtonTitle>
-              </ButtonTitleWrapper>
-            </ButtonWrapper>
+          {setLoadingProjects ? (
+            <ButtonsContainer>
+              <ButtonWrapper>
+                <ButtonHome
+                  onPress={handleNewProject}
+                  style={{ backgroundColor: theme.colors.highlight }}
+                >
+                  <ButtonIconIonicons name="add-circle-outline" />
+                </ButtonHome>
+                <ButtonTitleWrapper>
+                  <ButtonTitle>Novo{"\n"}Projeto</ButtonTitle>
+                </ButtonTitleWrapper>
+              </ButtonWrapper>
 
-            <ButtonWrapper>
-              <ButtonHome
-                onPress={handleButtonProjetos}
-                style={{ backgroundColor: theme.colors.dark_inactive }}
-              >
-                <ButtonIconMaterialCommunity name="movie-edit" />
-              </ButtonHome>
-              <ButtonTitleWrapper>
-                <ButtonTitle>Projetos{"\n"}em Criação</ButtonTitle>
-              </ButtonTitleWrapper>
-            </ButtonWrapper>
+              <ButtonWrapper>
+                <ButtonHome
+                  onPress={handleButtonProjetos}
+                  style={{ backgroundColor: theme.colors.dark_inactive }}
+                >
+                  <ButtonIconMaterialCommunity name="movie-edit" />
+                </ButtonHome>
+                <ButtonTitleWrapper>
+                  <ButtonTitle>Projetos{"\n"}em Criação</ButtonTitle>
+                </ButtonTitleWrapper>
+              </ButtonWrapper>
 
-            <ButtonWrapper>
-              <ButtonHome
-                onPress={handleButtonPedidos}
-                style={{ backgroundColor: theme.colors.dark_inactive }}
-              >
-                <ButtonIconMaterialCommunity name="movie-check" />
-              </ButtonHome>
-              <ButtonTitleWrapper>
-                <ButtonTitle>Pedidos</ButtonTitle>
-              </ButtonTitleWrapper>
-            </ButtonWrapper>
+              <ButtonWrapper>
+                <ButtonHome
+                  onPress={handleButtonPedidos}
+                  style={{ backgroundColor: theme.colors.dark_inactive }}
+                >
+                  <ButtonIconMaterialCommunity name="movie-check" />
+                </ButtonHome>
+                <ButtonTitleWrapper>
+                  <ButtonTitle>Pedidos</ButtonTitle>
+                </ButtonTitleWrapper>
+              </ButtonWrapper>
 
-            <ButtonWrapper>
-              <ButtonHome
-                style={{ backgroundColor: theme.colors.dark_inactive }}
-              >
-                <ButtonIconIonicons name="school-outline" />
-              </ButtonHome>
-              <ButtonTitleWrapper>
-                <ButtonTitle>Aprenda</ButtonTitle>
-              </ButtonTitleWrapper>
-            </ButtonWrapper>
-          </ButtonsContainer>
+              <ButtonWrapper>
+                <ButtonHome
+                  style={{ backgroundColor: theme.colors.dark_inactive }}
+                >
+                  <ButtonIconIonicons name="school-outline" />
+                </ButtonHome>
+                <ButtonTitleWrapper>
+                  <ButtonTitle>Aprenda</ButtonTitle>
+                </ButtonTitleWrapper>
+              </ButtonWrapper>
+            </ButtonsContainer>
+          ) : null}
 
           <LastProjectsContainer>
             <LastProjectsTitle>Últimos Projetos</LastProjectsTitle>

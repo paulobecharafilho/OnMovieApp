@@ -9,6 +9,8 @@ import {
   Text,
   FlatList,
   RefreshControl,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useTheme } from "styled-components";
 import { FileDetailsModal } from "../../Components/FileDetailsModal";
@@ -47,7 +49,7 @@ import { ButtonCustom } from "../../Components/ButtonCustom";
 
 interface Params {
   userId: number;
-  project?: ProjectProps;
+  projectInit?: ProjectProps;
   from?: string;
 }
 
@@ -65,7 +67,7 @@ export function CloudMovie({ navigation }) {
 
   const categoriesData = ["Todos", "Imagens", `Vídeos`, "Outros"];
 
-  const { userId, project, from } = route.params as Params;
+  const { userId, projectInit, from} = route.params as Params;
 
   const [libraryFiles, setLibraryFiles] = useState<FileAttatchedProps[]>([]);
   const [libraryFilesInProject, setLibraryFilesInProject] = useState<
@@ -76,12 +78,15 @@ export function CloudMovie({ navigation }) {
   const [fileDetailsModalVisible, setFileDetailsModalVisible] = useState(false);
   const [modalAddButtonVisible, setModalAddButtonVisible] = useState(false);
 
-  const [choosedFile, setChoosedFile] = useState<FilesProps>();
+  const [choosedFile, setChoosedFile] = useState<FileAttatchedProps>();
   const [filesToUpload, setFilesToUpload] = useState<DocumentProps[]>([]);
+  const [project, setProject] = useState<ProjectProps>(projectInit);
 
   const [categorySelected, setCategorySelected] = useState("Todos");
 
   const [refreshing, setRefreshing] = useState(false);
+
+  const [loading, setLoading] = useState(true);
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -89,7 +94,7 @@ export function CloudMovie({ navigation }) {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => {
+    wait(100).then(() => {
       setRefreshing(false);
     });
   }, []);
@@ -99,16 +104,22 @@ export function CloudMovie({ navigation }) {
       async function getLibraryFiles() {
         await getFiles(userId).then(async (result) => {
           if (result.result === "Success") {
+            setLibraryFiles([]);
             await result.libraryFiles.map((item) => {
-              let findItem = project.files.find(
-                (element) => element.file_name === item.file_name
-              );
-              if (findItem) {
-                item.isAttachedToProject = true;
+              if (project.files) {
+                let findItem = project.files.find(
+                  (element) => element.file_id === item.file_id
+                );
+                if (findItem) {
+                  item.isAttachedToProject = true;
+                } else {
+                  item.isAttachedToProject = false;
+                }
               } else {
-                item.isAttachedToProject = false;
+                project.files=[];
               }
-              setLibraryFiles(oldArray => [...oldArray, item]);
+              setLibraryFiles((oldArray) => [...oldArray, item]);
+              setLoading(false);
             });
           }
         });
@@ -118,14 +129,100 @@ export function CloudMovie({ navigation }) {
     }, [userId, project, refreshing])
   );
 
-  function handleOpenModal(file: FilesProps) {
+  async function handleAttachFile() {
+    await api
+      .post(
+        `proc_link_file.php?userId=${userId}&projectId=${project.id_proj}`,
+        {
+          fileId: choosedFile.file_id,
+          origem: "appProjectCloudMovie",
+        }
+      )
+      .then((response) => {
+        if (response.data.response === "Success") {
+          // console.log(
+          //   `@CloudMovie:HandleAttachFile -> file ${response.data.file.fileName} attached Successfully`
+          // );
+          let projectAux = project;
+          // console.log(`@CloudMovie: 145 -> ProjectAux.push -> ${JSON.stringify(choosedFile)}`)
+          projectAux.files.push(choosedFile);
+          setProject(projectAux);
+          onRefresh();
+          handleCloseModal();
+          handleCloseFileDetailsModal();
+          
+        } else {
+          console.log(
+            `@CloudMovie:HandleAttachFile -> file ${response.data.file.fileName} not Attached because of ${response.data.response}`
+          );
+        }
+      })
+      .catch (err => console.log(`File Not Attached -> ${err}`));
+  }
+
+  function alertDetachFile() {
+    Alert.alert(`Desanexar arquivo`,
+    `Você tem certeza que deseja remover o arquivo ${choosedFile.file_name} deste projeto? Lembrando que ele continua na sua biblioteca, mas não vai ao editor desse projeto.`,
+    [
+      {
+        text: "Cancelar.",
+        style: "cancel",
+      },
+      {
+        text: "Sim, desejo Remover.",
+        onPress: () => handleDetachFile(),
+        style: "destructive",
+      },
+    ],
+    )
+  }
+
+  async function handleDetachFile() {
+    await api
+    .post(
+      `proc_unlink_file.php?userId=${userId}&projectId=${project.id_proj}`,
+      {
+        fileId: choosedFile.file_id,
+        origem: "appProjectCloudMovie",
+        fileName: choosedFile.file_name,
+      }
+    )
+    .then((response) => {
+      if (response.data.response === "Success") {
+        let projectFilesAux: FileAttatchedProps[] = [];
+        let projectAux = project;
+        console.log(`@CloudMovie:HandleAttachFile -> file ${JSON.stringify(response.data.file)} detached Successfully`);
+        project.files.map((element) => {
+          if (element.file_id !== choosedFile.file_id) {
+            projectFilesAux.push(element);
+          } 
+        })
+
+        projectAux.files = projectFilesAux;
+        projectAux.qtd_files = projectFilesAux.length;
+       
+        setProject(projectAux);
+        onRefresh();
+        handleCloseModal();
+        handleCloseFileDetailsModal();
+        
+      } else {
+        console.log(
+          `@CloudMovie:HandleAttachFile -> file ${response.data.file} not detached because of ${response.data.response}`
+        );
+      }
+    })
+    .catch (err => console.log(`File Not Detached -> ${err}`));
+  }
+
+  function handleOpenModal(file: FileAttatchedProps) {
     setModalVisible(true);
     setChoosedFile(file);
   }
 
   function handleCloseModal() {
     setModalVisible(false);
-    setChoosedFile({} as FilesProps);
+    setChoosedFile({} as FileAttatchedProps);
   }
 
   function handleFileDetails() {
@@ -135,7 +232,7 @@ export function CloudMovie({ navigation }) {
 
   function handleCloseFileDetailsModal() {
     setFileDetailsModalVisible(false);
-    setChoosedFile({} as FilesProps);
+    setChoosedFile({} as FileAttatchedProps);
   }
 
   function handleClickAddButton() {
@@ -164,16 +261,11 @@ export function CloudMovie({ navigation }) {
     navigation.goBack();
   }
 
-  function handleDetachFile() {}
-
   function handleBackButton() {
     navigation.goBack();
   }
 
-
-
   async function handleDocumentPicker() {
-
     const files = await DocumentPicker.pickMultiple({
       type: DocumentPicker.types.allFiles,
     });
@@ -202,10 +294,6 @@ export function CloudMovie({ navigation }) {
 
     handleUploadFiles(type, filesAux);
   }
-
-
-
-
 
   function ShowAllFiles() {
     return (
@@ -286,7 +374,7 @@ export function CloudMovie({ navigation }) {
   function ShowOtherFiles() {
     let otherFiles = [];
     libraryFiles.map((element) => {
-      if (element.file_type != 'video' && element.file_type != 'image') {
+      if (element.file_type != "video" && element.file_type != "image") {
         otherFiles.push(element);
       }
     });
@@ -310,8 +398,6 @@ export function CloudMovie({ navigation }) {
       <Text>Você não tem outros arquivos na sua biblioteca</Text>
     );
   }
-
- 
 
   return (
     <Container>
@@ -345,9 +431,25 @@ export function CloudMovie({ navigation }) {
               >
                 <Text style={styles(theme).textButton}>Detalhes</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles(theme).modalDetachButton}>
-                <Text style={styles(theme).textButton}>Remover do Projeto</Text>
-              </TouchableOpacity>
+              {choosedFile ? choosedFile.isAttachedToProject ? (
+                <TouchableOpacity
+                  style={styles(theme).modalDetachButton}
+                  onPress={alertDetachFile}
+                >
+                  <Text style={styles(theme).textButton}>
+                    Remover do Projeto
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={styles(theme).modalAtachButton}
+                  onPress={handleAttachFile}
+                >
+                  <Text style={styles(theme).textButton}>
+                    Adicionar ao Projeto
+                  </Text>
+                </TouchableOpacity>
+              ): null}
             </View>
           </TouchableOpacity>
         </Modal>
@@ -359,8 +461,11 @@ export function CloudMovie({ navigation }) {
             file={choosedFile}
             projectId={Number(project.id_proj)}
             userId={userId}
+            from='CloudMovie'
             fileDetailsModalVisible={fileDetailsModalVisible}
             handleCloseFileDetailsModal={handleCloseFileDetailsModal}
+            handleDetachFile={alertDetachFile}
+            handleAttachFile={handleAttachFile}
           />
         ) : null}
 
@@ -424,64 +529,69 @@ export function CloudMovie({ navigation }) {
             </IconButton>
           </ContentTitleRow>
 
-          <FilesContainer>
-            {libraryFiles.length > 0 ? (
-              <ListContent>
-                <FlatList
-                  contentContainerStyle={{
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "space-around",
-                    alignSelf: "center",
-                  }}
-                  horizontal
-                  data={categoriesData}
-                  keyExtractor={(item) => item}
-                  renderItem={({ item }) => (
-                    <CategoriesButton
-                      onPress={() => setCategorySelected(item)}
-                      style={{
-                        paddingVertical: 5,
-                        paddingHorizontal: 10,
-                        borderStyle: item === categorySelected ? "solid" : null,
-                        borderColor:
-                          item === categorySelected
-                            ? theme.colors.primary_light
-                            : null,
-                        borderWidth: item === categorySelected ? 0.5 : null,
-                        borderRadius: 10,
-                      }}
-                    >
-                      <CategoriesTitle>{item}</CategoriesTitle>
-                    </CategoriesButton>
-                  )}
-                />
-                {categorySelected === "Todos" ? (
-                  <ShowAllFiles />
-                ) : categorySelected === "Imagens" ? (
-                  <ShowImageFiles />
-                ) : categorySelected === "Vídeos" ? (
-                  <ShowVideoFiles />
-                ) : categorySelected === "Outros" ? (
-                  <ShowOtherFiles />
-                ) : null}
-              </ListContent>
-            ) : (
-              <NoneProjectTitle>
-                Você não tem nenhum arquivo na sua Biblioteca
-              </NoneProjectTitle>
-            )}
-            <ButtonCustom
-              style={styles(theme).buttonCustom}
-              highlightColor={theme.colors.shape}
-              text={"Avançar"}
-              onPress={
-                from === "projectCloudMovie"
-                  ? handleBacktoProjectDetails
-                  : handleContinueFromDetails
-              }
-            />
-          </FilesContainer>
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <FilesContainer>
+              {libraryFiles.length > 0 ? (
+                <ListContent>
+                  <FlatList
+                    contentContainerStyle={{
+                      width: "100%",
+                      alignItems: "center",
+                      justifyContent: "space-around",
+                      alignSelf: "center",
+                    }}
+                    horizontal
+                    data={categoriesData}
+                    keyExtractor={(item) => item}
+                    renderItem={({ item }) => (
+                      <CategoriesButton
+                        onPress={() => setCategorySelected(item)}
+                        style={{
+                          paddingVertical: 5,
+                          paddingHorizontal: 10,
+                          borderStyle:
+                            item === categorySelected ? "solid" : null,
+                          borderColor:
+                            item === categorySelected
+                              ? theme.colors.primary_light
+                              : null,
+                          borderWidth: item === categorySelected ? 0.5 : null,
+                          borderRadius: 10,
+                        }}
+                      >
+                        <CategoriesTitle>{item}</CategoriesTitle>
+                      </CategoriesButton>
+                    )}
+                  />
+                  {categorySelected === "Todos" ? (
+                    <ShowAllFiles />
+                  ) : categorySelected === "Imagens" ? (
+                    <ShowImageFiles />
+                  ) : categorySelected === "Vídeos" ? (
+                    <ShowVideoFiles />
+                  ) : categorySelected === "Outros" ? (
+                    <ShowOtherFiles />
+                  ) : null}
+                </ListContent>
+              ) : (
+                <NoneProjectTitle>
+                  Você não tem nenhum arquivo na sua Biblioteca
+                </NoneProjectTitle>
+              )}
+              <ButtonCustom
+                style={styles(theme).buttonCustom}
+                highlightColor={theme.colors.shape}
+                text={"Avançar"}
+                onPress={
+                  from === "projectCloudMovie"
+                    ? handleBacktoProjectDetails
+                    : handleContinueFromDetails
+                }
+              />
+            </FilesContainer>
+          )}
         </Content>
       </FormContainer>
     </Container>
@@ -498,7 +608,14 @@ const styles = (theme: any) =>
       justifyContent: "center",
       backgroundColor: theme.colors.primary,
     },
-    modalAtachButton: {},
+    modalAtachButton: {
+      width: "40%",
+      height: "30%",
+      borderRadius: 50,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme.colors.highlight,
+    },
     modalDetachButton: {
       width: "40%",
       height: "30%",

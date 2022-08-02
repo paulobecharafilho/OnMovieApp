@@ -89,10 +89,13 @@ export const CloudMovieButton = styled(TouchableOpacity)`
   margin-top: 30px;
   width: 100%;
   padding: 15px 15px 15px 20px;
+
+  background-color: ${({ theme }) => theme.colors.secondary};
   
   border: solid 0.5px;
   border-color: ${({ theme }) => theme.colors.shape_inactive};
   border-radius: 20px;
+  box-shadow: 5px 2px 3px ${({ theme }) => theme.colors.title};
 `;
 
 export const CloudMovieRow = styled.View`

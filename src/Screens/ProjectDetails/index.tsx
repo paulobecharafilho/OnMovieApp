@@ -32,6 +32,8 @@ import {
 } from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getFiles } from "../../services/getFiles";
+import { getProjetctFiles } from "../../services/getProjectFiles";
+import { FilesProps } from "../../utils/Interfaces";
 
 interface ProjectProps extends ProjectDTO {
   newStatusProj: string;
@@ -51,6 +53,10 @@ export function ProjectDetails({navigation}) {
 
   const [descriptionComplete, setDescriptionComplete] = useState(false);
   const [cloudMovieComplete, setCloudMovieComplete] = useState(false);
+  const [scriptCompleted, setScriptCompleted] = useState(false);
+  const [checkoutComplete, setCheckoutComplete] = useState(false);
+
+  const [totalVideoTime, setTotalVideoTime] = useState(0);
 
   function handleGoToProjectCloud() {
     navigation.navigate(`ProjectCloudMovie`, {
@@ -62,7 +68,7 @@ export function ProjectDetails({navigation}) {
   }
 
   function handleBackButton() {
-    navigation.goBack();
+    navigation.navigate(`Home`);
   }
 
   function handleGoToProjectDescriptionDetails(){
@@ -72,10 +78,38 @@ export function ProjectDetails({navigation}) {
     })
   }
 
-  function handleGoToEditDescription() {
-    navigation.navigate(`NewProject`, {
+  function handleGoToCheckoutDetails() {
+    navigation.navigate(`CheckoutDetails`, {
       userId: userId,
-      projectToEdit: project
+      projectReceived: project
+    })
+  }
+
+  function handleGoToPaymentDetails() {
+    navigation.navigate(`PaymentDetails`, {
+      project: project,
+      userId: userId,
+    })
+  }
+
+  function handleGoToScript() {
+    navigation.navigate(`Script`, {
+      userId: userId,
+      project: project,
+      from:'ProjectDetails'
+    })
+  }
+
+  function handleGoToChat() {
+    navigation.navigate(`Chat`, {
+      project: project,
+    })
+  }
+
+  function handleGoToApprove() {
+    navigation.navigate(`Approve`, {
+      userId: userId,
+      project: project,
     })
   }
 
@@ -83,9 +117,29 @@ export function ProjectDetails({navigation}) {
 
   useFocusEffect(
     useCallback(() => {
-
       if (project.nome_proj && project.video_format && project.duracao_proj && project.duracao_compl) {
         setDescriptionComplete(true);
+      }
+
+      if (project.status_proj != 'Rascunho') {
+        setCheckoutComplete(true);
+      }
+
+      async function sumVideoTime(){
+        // console.log(`iniciando soma do tempo`)
+        await getProjetctFiles(userId, project.id_proj)
+        .then((response) => {
+          if (response.result === 'Success') {
+            let totalTime = 0;
+            response.libraryDependenciesFiles.forEach((element: FilesProps) => {
+              totalTime += Number(element.duracao);
+              // console.log(`@ProjectDetails -> Somando tempo ${element.duracao} do arquivo ${element.file_name}`)
+            })
+
+            // console.log(`TotalTime -> ${totalTime}`)
+            setTotalVideoTime((totalTime/60).toFixed(2));
+          }
+        })
       }
 
       async function checkCloudMovieCompleted() {
@@ -103,7 +157,19 @@ export function ProjectDetails({navigation}) {
         }
       }
 
+      async function checkScriptCompleted() {
+        let result = await AsyncStorage.getItem(`@onmovieapp:project=${project.id_proj}:isScriptCompleted`);
+        // console.log(`@ProjectDetails - isSriptCompleted ${result}`);
+        if (result === 'true') {
+          setScriptCompleted(true)
+        } else {
+          setScriptCompleted(false);
+        }
+      }
+
       checkCloudMovieCompleted();
+      checkScriptCompleted();
+      sumVideoTime();
 
     }, [project])
   )
@@ -137,11 +203,11 @@ export function ProjectDetails({navigation}) {
             </ContentColumWrapper>
             <ContentColumWrapper>
               <ContentColumSubtitle>Tempo de vídeo:</ContentColumSubtitle>
-              <ContentColumTitle>124 minutos</ContentColumTitle>
+              <ContentColumTitle>{totalVideoTime} minutos</ContentColumTitle>
             </ContentColumWrapper>
             <ContentColumWrapper>
               <ContentColumSubtitle>Tempo de vídeo:</ContentColumSubtitle>
-              <ContentColumTitle>124 minutos</ContentColumTitle>
+              <ContentColumTitle>125 minutos</ContentColumTitle>
             </ContentColumWrapper>
           </ContentInfoRow>
           <ContentProgress>
@@ -170,22 +236,28 @@ export function ProjectDetails({navigation}) {
             isCompleted={cloudMovieComplete}
           />
           <ProjectDetailsCard 
+            onPress={handleGoToScript}
             title="Estúdio de Criação"
             subtitle='Roteiro e cenas do vídeo'
             icon='movie-outline'
+            isCompleted={scriptCompleted}
           />
           <ProjectDetailsCard 
+            onPress={checkoutComplete ? handleGoToPaymentDetails : handleGoToCheckoutDetails}
             title="Checkout e Pagamento"
             subtitle='Detalhamentos e Recibos'
             icon='credit-card-outline'
+            isCompleted={checkoutComplete}
           />
           <ProjectDetailsCard 
+            onPress={handleGoToChat}
             title="Chat com o Editor"
             subtitle='Converse com o editor do seu projeto'
             icon='message-processing-outline'
-            isDisabled={project.status_proj === 'Rascunho' ? true : false}
+            isDisabled={project.status_proj === 'Rascunho' || project.status_proj === 'Aprovado' || project.status_proj === 'Na Fila' ? true : false}
           />
-          <ProjectDetailsCard 
+          <ProjectDetailsCard
+            onPress={handleGoToApprove}
             title="Aprovação e Download"
             subtitle='Aprove ou solicite correções'
             icon='checkbox-outline'

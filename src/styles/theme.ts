@@ -3,8 +3,8 @@ export default {
       primary: '#6B15D7',
       primary_light: 'rgba(107, 21, 215, 0.5)',
 
-      secondary: '#FFB800',
-      secondary_light: 'rgba(255, 184, 0, 0.3)',
+      secondary: '#ff9700',
+      secondary_light: 'rgba(255, 184, 0, 0.7)',
 
       terciary: '#6F16E0',
 

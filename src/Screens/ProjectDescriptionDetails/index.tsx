@@ -52,12 +52,14 @@ export function ProjectDescriptionDetails({ navigation }) {
         await getProjectAudio(userId, project.id_proj).then((result) => {
           console.log(
             `@ProjectDescriptionDetails:GETAUDIO() -> result -> ${JSON.stringify(
-              result.projectAudioMsg
+              result
             )}`
           );
           if (result.result === "Success") {
             let audioProjectUri = `${libraryBaseUrl}${userId}/${project.id_proj}/audios/${result.projectAudioMsg.file_msg}`;
             setAudioUri(audioProjectUri);
+            setLoading(false);
+          } else {
             setLoading(false);
           }
         });
@@ -66,10 +68,11 @@ export function ProjectDescriptionDetails({ navigation }) {
       getAudio();
 
       let formatsAux: string[] = JSON.parse(project.video_format);
-
-      formatsAux.map((format) => {
-        setProjectFormats((old) => [...old, format]);
-      });
+      if (formatsAux){
+        formatsAux.map((format) => {
+          setProjectFormats((old) => [...old, format]);
+        });
+      }
     }, [project])
   );
 
@@ -147,11 +150,13 @@ export function ProjectDescriptionDetails({ navigation }) {
 
             <InfoTitleWrapperFlex1>
               <InfoTitle>Áudio enviado:</InfoTitle>
-              <AudioPlayer
-                audioMomentStart={"recorded"}
-                audioUriStart={audioUri}
-                setLoading={setLoading}
-              />
+              {audioUri ? 
+                <AudioPlayer
+                  audioMomentStart={"recorded"}
+                  audioUriStart={audioUri}
+                  setLoading={setLoading}
+                />
+              : null}
             </InfoTitleWrapperFlex1>
 
             <InfoTitleWrapperFlex1>
@@ -170,12 +175,12 @@ export function ProjectDescriptionDetails({ navigation }) {
               <ButtonCustom
                 text="Editar"
                 backgroundColor={
-                  project.newStatusProj === "Criação"
+                  project.status_proj === "Rascunho"
                     ? theme.colors.primary
                     : theme.colors.text
                 }
                 highlightColor={theme.colors.primary}
-                disabled={project.newStatusProj === "Criação" ? false : true}
+                disabled={project.status_proj === "Rascunho" ? false : true}
                 onPress={handleGoToEditDescription}
               />
             </ButtonWrapper>

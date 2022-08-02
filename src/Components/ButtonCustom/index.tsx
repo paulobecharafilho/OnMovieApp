@@ -15,7 +15,7 @@ export function ButtonCustom({ text, backgroundColor, highlightColor, disabled, 
   const theme = useTheme();
   return (
     <Container disabled={disabled} style={{backgroundColor: backgroundColor ? backgroundColor : theme.colors.shape}} {...rest} >
-      <Title style={{color: disabled || highlightColor ? theme.colors.shape : theme.colors.primary}} >{text}</Title>
+      <Title adjustsFontSizeToFit style={{color: disabled || highlightColor ? theme.colors.shape : theme.colors.primary}} >{text}</Title>
     </Container>
   );
 }

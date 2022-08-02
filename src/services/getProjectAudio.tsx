@@ -17,9 +17,7 @@ export async function getProjectAudio(userId, projectId) {
       result = 'Success';
       
     } else {
-      const result = {
-        result: 0
-      }
+      result = 'Não foi possível encontrar áudio'
     }
   })
 

@@ -71,6 +71,12 @@ export const Content = styled.KeyboardAvoidingView`
   
 `;
 
+export const ContentPage3 = styled.View`
+  flex: 1;
+  padding: 30px 30px ${getBottomSpace() + 20}px 30px;
+  
+`;
+
 export const InfoContent = styled.View`
   justify-content: space-between;
 `;

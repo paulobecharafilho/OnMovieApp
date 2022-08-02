@@ -71,7 +71,7 @@ export const ContentStatus = styled.Text`
 
 export const ContentTitle = styled.Text`
   font-family: ${({ theme }) => theme.fonts.poppins_medium};
-  font-size: ${RFValue(30)}px;
+  font-size: ${RFValue(20)}px;
   color: ${({ theme }) => theme.colors.shape};
 
   margin-top: 5px;

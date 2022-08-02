@@ -38,6 +38,7 @@ export async function uploadMedia({
 
   for (const element of mediaToUpload) {
     const filename = element.filename;
+    const duracao = element.duration.toFixed(2);
     const fd = new FormData();
     fd.append(
       "Filedata",
@@ -51,7 +52,7 @@ export async function uploadMedia({
     );
 
     const task = await FileSystem.createUploadTask(
-      `${baseUrl}/proc_upload_fr_start.php?userId=${userId}&projectId=${projectId}&token_key=${element.creationTime}&duration=${element.duration}`,
+      `${baseUrl}/proc_upload_fr_start.php?userId=${userId}&projectId=${projectId}&token_key=${element.creationTime}&duration=${duracao}`,
       element.localUri,
       {
         headers: {
@@ -70,9 +71,9 @@ export async function uploadMedia({
         element.progress = progress;
         setProgress(progress);
         setMediaUploading(element);
-        console.log(
-          `DataSent -> ${data.totalByteSent}, DataTotal -> ${data.totalBytesExpectedToSend} -> progress: ${progress}%`
-        );
+        // console.log(
+        //   `DataSent -> ${data.totalByteSent}, DataTotal -> ${data.totalBytesExpectedToSend} -> progress: ${progress}%`
+        // );
       }
     );
 

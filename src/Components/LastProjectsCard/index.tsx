@@ -38,7 +38,7 @@ export function LastProjectsCard({
     <Container {...rest }>
       <ThumbImage source={ThumbExample} />
       <StatusView style={{ backgroundColor: project.highlightColor }}>
-        <StatusTitle>{project.newStatusProj}</StatusTitle>
+        <StatusTitle adjustsFontSizeToFit numberOfLines={1}>{project.newStatusProj}</StatusTitle>
       </StatusView>
       <TitleWrapper>
         <Title adjustsFontSizeToFit >{project.nome_proj}</Title>

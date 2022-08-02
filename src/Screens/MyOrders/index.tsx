@@ -127,7 +127,7 @@ export function MyOrders({ navigation }) {
                 break;
 
               case "em correcao":
-                setProjectsEmCorrecao((oldArray) => [...oldArray, element]);
+                setProjectsEmEdicao((oldArray) => [...oldArray, element]);
                 break;
 
               case "em aprovacao":

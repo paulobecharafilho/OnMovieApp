@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "299313569305",
+    "project_id": "onmovie-d9ad2",
+    "storage_bucket": "onmovie-d9ad2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299313569305:android:cc341212c4f6ed3bb05488",
+        "android_client_info": {
+          "package_name": "com.onmovie.onmovieapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "299313569305-gesaa3i22krargf9btqka99ha5dplokm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxBG5eqe9hdag8NkKhT-MWSgwdIbi7kG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "299313569305-gesaa3i22krargf9btqka99ha5dplokm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

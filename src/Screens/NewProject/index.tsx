@@ -25,6 +25,7 @@ import {
   PageTitle,
   HeaderIcon,
   Content,
+  ContentPage3,
   InfoContent,
   InfoWrapper,
   InfoTitleWrapper,
@@ -86,14 +87,20 @@ export function NewProject({ navigation }) {
 
   // ------------------- Variáveis da página 01 -----------------------------------------------
 
-  const [projectName, setProjectName] = useState(projectToEdit ? projectToEdit.nome_proj : "");
+  const [projectName, setProjectName] = useState(
+    projectToEdit ? projectToEdit.nome_proj : ""
+  );
 
   // ------------------- Fim das variáveis da página 01 -----------------------------------------------
 
   // ------------------- Variáveis da página 02 -----------------------------------------------
-  const [durationCompSelected, setDurationCompSelected] = useState(projectToEdit ? projectToEdit.duracao_compl ? projectToEdit.duracao_compl : "" : "");
-
- 
+  const [durationCompSelected, setDurationCompSelected] = useState(
+    projectToEdit
+      ? projectToEdit.duracao_compl
+        ? projectToEdit.duracao_compl
+        : ""
+      : ""
+  );
 
   const [projectDuration, setProjectDuration] = useState<ValueMap>({
     hours: 0,
@@ -102,7 +109,9 @@ export function NewProject({ navigation }) {
   });
   const [projectDurationFormatted, setProjectDurationFormatted] = useState("");
 
-  const [projectId, setProjectId] = useState(projectToEdit ? projectToEdit.id_proj : null);
+  const [projectId, setProjectId] = useState(
+    projectToEdit ? projectToEdit.id_proj : null
+  );
 
   const durationCompList = ["exatamente", "a partir", "até", "aproximado"];
 
@@ -110,13 +119,27 @@ export function NewProject({ navigation }) {
 
   // ------------------- Variáveis da página 03 -----------------------------------------------
 
-  const [audioMoment, setAudioMoment] = useState(projectToEdit ? "played" : "none");
-  const [projectDescription, setProjectDescription] = useState(projectToEdit ? projectToEdit.descri_proj ? projectToEdit.descri_proj : "": "");
-  const [projectDescriptionLength, setProjectDescriptionLength] = useState(projectToEdit ? projectToEdit.descri_proj ? projectToEdit.descri_proj.length : 0 : 0);
+  const [audioMoment, setAudioMoment] = useState(
+    projectToEdit ? "played" : "none"
+  );
+  const [projectDescription, setProjectDescription] = useState(
+    projectToEdit
+      ? projectToEdit.descri_proj
+        ? projectToEdit.descri_proj
+        : ""
+      : ""
+  );
+  const [projectDescriptionLength, setProjectDescriptionLength] = useState(
+    projectToEdit
+      ? projectToEdit.descri_proj
+        ? projectToEdit.descri_proj.length
+        : 0
+      : 0
+  );
   const [confirmProjectDescriptionEmpty, setConfirmProjectDescriptionEmpty] =
     useState(false);
 
-  const [audioFromProjectToEdit, setAudioFromProjectToEdit] = useState('');
+  const [audioFromProjectToEdit, setAudioFromProjectToEdit] = useState("");
   const [audioUri, setAudioUri] = useState("");
   const [confirmAudioEmpty, setConfirmAudioEmpty] = useState(false);
 
@@ -124,7 +147,13 @@ export function NewProject({ navigation }) {
 
   // ------------------- Variáveis da página 04 -----------------------------------------------
 
-  const [projectLink, setProjectLink] = useState(projectToEdit ? projectToEdit.link_proj ? projectToEdit.link_proj : "" : "");
+  const [projectLink, setProjectLink] = useState(
+    projectToEdit
+      ? projectToEdit.link_proj
+        ? projectToEdit.link_proj
+        : ""
+      : ""
+  );
   const [confirmProjectLinkEmpty, setConfirmProjctLinkEmpty] = useState(false);
 
   // ------------------- Fim das Variáveis da página 04 -----------------------------------------------
@@ -194,36 +223,37 @@ export function NewProject({ navigation }) {
     async function getAudio() {
       await getProjectAudio(userId, projectToEdit.id_proj).then((result) => {
         if (result.result === "Success") {
-          let audioProjectUri = `${libraryBaseUrl}${userId}/${projectToEdit.id_proj}/audios/${result.projectAudioMsg.file_msg}`
-          setAudioUri(audioProjectUri)
+          let audioProjectUri = `${libraryBaseUrl}${userId}/${projectToEdit.id_proj}/audios/${result.projectAudioMsg.file_msg}`;
+          setAudioUri(audioProjectUri);
           setAudioFromProjectToEdit(audioProjectUri);
         }
-      })
+      });
     }
 
     async function getProjectDurationFormatted() {
-      let hours = Number(projectToEdit.duracao_proj.split(':')[0])
-      let minutes = Number(projectToEdit.duracao_proj.split(':')[1])
-      let seconds = Number(projectToEdit.duracao_proj.split(':')[2])
+      let hours = Number(projectToEdit.duracao_proj.split(":")[0]);
+      let minutes = Number(projectToEdit.duracao_proj.split(":")[1]);
+      let seconds = Number(projectToEdit.duracao_proj.split(":")[2]);
 
       setProjectDuration({
         hours: hours,
         minutes: minutes,
-        seconds: seconds
-      })
+        seconds: seconds,
+      });
     }
 
     async function getFormats() {
-     let videoFormats: string[] = JSON.parse(projectToEdit.video_format);
-     setQtdFormats(videoFormats.length);
-     videoFormats.map((formatFromProject) => {
-      let videoFormatAux: FormatProps = formats.find((formatFind) => formatFind.title === formatFromProject);
-      videoFormatAux.isSelected = true;
-      setFormatsSelected(old => [...old, videoFormatAux]);
-      setFormatsSelectedFormatted(old => [...old, videoFormatAux.title])
-     })
+      let videoFormats: string[] = JSON.parse(projectToEdit.video_format);
+      setQtdFormats(videoFormats.length);
+      videoFormats.map((formatFromProject) => {
+        let videoFormatAux: FormatProps = formats.find(
+          (formatFind) => formatFind.title === formatFromProject
+        );
+        videoFormatAux.isSelected = true;
+        setFormatsSelected((old) => [...old, videoFormatAux]);
+        setFormatsSelectedFormatted((old) => [...old, videoFormatAux.title]);
+      });
     }
-
 
     let myInterval = setInterval(() => {
       if (pageForm === 0) {
@@ -451,10 +481,14 @@ export function NewProject({ navigation }) {
         )
       );
 
-      if (audioMoment != "none" && (audioUri != audioFromProjectToEdit)) {
+      if (audioMoment != "none" && audioUri != audioFromProjectToEdit) {
         // Chamda para upload do áudio!
 
-         console.log(`@NewProject:446 -> Iniciando upload do áudio com fd -> ${JSON.stringify(fd)}`)
+        console.log(
+          `@NewProject:446 -> Iniciando upload do áudio com fd -> ${JSON.stringify(
+            fd
+          )}`
+        );
         try {
           const response = await ky.post(
             `https://zrgpro.com/on_app/user/proc_upload_audio.php?userId=${userId}}&projectId=${projectId}`,
@@ -463,11 +497,11 @@ export function NewProject({ navigation }) {
             }
           );
           response.json().then((responseJson) => {
-            console.log(`@NewProject:456 -> responseJson.response -> ${responseJson.result[0].response}`)
+            // console.log(`@NewProject:456 -> responseJson.response -> ${responseJson.result[0].response}`)
 
-            console.log(
-              `reponseJsonAudio -> ${responseJson.result[0].finalAudio}`
-            );
+            // console.log(
+            //   `reponseJsonAudio -> ${responseJson.result[0].finalAudio}`
+            // );
             // setAudioUri()
 
             // Chamada para atualização no DB da descrição e do link.
@@ -495,7 +529,11 @@ export function NewProject({ navigation }) {
                     console.log(`Projeto Adicionado com Sucesso!`);
                     setLoading(false);
                     setPageForm(pageForm + 1);
-                    navigation.navigate(`Home`);
+                    navigation.navigate(`ProjectCloudMovie`, {
+                      userId: userId,
+                      projectId: projectId,
+                      from: "start",
+                    });
                   } else {
                     Alert.alert(`${response.data.result[0].response}`);
                   }
@@ -536,9 +574,8 @@ export function NewProject({ navigation }) {
                 navigation.navigate(`ProjectCloudMovie`, {
                   userId: userId,
                   projectId: projectId,
-                  from: 'start'
+                  from: "start",
                 });
-                
               } else {
                 Alert.alert(`${response.data.result[0].response}`);
               }
@@ -568,7 +605,7 @@ export function NewProject({ navigation }) {
 
   return (
     <Container>
-       <StatusBar
+      <StatusBar
         barStyle="dark-content"
         backgroundColor="transparent"
         translucent
@@ -582,7 +619,10 @@ export function NewProject({ navigation }) {
           <FormContainer>
             <Header>
               <HeaderRow>
-                <BackButton onPress={handleBackButton} color={theme.colors.primary}/>
+                <BackButton
+                  onPress={handleBackButton}
+                  color={theme.colors.primary}
+                />
                 <PageTitle>Novo Projeto</PageTitle>
                 <HeaderIcon name="trash-outline" />
               </HeaderRow>
@@ -626,15 +666,17 @@ export function NewProject({ navigation }) {
                         value={projectName}
                         placeholder="Digite aqui o nome do seu projeto"
                         placeholderTextColor={theme.colors.primary_light}
+                        returnKeyType='done'
+                        onSubmitEditing={handleContinueToPage2}
                       />
                     </NameContent>
 
-                    <ButtonCustom
+                    {/* <ButtonCustom
                      text={"Continuar"}
                      backgroundColor={theme.colors.primary}
                      highlightColor={theme.colors.shape}
                      onPress={pageForm === 1 ? handleContinueToPage2 : null}
-                    />
+                    /> */}
                   </FormContent>
                 </Content>
               ) // Página 02
@@ -643,7 +685,7 @@ export function NewProject({ navigation }) {
                 <ActivityIndicator />
               ) : (
                 <Content
-                  behavior={Platform.OS === "ios" ? "padding" : "height"}
+                  behavior={Platform.OS === "ios" ? "padding" : "padding"}
                 >
                   <InfoContent>
                     <InfoWrapper>
@@ -697,7 +739,11 @@ export function NewProject({ navigation }) {
                                 durationCompSelected === item ? true : false
                               }
                             >
-                              <DurationText isSelected={ durationCompSelected === item ? true : false }>
+                              <DurationText
+                                isSelected={
+                                  durationCompSelected === item ? true : false
+                                }
+                              >
                                 {item}
                               </DurationText>
                             </DurationView>
@@ -706,12 +752,12 @@ export function NewProject({ navigation }) {
                       />
                     </TimeContent>
 
-                    <ButtonCustom
+                    {/* <ButtonCustom
                       text={"Continuar"}
                       backgroundColor={theme.colors.primary}
                       highlightColor={theme.colors.shape}
                       onPress={pageForm === 2 ? handleContinueToPage3 : null}
-                    />
+                    /> */}
                   </FormContent>
                 </Content>
               )
@@ -720,7 +766,7 @@ export function NewProject({ navigation }) {
               loading || loadingAfterButton ? (
                 <ActivityIndicator />
               ) : (
-                <Content>
+                <ContentPage3>
                   <InfoContent>
                     <InfoWrapper>
                       <InfoTitleWrapper>
@@ -764,17 +810,21 @@ export function NewProject({ navigation }) {
                       audioUriStart={audioMoment != "none" ? audioUri : null}
                     />
 
-                    <ButtonCustom
+                    {/* <ButtonCustom
                       text={"Continuar"}
-                      backgroundColor={theme.colors.primary}
+                      backgroundColor={audioMoment != 'recording' ? theme.colors.primary : theme.colors.inactive}
                       highlightColor={theme.colors.shape}
                       onPress={pageForm === 3 ? handleContinueToPage4 : null}
-                    />
+                      disabled={audioMoment === 'recording'}
+                    /> */}
                   </FormContent>
-                </Content>
+                </ContentPage3>
               )
             ) : pageForm === 4 ? (
-              <Content>
+              <Content
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}   
+              >
                 <InfoContent>
                   <InfoWrapper>
                     <InfoTitleWrapper>
@@ -811,89 +861,89 @@ export function NewProject({ navigation }) {
                     style={{
                       color: theme.colors.text,
                       textAlign: "center",
-                      marginBottom: 70,
+                      marginBottom: '10%',
                     }}
                   >
                     Obs: este link não é obrigatório, mas é importante para o
                     editor entender o perfil de vídeo que você deseja.
                   </Subtitle>
-                  <ButtonCustom
+                  {/* <ButtonCustom
                     text={"Continuar"}
                     backgroundColor={theme.colors.primary}
                     highlightColor={theme.colors.shape}
                     onPress={pageForm === 4 ? handleContinueToPage5 : null}
-                  />
+                  /> */}
                 </FormContent>
               </Content>
             ) : pageForm === 5 ? (
               loading || loadingAfterButton ? (
                 <ActivityIndicator />
               ) : (
-              <Content>
-                <InfoContent>
-                  <InfoWrapper>
-                    <InfoTitleWrapper>
-                      <InfoTitle>Informações</InfoTitle>
-                      <InfoSubtitle>
-                        Descreva e configure seu projeto
-                      </InfoSubtitle>
-                    </InfoTitleWrapper>
-                    <InfoPageNumberWrapper>
-                      <InfoPage style={style.InfoPage01}>{pageForm}</InfoPage>
-                      <InfoPage style={style.InfoPage02}>/</InfoPage>
-                      <InfoPage style={style.InfoPage03}>5</InfoPage>
-                    </InfoPageNumberWrapper>
-                  </InfoWrapper>
-                  <ProgressBar progress="100%" widthCustom="100%" />
-                </InfoContent>
+                <Content>
+                  <InfoContent>
+                    <InfoWrapper>
+                      <InfoTitleWrapper>
+                        <InfoTitle>Informações</InfoTitle>
+                        <InfoSubtitle>
+                          Descreva e configure seu projeto
+                        </InfoSubtitle>
+                      </InfoTitleWrapper>
+                      <InfoPageNumberWrapper>
+                        <InfoPage style={style.InfoPage01}>{pageForm}</InfoPage>
+                        <InfoPage style={style.InfoPage02}>/</InfoPage>
+                        <InfoPage style={style.InfoPage03}>5</InfoPage>
+                      </InfoPageNumberWrapper>
+                    </InfoWrapper>
+                    <ProgressBar progress="100%" widthCustom="100%" />
+                  </InfoContent>
 
-                <FormContent>
-                  <FormatsContainer>
-                    <FormatsTitleWrapper>
-                      <Subtitle>agora escolha o(s)</Subtitle>
-                      <Title>Formatos do seu vídeo.</Title>
-                      <Subtitle
-                        style={{
-                          color: theme.colors.text,
-                          textAlign: "center",
-                          marginBottom: 60,
-                          marginTop: 30,
-                          fontSize: RFValue(10),
-                        }}
-                      >
-                        obs: O valor da edição inclui 01 formato. Para formatos
-                        adicionais, será cobrado um valor de R$ 20,00 por
-                        formato extra.
-                      </Subtitle>
-                    </FormatsTitleWrapper>
+                  <FormContent>
+                    <FormatsContainer>
+                      <FormatsTitleWrapper>
+                        <Subtitle>agora escolha o(s)</Subtitle>
+                        <Title>Formatos do seu vídeo.</Title>
+                        <Subtitle
+                          style={{
+                            color: theme.colors.text,
+                            textAlign: "center",
+                            marginBottom: 60,
+                            marginTop: 30,
+                            fontSize: RFValue(10),
+                          }}
+                        >
+                          obs: O valor da edição inclui 01 formato. Para
+                          formatos adicionais, será cobrado um valor de R$ 20,00
+                          por formato extra.
+                        </Subtitle>
+                      </FormatsTitleWrapper>
 
-                    <FormatsFlatListContainer>
-                      <ScrollView
-                        contentContainerStyle={{
-                          flexDirection: "row",
-                          flexWrap: "wrap",
-                          justifyContent: "center",
-                        }}
-                      >
-                        {formats.map((item, index) => (
-                          <FormatButton
-                            key={item.key}
-                            format={item}
-                            backgroundColor={
-                              item.isSelected
-                                ? theme.colors.primary
-                                : "transparent"
-                            }
-                            textColor={
-                              item.isSelected
-                                ? theme.colors.shape
-                                : theme.colors.primary
-                            }
-                            onPress={() => handlePressFormat(item, index)}
-                          />
-                        ))}
-                      </ScrollView>
-                      {/* <FlatList 
+                      <FormatsFlatListContainer>
+                        <ScrollView
+                          contentContainerStyle={{
+                            flexDirection: "row",
+                            flexWrap: "wrap",
+                            justifyContent: "center",
+                          }}
+                        >
+                          {formats.map((item, index) => (
+                            <FormatButton
+                              key={item.key}
+                              format={item}
+                              backgroundColor={
+                                item.isSelected
+                                  ? theme.colors.primary
+                                  : "transparent"
+                              }
+                              textColor={
+                                item.isSelected
+                                  ? theme.colors.shape
+                                  : theme.colors.primary
+                              }
+                              onPress={() => handlePressFormat(item, index)}
+                            />
+                          ))}
+                        </ScrollView>
+                        {/* <FlatList 
                         data={formats}
                         keyExtractor={(item) => item.key}
                         renderItem={({item, index}) => (
@@ -906,26 +956,40 @@ export function NewProject({ navigation }) {
                         )}
                         contentContainerStyle={{flexDirection : "row", flexWrap : "wrap", justifyContent:"center"}}
                       /> */}
-                    </FormatsFlatListContainer>
+                      </FormatsFlatListContainer>
 
-                    <FormatsValueWrapper>
-                      <Subtitle>Valor adicional de formatos:</Subtitle>
-                      <Title style={{ color: theme.colors.secondary }}>
-                        R$ {qtdFormats > 0 ? (qtdFormats - 1) * 20 : 0},00
-                      </Title>
-                    </FormatsValueWrapper>
-                  </FormatsContainer>
+                      <FormatsValueWrapper>
+                        <Subtitle>Valor adicional de formatos:</Subtitle>
+                        <Title style={{ color: theme.colors.secondary }}>
+                          R$ {qtdFormats > 0 ? (qtdFormats - 1) * 20 : 0},00
+                        </Title>
+                      </FormatsValueWrapper>
+                    </FormatsContainer>
 
-                  <ButtonCustom
+                    {/* <ButtonCustom
                     text={"Continuar"}
                     backgroundColor={theme.colors.primary}
                     highlightColor={theme.colors.shape}
                     onPress={pageForm === 5 ? goToUploadFiles : null}
-                  />
-                </FormContent>
-              </Content>
+                  /> */}
+                  </FormContent>
+                </Content>
               )
             ) : null}
+
+            <ButtonCustom
+              text={"Continuar"}
+              backgroundColor={theme.colors.primary}
+              highlightColor={theme.colors.shape}
+              style={{alignSelf: "center", backgroundColor: theme.colors.primary}}
+              onPress={
+                pageForm === 1 ? handleContinueToPage2 : 
+                pageForm === 2 ? handleContinueToPage3 :
+                pageForm === 3 ? handleContinueToPage4 :
+                pageForm === 4 ? handleContinueToPage5 :
+                pageForm === 5 ? goToUploadFiles : null
+              }
+            />
           </FormContainer>
         </TouchableWithoutFeedback>
       )}

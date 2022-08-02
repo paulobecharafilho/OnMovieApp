@@ -17,6 +17,8 @@ export const Container = styled(TouchableOpacity)<ButtonProps>`
   border-radius: 45px;
 
   padding: 15px 60px;
+  box-shadow: 5px 3px 3px ${({ theme }) => theme.colors.title};
+
 `;
 
 export const Title = styled.Text`

@@ -17,10 +17,13 @@
       }
     },
     "plugins": [
-      "expo-document-picker"
+      "expo-document-picker",
+      "expo-media-library",
+      "expo-notifications"
     ],
     "android": {
-      "package": "com.onmovie.onmovieapp"
+      "package": "com.onmovie.onmovieapp",
+      "googleServicesFile": "./google-services.json"
     }
   }
 }

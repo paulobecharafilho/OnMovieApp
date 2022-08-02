@@ -18,8 +18,10 @@ export interface UserDTO {
   avatar: string,
   id_grupo: number,
   status: string,
+  stripe_id: string;
   assinante: string,
   saldo: number,
+  saldoFormatted: string,
   credito: number,
   debito: number,
   blocked: number,

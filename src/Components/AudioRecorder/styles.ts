@@ -7,8 +7,8 @@ import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 export const AudioContainer = styled.View`
   width: 100%;
-  height: 110px;
-  padding: 18px 30px;
+  height: 20%;
+  padding: 15px 30px;
 
   border: solid 1px;
   border-color: ${({ theme }) => theme.colors.primary_light};
