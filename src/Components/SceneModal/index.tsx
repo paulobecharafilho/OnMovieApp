@@ -170,7 +170,16 @@ export function SceneModal({
               <Subtitle style={{ color: theme.colors.attention }}>
                 {descriptionAux.length}/600 caracteres
               </Subtitle>
-            </DescriptionContent>
+
+                <TouchableOpacity
+                  onPress={() => handleSaveSceneDescription(descriptionAux)}
+                  style={[styles(theme).saveButton, {backgroundColor: projectStatus === 'Rascunho' ? theme.colors.secondary : theme.colors.text}]}
+                  disabled={projectStatus != 'Rascunho'}
+                >
+                  <Text style={styles(theme).textButton}>Salvar Descrição</Text>
+                </TouchableOpacity>
+              </DescriptionContent>
+              
             <FileContent>
               {fileChosen.file_id ? (
                 <View style={styles(theme).fileContentView}>
@@ -225,13 +234,6 @@ export function SceneModal({
               )}
             </FileContent>
           </Content>
-          <TouchableOpacity
-            onPress={() => handleSaveSceneDescription(descriptionAux)}
-            style={[styles(theme).saveButton, {backgroundColor: projectStatus === 'Rascunho' ? theme.colors.secondary : theme.colors.text}]}
-            disabled={projectStatus != 'Rascunho'}
-          >
-            <Text style={styles(theme).textButton}>Salvar cena</Text>
-          </TouchableOpacity>
         </Container>
       </TouchableWithoutFeedback>
     </Modal>
@@ -348,6 +350,7 @@ const styles = (theme: any) =>
       alignItems: "center",
     },
     saveButton: {
+      marginTop: 30,
       width: "70%",
       padding: 10,
       alignSelf: "center",

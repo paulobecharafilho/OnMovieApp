@@ -96,3 +96,18 @@ export interface OrderProps {
   val_extra_format: number;
   qtd_format_extra: number;
 }
+
+export interface NotificationsProps {
+  id_notifica: number;
+  id_origem: number;
+  id_proj: number;
+  origem: string;
+  avatar: string;
+  id_destino: number;
+  nome_origem: string;
+  nome_destino: string;
+  descricao: string;
+  prioridade: string;
+  status: string;
+  data: string;
+}

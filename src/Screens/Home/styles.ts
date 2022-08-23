@@ -84,7 +84,7 @@ export const UserProfileWrapper = styled.View`
 export const UserPhotoBackground = styled.View`
   width: 60px;
   height: 60px;
-  border-radius: 25px;
+  border-radius: 30px;
   background-color: ${({ theme }) => theme.colors.text_highlight};
 
   align-items: center;
@@ -92,8 +92,8 @@ export const UserPhotoBackground = styled.View`
 `;
 
 export const UserPhoto = styled.Image`
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   align-self: center;
 `;
 

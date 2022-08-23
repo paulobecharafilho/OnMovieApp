@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
-import { Dimensions, TouchableOpacity } from 'react-native';
+import { Dimensions, Platform, TouchableOpacity } from 'react-native';
 
 export const Container = styled.View`
   flex: 1;
@@ -37,7 +37,7 @@ export const HeaderIcon = styled(MaterialCommunityIcons)`
 
 export const Content = styled.View`
   flex: 1;
-  padding: 30px 30px ${getBottomSpace()}px 30px;
+  padding: 30px 30px ${Platform.OS==='ios' ? getBottomSpace() : 30}px 30px;
 
   background-color: ${({ theme }) => theme.colors.background_secondary};
 

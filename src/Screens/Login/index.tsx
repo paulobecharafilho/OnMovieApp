@@ -35,6 +35,7 @@ import {
 } from "./styles";
 import { InputForm } from "../../Components/InputForm";
 import { useForm } from "react-hook-form";
+import { useTheme } from "styled-components";
 
 interface FormData {
   email: string;
@@ -49,6 +50,7 @@ const schema = Yup.object().shape({
 });
 
 export function Login({ navigation }) {
+  const theme = useTheme();
   const NewLogoMargin = (Dimensions.get("window").width - 73) / 2;
 
   const [passwordSecurity, setPasswordSecurity] = useState(true);
@@ -60,6 +62,7 @@ export function Login({ navigation }) {
   } = useForm({ resolver: yupResolver(schema) });
 
   async function setUserIdStorage(value) {
+    console.log(`@Login -> getUserId -> ${value}`)
     try {
       await AsyncStorage.setItem('@onmovieapp:userId', value)
     } catch(e) {
@@ -151,6 +154,7 @@ export function Login({ navigation }) {
               autoCorrect={false}
               secureTextEntry={false}
               returnKeyType="next"
+              customTextColor={theme.colors.shape}
             />
             <InputForm
               name="password"
@@ -162,6 +166,8 @@ export function Login({ navigation }) {
               visibleButton={true}
               onVisibleButtonPress={() => handleChangleVisiblePassword()}
               onSubmitEditing={handleSubmit(handlePressLoginButton)}
+              customTextColor={theme.colors.shape}
+
             />
           </InputWrapper>
 

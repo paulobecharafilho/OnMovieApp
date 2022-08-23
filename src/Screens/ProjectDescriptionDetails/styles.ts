@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { ViewProps } from 'react-native';
+import { Platform, ViewProps } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 
@@ -93,7 +93,7 @@ export const InfoContainer = styled.View`
   padding-top: 20px;
   padding-left: 30px;
   padding-right: 30px;
-  padding-bottom: ${getBottomSpace()}px;
+  padding-bottom: ${Platform.OS==='ios' ? getBottomSpace() : 30}px;
 `;
 
 export const InfoTitleWrapperFlex1 = styled.View`

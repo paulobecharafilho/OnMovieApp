@@ -10,10 +10,12 @@ interface Props extends TextInputProps {
   text: string;
   visibleButton?: boolean;
   onVisibleButtonPress?: () => void;
+  customTextColor?: string;
 
   control: Control;
   name: string;
   error?: string;
+
 }
 
 export function InputForm({
@@ -23,6 +25,7 @@ export function InputForm({
   icon,
   text,
   visibleButton,
+  customTextColor,
   onVisibleButtonPress,
   ...rest
 }: Props) {
@@ -39,6 +42,7 @@ export function InputForm({
             onVisibleButtonPress={onVisibleButtonPress}
             onChangeText={onChange}
             value={value}
+            customTextColor={customTextColor ? customTextColor : null}
           />
         )}
         name={name}

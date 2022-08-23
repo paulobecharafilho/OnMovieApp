@@ -2,6 +2,7 @@ import React from "react";
 import * as FileSystem from "expo-file-system";
 import { baseUrl } from "../services/api";
 import { AssetInfo } from "expo-media-library";
+import { Platform } from "react-native";
 
 interface MediaProps extends AssetInfo {
   progress?: number;
@@ -53,7 +54,7 @@ export async function uploadMedia({
 
     const task = await FileSystem.createUploadTask(
       `${baseUrl}/proc_upload_fr_start.php?userId=${userId}&projectId=${projectId}&token_key=${element.creationTime}&duration=${duracao}`,
-      element.localUri,
+      Platform.OS === 'ios' ? element.localUri : element.uri,
       {
         headers: {
           "Content-Type": "multipart/form-data",

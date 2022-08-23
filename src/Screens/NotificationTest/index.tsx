@@ -5,10 +5,7 @@ import * as TaskManager from 'expo-task-manager';
 import React from 'react';
 import { Alert, Text, Platform, ScrollView, View } from 'react-native';
 
-import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
-import HeadingText from '../components/HeadingText';
-import ListButton from '../components/ListButton';
-import MonoText from '../components/MonoText';
+
 
 const BACKGROUND_NOTIFICATION_TASK = 'BACKGROUND-NOTIFICATION-TASK';
 const BACKGROUND_TASK_SUCCESSFUL = 'Background task successfully ran!';

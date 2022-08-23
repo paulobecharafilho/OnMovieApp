@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
-import { FlatList, TouchableOpacity } from 'react-native';
+import { FlatList, Platform, TouchableOpacity } from 'react-native';
 import { FilesProps } from '../../utils/Interfaces';
 
 export const Container = styled.View`
@@ -26,7 +26,7 @@ export const TitleBegin = styled.Text`
 
 export const FormContainer = styled.View`
   flex: 1;
-  padding-bottom: ${getBottomSpace()}px;
+  padding-bottom: ${Platform.OS === 'ios' ? getBottomSpace() : 30}px;
 `;
 
 export const Header = styled.View`

@@ -168,7 +168,7 @@ export function Register({ navigation }) {
             {emailIsValid ? (
               <ButtonCustom onPress={handlePressContinue} text={"Avançar"} />
             ) : (
-              <ButtonCustom text={"Avançar"} disabled={true} />
+              <ButtonCustom text={"Avançar"} disabled={true} highlightColor={theme.colors.primary_light}/>
             )}
           </Content>
 
@@ -193,7 +193,7 @@ export function Register({ navigation }) {
             {name ? (
               <ButtonCustom onPress={handlePressContinue} text={"Avançar"} />
             ) : (
-              <ButtonCustom text={"Avançar"} disabled={true} />
+              <ButtonCustom text={"Avançar"} disabled={true} highlightColor={theme.colors.primary_light}/>
             )}
           </Content>
 
@@ -221,7 +221,7 @@ export function Register({ navigation }) {
             {phoneIsValid ? (
               <ButtonCustom onPress={handlePressContinue} text={"Avançar"} />
             ) : (
-              <ButtonCustom text={"Avançar"} disabled={true} />
+              <ButtonCustom text={"Avançar"} disabled={true} highlightColor={theme.colors.primary_light}/>
             )}
           </Content>
 
@@ -249,7 +249,7 @@ export function Register({ navigation }) {
             {passwordIsValid ? (
               <ButtonCustom onPress={handleFinishRegister} text={"Criar minha conta"} />
             ) : (
-              <ButtonCustom text={"Criar minha conta"} disabled={true} />
+              <ButtonCustom text={"Criar minha conta"} disabled={true} highlightColor={theme.colors.primary_light}/>
             )}
           </Content>
         ) : null}

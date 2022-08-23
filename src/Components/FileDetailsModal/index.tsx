@@ -22,6 +22,10 @@ import api, { libraryBaseUrl } from "../../services/api";
 import { useFocusEffect } from "@react-navigation/native";
 import { getFiles } from "../../services/getFiles";
 
+const DocumentImage = require("../../assets/png/Documento.png");
+
+
+
 interface FileAttatchedProps extends FilesProps {
   isAttachedToProject?: boolean;
 }
@@ -56,6 +60,7 @@ export function FileDetailsModal({
 
   useFocusEffect(
     useCallback(() => {
+      console.log(`@FileDetailsModal -> projectStatus -> ${projectStatus}`)
       async function getFileDescription() {
         await getFiles(userId).then((result) => {
           if (result.result === "Success") {
@@ -124,7 +129,13 @@ export function FileDetailsModal({
             style={styles(theme).image}
             source={{ uri: `${libraryBaseUrl}/${userId}/${file.file_name}` }}
           />
-        ) : null}
+          ) 
+          :
+            <Image
+            style={styles(theme).image}
+            source={DocumentImage}
+            />
+          }
 
         <TextInput
           style={styles(theme).textInput}

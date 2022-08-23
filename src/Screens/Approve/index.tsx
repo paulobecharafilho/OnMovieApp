@@ -48,6 +48,9 @@ export function Approve({ navigation }) {
 
   const params = route.params as Params;
 
+  const [permissionStatus, requestPermission] = MediaLibrary.usePermissions();
+
+
   const video = React.useRef(null);
   const [status, setStatus] = React.useState<AVPlaybackStatusToSet>({});
 
@@ -65,6 +68,8 @@ export function Approve({ navigation }) {
 
   const [correctDescription, setCorrectDescription] = useState('');
   const [erroEdicao, setErroEdicao] = useState(false);
+
+  const [isVideoApproved, setIsVideoApproved] = useState(false);
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -153,7 +158,7 @@ export function Approve({ navigation }) {
           });
       }
       refreshProject();
-    }, [refreshing])
+    }, [refreshing === true])
   );
 
   async function handleApproveProject() {
@@ -163,7 +168,11 @@ export function Approve({ navigation }) {
         `proc_aprova_servico.php?userId=${params.userId}&idProj=${projectRefreshed.id_proj}&fb=${stars}`
       )
       .then((response) => {
-        console.log(`@Approve -> ${JSON.stringify(response.data)}`);
+        if (response.data.response === 'Success') {
+          setApproveModalIsVisible(false);
+          setIsVideoApproved(true);
+          onRefresh();
+        }
       })
       .catch((err) => {
         console.log(`@Approve Catch -> ${err}`);
@@ -180,34 +189,39 @@ export function Approve({ navigation }) {
   }
 
   async function downlaodVideo() {
-    setDownloadLoading(true);
-    const uri = `${finalFileBaseUrl}/${params.userId}/${projectRefreshed.id_proj}/${projectRefreshed.arquivo_final}`;
-    let fileUri =
-      FileSystem.documentDirectory + `${projectRefreshed.arquivo_final}`;
-    // FileSystem.downloadAsync(uri, fileUri, )
-    // .then(({ uri }) => {
-    //     saveFile(uri);
-    //   })
-    //   .catch(error => {
-    //     console.error(error);
-    //   })
+    console.log(`permissionStatus -> ${permissionStatus.granted}`)
 
-    await FileSystem.createDownloadResumable(uri, fileUri, {}, (data) => {
-      let progressAux =
-        (data.totalBytesWritten / data.totalBytesExpectedToWrite * 100).toFixed(2);
-      setDownloadProgress(progressAux);
-    })
-      .downloadAsync()
-      .then(({ uri }) => {
-        saveFile(uri);
+    if (!permissionStatus) {
+      requestPermission
+    } else {
+      setDownloadLoading(true);
+      const uri = `${finalFileBaseUrl}/${params.userId}/${projectRefreshed.id_proj}/${projectRefreshed.arquivo_final}`;
+      let fileUri =
+        FileSystem.documentDirectory + `${projectRefreshed.arquivo_final}`;
+      // FileSystem.downloadAsync(uri, fileUri, )
+      // .then(({ uri }) => {
+      //     saveFile(uri);
+      //   })
+      //   .catch(error => {
+      //     console.error(error);
+      //   })
+  
+      await FileSystem.createDownloadResumable(uri, fileUri, {}, (data) => {
+        let progressAux =
+          (data.totalBytesWritten / data.totalBytesExpectedToWrite * 100).toFixed(2);
+        setDownloadProgress(progressAux);
       })
-      .catch((error) => {
-        console.error(error);
-      });
+        .downloadAsync()
+        .then(({ uri }) => {
+          saveFile(uri);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   }
 
   async function saveFile(fileUri: string) {
-    console.log(`Iniciando saveFile com fileUri -> ${fileUri}`);
 
     if (MediaLibrary.PermissionStatus.GRANTED) {
       const asset = await MediaLibrary.createAssetAsync(fileUri);
@@ -229,7 +243,6 @@ export function Approve({ navigation }) {
   }
 
   async function handleCorrectProject() {
-    console.log(`iniciando correção com descrição: ${correctDescription}`)
     api.post(`proc_corr_serv.php?userId=${params.userId}`, {
       idProj: projectRefreshed.id_proj,
       descri: correctDescription,

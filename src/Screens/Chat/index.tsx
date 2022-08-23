@@ -34,6 +34,8 @@ import {
 import { getBottomSpace } from "react-native-iphone-x-helper";
 import api from "../../services/api";
 import { ChatCard } from "../../Components/ChatCard";
+import { useHeaderHeight } from '@react-navigation/elements';
+
 
 interface Params {
   project: ProjectProps;
@@ -42,6 +44,7 @@ interface Params {
 export function Chat({ navigation }) {
   const theme = useTheme();
   const route = useRoute();
+  const headerHeight = useHeaderHeight();
 
   const params = route.params as Params;
 
@@ -66,19 +69,23 @@ export function Chat({ navigation }) {
     });
   }, []);
 
-  async function getChatFromProject2() {
-    await getChat(params.project.id_proj).then((response) => {
-      if (response.result === "Success") {
-        if (response.chats) {
-          if (response.chats.length > 0) {
-            setMessages(response.chats);
-          }
-        }
-      }
-    });
-    
-    setLoading(false);
-  }
+  
+  // useEffect(() => {
+  //   const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+  //     setKeyboardStatus("Keyboard Shown");
+  //     console.log(`KeyboardShown`)
+  //   });
+  //   const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+  //     setKeyboardStatus("Keyboard Hidden");
+  //   });
+
+  //   return () => {
+  //     showSubscription.remove();
+  //     hideSubscription.remove();
+  //   };
+  // }, []);
+
+
 
   useFocusEffect(
     useCallback(() => {
@@ -108,6 +115,21 @@ export function Chat({ navigation }) {
     // return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
   }, []);
 
+
+  async function getChatFromProject2() {
+    await getChat(params.project.id_proj).then((response) => {
+      if (response.result === "Success") {
+        if (response.chats) {
+          if (response.chats.length > 0) {
+            setMessages(response.chats);
+          }
+        }
+      }
+    });
+    
+    setLoading(false);
+  }
+
   async function onSendMessage() {
     await api
       .post(`api_chat/sendmessage.php`, {
@@ -128,6 +150,9 @@ export function Chat({ navigation }) {
       .catch((err) => Alert.alert(`Erro -> ${err}`));
   }
 
+
+  
+
   return (
     <Container>
       <Header>
@@ -145,7 +170,12 @@ export function Chat({ navigation }) {
 
       {!loading ? (
         // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <Content behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{flex: 1, justifyContent: 'space-between', marginBottom: getBottomSpace() + 10}}
+          keyboardVerticalOffset={headerHeight}
+
+        >
           <ContentChat>
             {messages.length > 0 ? (
               <FlatList
@@ -164,7 +194,7 @@ export function Chat({ navigation }) {
             )}
           </ContentChat>
 
-          <View style={[styles.contentInput, { bottom: keyboardHeight }]}>
+          <View style={[styles.contentInput]}>
             <TextInput
               value={messageToSend}
               placeholder="Digite aqui sua mensagem"
@@ -188,7 +218,7 @@ export function Chat({ navigation }) {
               />
             </TouchableOpacity>
           </View>
-        </Content>
+        </KeyboardAvoidingView>
       ) : (
         // </TouchableWithoutFeedback>
         <Text>Nenhuma Mensagem</Text>

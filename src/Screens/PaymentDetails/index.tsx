@@ -83,32 +83,47 @@ export function PaymentDetails({navigation}) {
               subtitle= {params.project.nome_proj}
               price={orderInfo.order_price}
             />
-            {orderInfo.pay_using_credit ? 
+            <CheckoutDetailsCard
+              title="Pagamento com Créditos"
+              subtitle={`${orderInfo.qtd_format_extra} formatos extras`}
+              price={orderInfo.pay_using_credit}
+            />        
+            <CheckoutDetailsCard
+              title="Pagamento com Cartão"
+              subtitle={`${orderInfo.qtd_format_extra} formatos extras`}
+              price={orderInfo.paid_amount ? orderInfo.paid_amount : '0.00'}
+            />
+            {orderInfo.pay_method === 'franquia' ? 
               <CheckoutDetailsCard
-                title="Pagamento com Créditos"
-                subtitle={`${orderInfo.qtd_format_extra} formatos extras`}
-                price={orderInfo.pay_using_credit}
-              />
-            :null}
-            {orderInfo.paid_amount ? 
-              <CheckoutDetailsCard
-                title="Pagamento com Cartão"
-                subtitle={`${orderInfo.qtd_format_extra} formatos extras`}
+                style={{backgroundColor: theme.colors.secondary}}
+                title="Realizado com Assinatura"
+                subtitle={`Esta projeto foi realizado com assinatura`}
                 price={orderInfo.paid_amount}
               />
-            :null}
+            : null}
+        
            
           </CardsView>
         }
 
+        {orderInfo.pay_method === 'franquia' ? 
+        
         <CardsView>
-          <TitleWrapper>
-            <Title>Pagamento Utilizando Cartão:</Title>
-          </TitleWrapper>
+            <TitleWrapper>
+              <Title>Este projeto foi realizado por assinatura.</Title>
+            </TitleWrapper>
 
-          <Title>Cartão Utilizado:</Title>
-          <Title>{orderInfo.four_digits}</Title>
-        </CardsView>
+          </CardsView>
+        :
+          <CardsView>
+            <TitleWrapper>
+              <Title>Pagamento Utilizando Cartão:</Title>
+            </TitleWrapper>
+
+            <Title>Cartão Utilizado:</Title>
+            <Title>{orderInfo.four_digits}</Title>
+          </CardsView>
+        }
 
       </Content>
 

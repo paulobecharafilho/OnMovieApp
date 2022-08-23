@@ -60,7 +60,7 @@ export function CheckoutDetailsCard({ title, subtitle, price, customColor, hasTo
               ios_backgroundColor="#3e3e3e"
               onValueChange={handleChangeToggle}
               value={isToggleOn}
-              style={{ transform: [{ scaleX: .7 }, { scaleY: .7 }] }}
+              style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
               
             /> 
           : null}

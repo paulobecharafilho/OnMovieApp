@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 
 import { InitialStackRoutes } from "./stack.routes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ActivityIndicator, Text } from "react-native";
+import { ActivityIndicator, Platform, Text } from "react-native";
 import { useTheme } from "styled-components";
 
 export function Routes() {
@@ -13,7 +13,10 @@ export function Routes() {
   const [userId, setUserId] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  
   useEffect(() => {
+    console.log(`Iniciando Routes`)
+    let userIdAux = 0;
     async function getUserFromStorage() {
       await AsyncStorage.getItem("@onmovieapp:userId").then((result) => {
         if (result === null) {
@@ -23,6 +26,7 @@ export function Routes() {
         } else {
           setInitialPage("Home");
           setUserId(Number(result));
+          userIdAux = Number(result);
           setLoading(false)
         }
       });
@@ -33,6 +37,7 @@ export function Routes() {
     } catch (error) {
       console.log(`erro -> ${error}`);
     }
+
   }, []);
   return (
     <NavigationContainer>
@@ -47,3 +52,4 @@ export function Routes() {
     </NavigationContainer>
   );
 }
+

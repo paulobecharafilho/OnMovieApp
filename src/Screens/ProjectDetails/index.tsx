@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { Alert, BackHandler, StyleSheet, TouchableOpacity } from "react-native";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { useTheme } from "styled-components";
 import { ProjectDTO } from "../../dtos/ProjectDTO";
@@ -7,6 +7,7 @@ import { ProjectDTO } from "../../dtos/ProjectDTO";
 import { ProjectDetailsCard } from "../../Components/ProjectDetailsCard";
 import { BackButton } from "../../Components/BackButton";
 import { ProgressBar } from "../../Components/ProgressBar";
+import api from "../../services/api";
 
 const ThumbExample = require(`../../assets/png/ThumbsExampleBig.png`);
 
@@ -15,7 +16,7 @@ import {
   Header,
   HeaderWrapper,
   HeaderTitle,
-  HeaderLogo,
+  HeaderIcon,
   Content,
   ContentHeader,
   Thumb,
@@ -31,7 +32,6 @@ import {
   ContentCardsScrollView,
 } from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getFiles } from "../../services/getFiles";
 import { getProjetctFiles } from "../../services/getProjectFiles";
 import { FilesProps } from "../../utils/Interfaces";
 
@@ -58,6 +58,8 @@ export function ProjectDetails({navigation}) {
 
   const [totalVideoTime, setTotalVideoTime] = useState(0);
 
+  const [dateFormatted, setDateFormatted] = useState('');
+
   function handleGoToProjectCloud() {
     navigation.navigate(`ProjectCloudMovie`, {
       userId: userId,
@@ -70,6 +72,16 @@ export function ProjectDetails({navigation}) {
   function handleBackButton() {
     navigation.navigate(`Home`);
   }
+
+  const backAction = () => {
+    handleBackButton();
+    return true;
+  };
+
+  const backHandler = BackHandler.addEventListener(
+    "hardwareBackPress",
+    backAction
+  );
 
   function handleGoToProjectDescriptionDetails(){
     navigation.navigate(`ProjectDescriptionDetails`, {
@@ -113,6 +125,69 @@ export function ProjectDetails({navigation}) {
     })
   }
 
+
+
+  function handleDeleteProjectAlert() {
+    Alert.alert(`Remover Projeto?`, `Você tem certeza que deseja remover o projeto ${project.id_proj}?`,
+    [
+      {
+        text: "Remover Projeto",
+        onPress: () => handleDeleteProject(),
+        style: "destructive"
+      },
+      {
+        text: "Cancelar",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel"
+      },
+    ]
+  )}
+
+  function handleDeleteProject() {
+    api.get(`proc_del_proj.php?userId=${userId}&idProj=${project.id_proj}`)
+    .then((response) => {
+      if (response.data.response === 'Success') {
+        Alert.alert(`Projeto Removido com sucesso!`);
+        navigation.navigate(`Home`);
+      } else {
+        Alert.alert(`Não foi possível remover o projeto! ${response.data.response}`);
+      }
+    })
+  }
+
+  
+  function handleCancelProjectAlert() {
+    Alert.alert(`Cancelar Projeto?`, `Você tem certeza que deseja retirar o projeto ${project.id_proj} da fila e voltar para criação? O valor pago voltará em forma de créditos na sua conta`,
+    [
+      {
+        text: "Voltar para Criação",
+        onPress: () => handleCancelProject(),
+        style: "destructive"
+      },
+      {
+        text: "Cancelar",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel"
+      },
+    ]
+  )}
+
+  function handleCancelProject() {
+    console.log(`@ProjectDetails -> Iniciando handleCancelProject com userId=${userId}`)
+    api.post(`proc_cancel_ped_fila.php?userId=${userId}`, {
+      projId: project.id_proj,
+    })
+    .then((response) => {
+      if (response.data.response === 'Success') {
+        Alert.alert(`Projeto Removido com sucesso!`);
+        navigation.navigate(`Home`);
+      } else {
+        Alert.alert(`Não foi possível remover o projeto!`, `${response.data.response}`);
+        console.log(`erro -> ${JSON.stringify(response.data)}`)
+      }
+    })
+  }
+
   
 
   useFocusEffect(
@@ -124,6 +199,8 @@ export function ProjectDetails({navigation}) {
       if (project.status_proj != 'Rascunho') {
         setCheckoutComplete(true);
       }
+
+      setDateFormatted(project.data_criacao.split(' ')[0]);
 
       async function sumVideoTime(){
         // console.log(`iniciando soma do tempo`)
@@ -180,7 +257,13 @@ export function ProjectDetails({navigation}) {
         <HeaderWrapper>
           <BackButton onPress={handleBackButton} />
           <HeaderTitle>Resumo</HeaderTitle>
-          <HeaderLogo />
+          <TouchableOpacity 
+            style={{padding: 10}}
+            onPress={project.status_proj === 'Rascunho' ? handleDeleteProjectAlert : project.status_proj === 'Na Fila' ? handleCancelProjectAlert : null} 
+            disabled={project.status_proj != 'Rascunho' && project.status_proj != 'Na Fila'}
+          >
+            <HeaderIcon name="trash-outline" style={project.status_proj != 'Rascunho' && project.status_proj != 'Na Fila' ? {color: theme.colors.shape_inactive} : null}/>
+          </TouchableOpacity>
         </HeaderWrapper>
       </Header>
 
@@ -202,12 +285,12 @@ export function ProjectDetails({navigation}) {
               <ContentColumTitle>{project.id_proj}</ContentColumTitle>
             </ContentColumWrapper>
             <ContentColumWrapper>
-              <ContentColumSubtitle>Tempo de vídeo:</ContentColumSubtitle>
-              <ContentColumTitle>{totalVideoTime} minutos</ContentColumTitle>
+              <ContentColumSubtitle>Data de Criação:</ContentColumSubtitle>
+              <ContentColumTitle>{dateFormatted.split('-')[2]}-{dateFormatted.split('-')[1]}-{dateFormatted.split('-')[0]}</ContentColumTitle>
             </ContentColumWrapper>
             <ContentColumWrapper>
               <ContentColumSubtitle>Tempo de vídeo:</ContentColumSubtitle>
-              <ContentColumTitle>125 minutos</ContentColumTitle>
+              <ContentColumTitle>{project.duracao_proj.split(':')[0]}h: {project.duracao_proj.split(':')[1]}min:{project.duracao_proj.split(':')[2]}s</ContentColumTitle>
             </ContentColumWrapper>
           </ContentInfoRow>
           <ContentProgress>
@@ -245,14 +328,15 @@ export function ProjectDetails({navigation}) {
           <ProjectDetailsCard 
             onPress={checkoutComplete ? handleGoToPaymentDetails : handleGoToCheckoutDetails}
             title="Checkout e Pagamento"
-            subtitle='Detalhamentos e Recibos'
+            subtitle='Pagamentos e Detalhamento'
             icon='credit-card-outline'
             isCompleted={checkoutComplete}
+            isDisabled={!cloudMovieComplete && project.status_proj != 'Aprovado'}
           />
           <ProjectDetailsCard 
             onPress={handleGoToChat}
             title="Chat com o Editor"
-            subtitle='Converse com o editor do seu projeto'
+            subtitle='Converse com o editor do projeto'
             icon='message-processing-outline'
             isDisabled={project.status_proj === 'Rascunho' || project.status_proj === 'Aprovado' || project.status_proj === 'Na Fila' ? true : false}
           />

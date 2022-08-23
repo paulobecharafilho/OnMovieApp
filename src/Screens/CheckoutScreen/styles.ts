@@ -39,7 +39,7 @@ export const Content = styled.View`
 
 
 export const ContentContainerInit = styled.View`
-    flex: 5;
+    flex: 3;
 `;
 
 export const TitleWrapper = styled.View`

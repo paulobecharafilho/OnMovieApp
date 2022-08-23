@@ -21,7 +21,6 @@ export const Container = styled.View`
 export const Icon = styled(MaterialIcons)`
     font-family: ${({ theme }) => theme.fonts.poppins_regular};
     font-size: ${RFValue(15)}px;
-    color: ${({ theme }) => theme.colors.shape};
 
     margin-right: 10px;
 `;

@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
-import { Dimensions, FlatList, TouchableOpacity } from 'react-native';
+import { Dimensions, FlatList, Platform, TouchableOpacity } from 'react-native';
 import { FilesProps } from '../../utils/Interfaces';
 
 
@@ -86,7 +86,7 @@ export const FilesContainer = styled.View`
   background-color: ${({ theme }) => theme.colors.background_secondary};
   width: ${Dimensions.get('window').width}px;
   padding: 20px 20px;
-  padding-bottom: ${getBottomSpace() + 100}px;
+  padding-bottom: ${Platform.OS === 'ios' ? getBottomSpace() + 100 : 120}px;
 
   border-radius: 50px;
 `;

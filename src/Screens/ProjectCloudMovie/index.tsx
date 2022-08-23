@@ -287,19 +287,15 @@ export function ProjectCloudMovie({ navigation }) {
     });
   }
 
-  function handleContinueFromStart() {
-    navigation.navigate("Script", {
-      userId: userId,
-      project: project,
-      from: 'ProjectCloudMovie'
-    });
-  }
-
-  function handleContinueFromDetails() {
-    navigation.navigate("ProjectDetails", {
-      userId: userId,
-      project: project,
-    });
+  function handleContinue() {
+    if (project.qtd_files > 0) {
+      navigation.navigate("ProjectDetails", {
+        userId: userId,
+        project: project,
+      });
+    } else {
+      Alert.alert(`Nenhum arquivo no projeto`, `Por favor adicione pelo menos 1 arquivo para enviar ao editor!`)
+    }
   }
 
   function alertDetachFile() {
@@ -629,11 +625,7 @@ export function ProjectCloudMovie({ navigation }) {
               <ButtonCustom
                 style={styles(theme).buttonCustom}
                 text={"Avançar"}
-                onPress={
-                  from === "start"
-                    ? handleContinueFromStart
-                    : handleContinueFromDetails
-                }
+                onPress={handleContinue}
               />
             </Content>
           ) : null}

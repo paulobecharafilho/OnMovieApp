@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Ionicons } from '@expo/vector-icons';
+import { KeyboardAvoidingView } from 'react-native';
 
 export const Container = styled.View`
     flex: 1;

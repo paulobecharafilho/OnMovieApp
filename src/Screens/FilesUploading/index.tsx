@@ -140,14 +140,14 @@ export function FilesUploading({ navigation }) {
           ) : (
             <View style={styles(theme).viewContainer}>
               {/* <Button title="UploadMoreFiles" onPress={handleUploadMoreFiles} /> */}
-              <Text>
-                UploadMomment: {uploadingMomment} {"\n"}
+              <Text style={styles(theme).text}>
+                Upload em Andamento {"\n"}
                 {"\n"}
               </Text>
               {isMediaSelected && type === "gallery"
                 ? mediaToUpload.map((item, index) => (
                     <View key={item.id}>
-                      <Text>File: {item.filename} progresso:</Text>
+                      <Text>{item.filename}</Text>
                       <Progress.Bar
                         color={theme.colors.highlight}
                         progress={
@@ -162,7 +162,7 @@ export function FilesUploading({ navigation }) {
                 : type === "documents"
                 ? files.map((item, index) => (
                     <View key={item.name}>
-                      <Text>File: {item.name} with progress:</Text>
+                      <Text>{item.name}:</Text>
                       <Progress.Bar
                         progress={
                           fileUploading && fileUploading.name === item.name
@@ -186,6 +186,16 @@ const styles = (theme: any) =>
   StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: theme.colors.background_primary,
+      paddingVertical: 30,
     },
-    viewContainer: {},
+    viewContainer: {
+      flex: 1,
+      backgroundColor: theme.colors.background_primary,
+    },
+    text: {
+      fontFamily: theme.fonts.poppins_medium,
+      fontSize: 12,
+      color: theme.colors.shape,
+    }
   });

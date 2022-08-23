@@ -44,7 +44,7 @@ export const HeaderLogo = styled.View`
 
 export const Content = styled.View`
   flex: 1;
-  justify-content: space-between;
+  justify-content: space-around;
   padding: 10px 30px ${getBottomSpace() + 20}px 30px;
 `;
 

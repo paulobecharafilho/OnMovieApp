@@ -41,6 +41,7 @@ export function FilesListCard({ file, customColor, ...rest }: Props) {
             ? theme.colors.shape_inactive
             : theme.colors.text,
       }}
+      {...rest}
     >
       {file.isAttachedToProject ? <MaterialCommunityIcons name="check-circle" style={styles(theme).iconStyle}/> : null}
       <ContainerRow>

@@ -3,6 +3,8 @@
     "name": "OnMovieApp",
     "slug": "OnMovieApp",
     "version": "1.0.0",
+    "scheme":"onmovieapp",
+    "icon":"./src/assets/icons/icon.png",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -19,11 +21,23 @@
     "plugins": [
       "expo-document-picker",
       "expo-media-library",
-      "expo-notifications"
+      "expo-notifications",
+      "expo-media-library",
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "string | string[]",
+          "enableGooglePay": "boolean"
+        }
+      ]
     ],
     "android": {
       "package": "com.onmovie.onmovieapp",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage":"./src/assets/icons/adaptive-icon.png",
+        "backgroundColor":"#591075"
+      }
     }
   }
 }

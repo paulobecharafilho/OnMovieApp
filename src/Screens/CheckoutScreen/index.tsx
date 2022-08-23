@@ -5,6 +5,8 @@ import {
   Button,
   View,
   BackHandler,
+  TouchableOpacity,
+  StyleSheet,
 } from "react-native";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { useStripe } from "@stripe/stripe-react-native";
@@ -46,6 +48,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getProjetctFiles } from "../../services/getProjectFiles";
 import { format, setDate } from "date-fns/esm";
+import { getProjectById } from "../../services/getProjectById";
 
 interface Params {
   userId: number;
@@ -70,6 +73,7 @@ export function CheckoutScreen({ navigation }) {
   const params = route.params as Params;
 
   const [userInfo, setUserInfo] = useState<UserDTO>();
+  const [qtdFranquias, setQtdFranquias] = useState(0);
   const [checkoutInfo, setCheckoutInfo] = useState<CheckoutInfo>();
 
   const [paymentIntent, setPaymentIntent] = useState(``);
@@ -81,21 +85,45 @@ export function CheckoutScreen({ navigation }) {
 
   const API_URL = `https://zrgpro.com/on_app/stripe`;
 
-
   useFocusEffect(
     useCallback(() => {
-      let dateFormatted = format(new Date(params.dateSelected), `yyyy-MM-dd kk:mm:ss`);
+      let dateFormatted = format(
+        new Date(params.dateSelected),
+        `yyyy-MM-dd kk:mm:ss`
+      );
+
+      let qtdFranquiasAux = 0;
+
+      // navigation.addListener('beforeRemove', (e) => {
+      //     // e.preventDefault();
+      //     handleBackButton();
+      //     //clear setInterval here and go back
+      // })
 
       async function getUserInfo() {
         await api
           .get(`get_user.php?userId=${params.userId}`)
-          .then((response) => {
+          .then(async (response) => {
             if (response.data.response === "Success") {
               console.log;
-              setUserInfo(response.data.user[0]);
-              checkoutProject(response.data.user[0]);
+              await setUserInfo(response.data.user[0]);
+              await getAssinaturas(params.userId);
+              await checkoutProject(response.data.user[0]);
             }
           });
+      }
+
+      async function getAssinaturas(userId) {
+        api.get(`get_assinaturas.php?userId=${userId}`)
+        .then((response) => {
+          if (response.data.response === 'Success') {
+            console.log(`@Home -> getAssinaturas -> ${response.data.qtd_franquias}`)
+            setQtdFranquias(Number(response.data.qtd_franquias));
+            qtdFranquiasAux = Number(response.data.qtd_franquias);
+          } else {
+            console.log(`@Home - Erro no getAssinaturas -> ${response.data.response}`)
+          }
+        })
       }
 
       async function checkoutProject(user: UserDTO) {
@@ -133,14 +161,10 @@ export function CheckoutScreen({ navigation }) {
     }, [])
   );
 
-
-
-
   const fetchPaymentSheetParams = async (
     checkoutInfoReceived: CheckoutInfo,
     user: UserDTO
   ) => {
-   
     // console.log(`checkoutReceived: ${JSON.stringify(checkoutInfoReceived)} e val_ped = ${params.paymentInfo.val_ped}`);
     const result = await apiStripe.post(
       `create-payment-intent.php?userId=${params.userId}&projId=${params.project.id_proj}`,
@@ -173,7 +197,6 @@ export function CheckoutScreen({ navigation }) {
   };
 
   const initializePaymentSheet = async (checkoutInfoReceived, user) => {
-    // console.log(`Iniciando Initialize com checkoutInfoReceived -> ${JSON.stringify(checkoutInfoReceived)}`)
     const { paymentIntent, ephemeralKey, customer, publishableKey } =
       await fetchPaymentSheetParams(checkoutInfoReceived, user);
 
@@ -185,7 +208,6 @@ export function CheckoutScreen({ navigation }) {
       //methods that complete payment after a delay, like SEPA Debit and Sofort.
       allowsDelayedPaymentMethods: false,
       merchantDisplayName: "OnMovie",
-      
     });
     if (!error) {
       setLoadingForButton(true);
@@ -204,117 +226,72 @@ export function CheckoutScreen({ navigation }) {
           paymentIntentId: paymentIntent,
         })
         .then(async (response) => {
-          // console.log(`@CheckoutScreen - OnSuccess -> paymentRetrieve = ${JSON.stringify(response.data)}`)
+          console.log(`@CheckoutScreen - OnSuccess -> paymentRetrieve = ${JSON.stringify(response.data)}`)
 
           if (response.data.response === "Success") {
             refreshProject();
-          } else if (response.data.response === 'Already Paid') {
-            Alert.alert(`Atenção!`, `Este serviço já foi pago. Por favor, entre em contato conosco!`)
-          }
-          
-          else {
-            Alert.alert(`Erro -> ${JSON.stringify(response.data)}`)
+          } else if (response.data.response === "Already Paid") {
+            Alert.alert(
+              `Atenção!`,
+              `Este serviço já foi pago. Por favor, entre em contato conosco!`
+            );
+          } else {
+            Alert.alert(`Erro -> ${JSON.stringify(response.data)}`);
           }
         });
     }
   };
 
   async function handlePayWithCredits() {
-    await api.post(`proc_solic_serv_credOnly.php?userId=${params.userId}`, 
-    {
-      projectId: params.project.id_proj,
-      valPed: params.selectEditorSelected
+    await api
+      .post(`proc_solic_serv_credOnly.php?userId=${params.userId}`, {
+        projectId: params.project.id_proj,
+        valPed: params.selectEditorSelected
           ? params.paymentInfo.valor_com_extra_sel
           : params.paymentInfo.val_ped,
-      projectName: params.project.nome_proj,
-      paymentCredito: checkoutInfo.payment_using_credits,
-    })
-    .then((response) => {
-      console.log(`@CheckoutScreen: PaymentCredit -> ${JSON.stringify(response.data)}`)
-      if (response.data.response === 'Success') {
-        refreshProject();
-      }
-    })
+        projectName: params.project.nome_proj,
+        paymentCredito: checkoutInfo.payment_using_credits,
+      })
+      .then((response) => {
+        console.log(
+          `@CheckoutScreen: PaymentCredit -> ${JSON.stringify(response.data)}`
+        );
+        if (response.data.response === "Success") {
+          refreshProject();
+        }
+      });
   }
 
-  function refreshProject() {
-    api.get(`list_project_by_id.php?userId=${params.userId}&projectId=${params.project.id_proj}`)
-    .then( async (response) => {
-      if (response.data.response === 'Success') {
-        // console.log(`@CheckoutScreen -> refreshProject -> ${JSON.stringify(response.data.projetos[0])}`);
-        let item: ProjectProps = response.data.projetos[0];
-
-        await getProjetctFiles(params.userId, item.id_proj).then((result) => {
-          if (result.result === "Success") {
-            item.files = result.libraryDependenciesFiles;
-            item.qtd_files = result.libraryDependenciesFiles.length;
-          }
-        });
-
-        switch (item.status_proj) {
-          case "Rascunho":
-            item.newStatusProj = "Criação";
-            item.highlightColor = theme.colors.highlight;
-            break;
-
-          case "Na Fila":
-            item.newStatusProj = "Fila";
-            item.highlightColor = theme.colors.secondary;
-            break;
-
-          case "em edicao":
-            item.newStatusProj = "Edição";
-            item.highlightColor = theme.colors.title;
-            break;
-
-          case "Em edicao":
-            item.newStatusProj = "Edição";
-            item.highlightColor = theme.colors.title;
-            break;
-
-          case "controle":
-            item.newStatusProj = "Edição";
-            item.highlightColor = theme.colors.title;
-            break;
-
-          case "correcao_controle":
-            item.newStatusProj = "Edição";
-            item.highlightColor = theme.colors.title;
-            break;
-
-          case "em correcao":
-            item.newStatusProj = "Correção";
-            item.highlightColor = theme.colors.highlight_pink;
-            break;
-
-          case "em aprovacao":
-            item.newStatusProj = "Aprovação";
-            item.highlightColor = theme.colors.attention;
-            break;
-
-          case "Em aprovacao":
-            item.newStatusProj = "Aprovação";
-            item.highlightColor = theme.colors.attention;
-            break;
-
-          case "Aprovado":
-            item.newStatusProj = "Finalizado";
-            item.highlightColor = theme.colors.success;
-            break;
-
-          default:
-            console.log(
-              `Projeto id ${item.id_proj} com status ${item.newStatusProj} não ficou em nenhuma categoria`
-            );
+  async function handlePayWithAssinaturas() {
+    await api
+      .post(`proc_solic_serv_assinatura.php?userId=${params.userId}`, {
+        projectId: params.project.id_proj,
+        valPed: params.selectEditorSelected
+          ? params.paymentInfo.valor_com_extra_sel
+          : params.paymentInfo.val_ped,
+        projectName: params.project.nome_proj,
+      })
+      .then((response) => {
+        console.log(
+          `@CheckoutScreen: PaymentAssinaturas -> ${JSON.stringify(response.data)}`
+        );
+        if (response.data.response === "Success") {
+          refreshProject();
         }
+      });
+  }
 
 
-        setProjectRefreshed(item);
-
-        navigation.navigate(`ProjectDetails`, {
-          project: item,
-          userId: params.userId,
-        });
+  async function refreshProject() {
+    await getProjectById(params.userId, params.project.id_proj, theme)
+    .then((result) => {
+      if (result.result === 'Success') {
+        // console.log(`Refresh Done Successfully -> ${JSON.stringify(result.projectResult)}`);
+        let projectRefreshed = result.projectResult;
+        navigation.navigate('ProjectDetails', {
+          project: projectRefreshed,
+          userId: params.userId
+        })
       }
     })
   }
@@ -331,14 +308,7 @@ export function CheckoutScreen({ navigation }) {
   }
 
   const backAction = () => {
-    Alert.alert("Hold on!", "Are you sure you want to go back?", [
-      {
-        text: "Cancel",
-        onPress: () => null,
-        style: "cancel",
-      },
-      { text: "YES", onPress: () => handleBackButton() },
-    ]);
+    handleBackButton();
     return true;
   };
 
@@ -346,8 +316,6 @@ export function CheckoutScreen({ navigation }) {
     "hardwareBackPress",
     backAction
   );
-
-  
 
   return (
     <Container>
@@ -420,24 +388,90 @@ export function CheckoutScreen({ navigation }) {
               </TotalPriceWrapper>
             ) : (
               <TotalPriceWrapper>
-                <PriceSubtitle>Pagamento Total utilzando Créditos:</PriceSubtitle>
+                <PriceSubtitle>
+                  Pagamento Total utilzando Créditos:
+                </PriceSubtitle>
                 <PriceTitle>{`R$ ${checkoutInfo.payment_using_credits_formatted}`}</PriceTitle>
               </TotalPriceWrapper>
             )}
+            {qtdFranquias > 0 ?
+              <TotalPriceWrapper style={{marginVertical: 30}}>
+                <PriceTitle style={{textAlign: "center"}}>
+                  Obs: Você é assinatura e possui {qtdFranquias} projetos restantes.
+                </PriceTitle>
+              </TotalPriceWrapper>
+            : null}
 
             <View style={{ width: "100%", alignItems: "center" }}>
+              {qtdFranquias > 0 ? (
+                <TouchableOpacity
+                disabled={!loadingForButton}
+                onPress={handlePayWithAssinaturas}
+                style={[
+                  styles.button,
+                  { backgroundColor: theme.colors.secondary, marginBottom: 15},
+                ]}
+              >
+                <Title
+                  style={{
+                    color: theme.colors.shape,
+                    fontFamily: theme.fonts.poppins_medium,
+                    fontSize: 15,
+                  }}
+                >
+                  Utilizar assinatura!
+                </Title>
+              </TouchableOpacity>
+              ) : null}
+
               {paymentOnlyCredits ? (
-                <Button
-                  // disabled={!loadingForButton}
-                  title="Pagar com créditos"
-                  onPress={handlePayWithCredits}
-                />
-              ) : (
-                <Button
+                <TouchableOpacity
                   disabled={!loadingForButton}
-                  title="Ir para Pagamento"
+                  onPress={handlePayWithCredits}
+                  style={[
+                    styles.button,
+                    { backgroundColor: theme.colors.primary },
+                  ]}
+                >
+                  <Title
+                    style={{
+                      color: theme.colors.shape,
+                      fontFamily: theme.fonts.poppins_medium,
+                      fontSize: 15,
+                    }}
+                  >
+                    Pagar com Créditos
+                  </Title>
+                </TouchableOpacity>
+              ) : (
+                // <Button
+                //   // disabled={!loadingForButton}
+                //   title="Pagar com créditos"
+                //   onPress={handlePayWithCredits}
+                // />
+                <TouchableOpacity
+                  disabled={!loadingForButton}
                   onPress={openPaymentSheet}
-                />
+                  style={[
+                    styles.button,
+                    { backgroundColor: theme.colors.primary },
+                  ]}
+                >
+                   <Title
+                    style={{
+                      color: theme.colors.shape,
+                      fontFamily: theme.fonts.poppins_medium,
+                      fontSize: 15,
+                    }}
+                  >
+                    Pagar com Cartão
+                  </Title>
+                </TouchableOpacity>
+                // <Button
+                //   disabled={!loadingForButton}
+                //   title="Ir para Pagamento"
+                //   onPress={openPaymentSheet}
+                // />
               )}
             </View>
           </ContentContainerEnd>
@@ -446,3 +480,11 @@ export function CheckoutScreen({ navigation }) {
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    borderRadius: 20,
+    paddingVertical: 15,
+    paddingHorizontal: 50,
+  },
+});

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   RefreshControl,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 
 import { BackButton } from "../../Components/BackButton";
 
@@ -38,6 +39,7 @@ import {
 import { ProjectDTO } from "../../dtos/ProjectDTO";
 import { ProjectListCard } from "../../Components/ProjectListCard";
 import { useTheme } from "styled-components";
+import { getProjects } from "../../services/getProjects";
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -48,7 +50,7 @@ interface ProjectProps extends ProjectDTO {
   highlightColor: string;
 }
 interface Params {
-  projects: ProjectProps[];
+  projects?: ProjectProps[];
   userId: number;
 }
 
@@ -65,16 +67,10 @@ export function MyOrders({ navigation }) {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
+    wait(100).then(() => setRefreshing(false));
   }, []);
 
-  const statusList = [
-    "Todos",
-    "Fila",
-    "Edição",
-    "Aprovação",
-    "Finalizado",
-  ];
+  const statusList = ["Todos", "Fila", "Edição", "Aprovação", "Finalizado"];
   const [statusSelected, setStatusSelected] = useState("Todos");
 
   const [noneProjects, setNoneProjects] = useState(true);
@@ -91,79 +87,51 @@ export function MyOrders({ navigation }) {
     []
   );
 
-  useEffect(() => {
-    async function fetchProjects() {
-      try {
-        if (params.projects.length > 0) {
-          setProjectsAll([]);
-          setProjectsAprovados([]);
-          setProjectsEmAprovacao([]);
-          setProjectsEmEdicao([]);
-          setProjectsNaFila([]);
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchProjects() {
+        await getProjects(params.userId, theme)
+          .then((result) => {
+            if (result.result === "Success") {
+              if (result.pedidos.length === 0) {
+                setNoneProjects(true);
+              } else {
+                setNoneProjects(false);
+                setProjectsAll(result.pedidos);
 
-          params.projects.forEach((element) => {
-            switch (element.status_proj) {
-
-              case "Na Fila":
-                // element.new_satus_proj = "Fila";
-                // element.highlightColor = theme.colors.highlight;
-                setProjectsNaFila((oldArray) => [...oldArray, element]);
-                break;
-
-              case "em edicao":               
-                setProjectsEmEdicao((oldArray) => [...oldArray, element]);
-                break;
-
-              case "Em edicao":               
-                setProjectsEmEdicao((oldArray) => [...oldArray, element]);
-                break;
-
-              case "controle":                
-                setProjectsEmEdicao((oldArray) => [...oldArray, element]);
-                break;
-
-              case "correcao_controle":
-                setProjectsEmEdicao((oldArray) => [...oldArray, element]);
-                break;
-
-              case "em correcao":
-                setProjectsEmEdicao((oldArray) => [...oldArray, element]);
-                break;
-
-              case "em aprovacao":
-                setProjectsEmAprovacao((oldArray) => [...oldArray, element]);
-                break;
-
-              case "Em aprovacao":
-                setProjectsEmAprovacao((oldArray) => [...oldArray, element]);
-                break;
-
-              case "Aprovado":
-                setProjectsAprovados((oldArray) => [...oldArray, element]);
-                break;
-
-              default:
-                console.log(
-                  `Projeto id ${element.id_proj} com status ${element.status_proj} não ficou em nenhuma categoria`
-                );
+                for (let project of result.pedidos) {
+                  if (project.newStatusProj === "Fila") {
+                    setProjectsNaFila((old) => [...old, project]);
+                  } else if (project.newStatusProj === "Edição") {
+                    setProjectsEmEdicao((old) => [...old, project]);
+                  } else if (project.newStatusProj === "Correção") {
+                    setProjectsEmCorrecao((old) => [...old, project]);
+                  } else if (project.newStatusProj === "Aprovação") {
+                    setProjectsEmAprovacao((old) => [...old, project]);
+                  } else if (project.newStatusProj === "Finalizado") {
+                    setProjectsAprovados((old) => [...old, project]);
+                  } else {
+                    console.log(
+                      `projeto ${project.id_proj} não ficou em nenhum grupo! -> ${project.newStatusProj}`
+                    );
+                  }
+                }
+              }
+              setLoading(false);
+            } else {
+              console.log(`erro no if do result -> ${result.result}`);
             }
-
-            setProjectsAll((oldArray) => [...oldArray, element]);
+          })
+          .catch((error) => {
+            Alert.alert(
+              `Não foi possível carregar os pedidos -> Erro: ${error}`
+            );
           });
-          setNoneProjects(false);
-          setLoading(false);
-        } else {
-          setNoneProjects(true);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.log(`erro -> ${error}`);
-        setLoading(false);
       }
-    }
 
-    fetchProjects();
-  }, [refreshing]);
+      fetchProjects();
+    }, [navigation, refreshing === true])
+  );
 
   function handleChangeStatus(status) {
     setStatusSelected(status);
@@ -172,18 +140,17 @@ export function MyOrders({ navigation }) {
   function handleGoToProjectDetails(project: ProjectProps) {
     navigation.navigate(`ProjectDetails`, {
       project: project,
-      userId: params.userId
-    })
+      userId: params.userId,
+    });
   }
 
   function handleNewProject() {
-    navigation.navigate('NewProject', { userId: params.userId });
+    navigation.navigate("NewProject", { userId: params.userId });
   }
 
   function handleBackButton() {
     navigation.goBack();
   }
-
 
   //Functions To Show in Render by Status!
 
@@ -197,7 +164,12 @@ export function MyOrders({ navigation }) {
         showsVerticalScrollIndicator={false}
         keyExtractor={(e: ProjectProps) => e.id_proj}
         renderItem={({ item }) => {
-          return <ProjectListCard onPress={() => handleGoToProjectDetails(item)} project={item} />;
+          return (
+            <ProjectListCard
+              onPress={() => handleGoToProjectDetails(item)}
+              project={item}
+            />
+          );
         }}
       />
     );
@@ -213,7 +185,12 @@ export function MyOrders({ navigation }) {
         showsVerticalScrollIndicator={false}
         keyExtractor={(e: ProjectProps) => e.id_proj}
         renderItem={({ item }) => {
-          return <ProjectListCard onPress={() => handleGoToProjectDetails(item)} project={item} />;
+          return (
+            <ProjectListCard
+              onPress={() => handleGoToProjectDetails(item)}
+              project={item}
+            />
+          );
         }}
       />
     );
@@ -229,7 +206,12 @@ export function MyOrders({ navigation }) {
         showsVerticalScrollIndicator={false}
         keyExtractor={(e: ProjectProps) => e.id_proj}
         renderItem={({ item }) => {
-          return <ProjectListCard onPress={() => handleGoToProjectDetails(item)} project={item} />;
+          return (
+            <ProjectListCard
+              onPress={() => handleGoToProjectDetails(item)}
+              project={item}
+            />
+          );
         }}
       />
     );
@@ -245,7 +227,12 @@ export function MyOrders({ navigation }) {
         showsVerticalScrollIndicator={false}
         keyExtractor={(e: ProjectProps) => e.id_proj}
         renderItem={({ item }) => {
-          return <ProjectListCard onPress={() => handleGoToProjectDetails(item)} project={item} />;
+          return (
+            <ProjectListCard
+              onPress={() => handleGoToProjectDetails(item)}
+              project={item}
+            />
+          );
         }}
       />
     );
@@ -261,7 +248,12 @@ export function MyOrders({ navigation }) {
         showsVerticalScrollIndicator={false}
         keyExtractor={(e: ProjectProps) => e.id_proj}
         renderItem={({ item }) => {
-          return <ProjectListCard onPress={() => handleGoToProjectDetails(item)} project={item} />;
+          return (
+            <ProjectListCard
+              onPress={() => handleGoToProjectDetails(item)}
+              project={item}
+            />
+          );
         }}
       />
     );
@@ -277,21 +269,19 @@ export function MyOrders({ navigation }) {
         showsVerticalScrollIndicator={false}
         keyExtractor={(e: ProjectProps) => e.id_proj}
         renderItem={({ item }) => {
-          return <ProjectListCard onPress={() => handleGoToProjectDetails(item)} project={item} />;
+          return (
+            <ProjectListCard
+              onPress={() => handleGoToProjectDetails(item)}
+              project={item}
+            />
+          );
         }}
       />
     );
   }
 
   return (
-    <Container
-      colors={[
-        theme.colors.background_gradient_01,
-        theme.colors.background_gradient_02,
-      ]}
-      start={[0, 0.4]}
-      end={[0, 1]}
-    >
+    <Container>
       <Header>
         <HeaderWrapper>
           <BackButton onPress={handleBackButton} />

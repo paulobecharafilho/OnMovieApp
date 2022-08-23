@@ -1,6 +1,7 @@
+import styled from 'styled-components/native';
 import { ViewProps } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import styled from 'styled-components/native';
+import { Ionicons } from '@expo/vector-icons';
 
 interface StatusProps extends ViewProps {
   backgroundColor?: string
@@ -18,7 +19,7 @@ export const Header = styled.View`
 `;
 
 export const HeaderWrapper = styled.View`
-  padding-left: 10px;
+  padding: 0 20px 0 20px;
   width: 100%;
   flex-direction: row;
   align-items: center;
@@ -31,8 +32,9 @@ export const HeaderTitle = styled.Text`
   color: ${({ theme }) => theme.colors.shape}
 `;
 
-export const HeaderLogo = styled.View`
-  width: 10%;
+export const HeaderIcon = styled(Ionicons)`
+  font-size: ${RFValue(18)}px;
+  color: ${({ theme }) => theme.colors.shape}
 `;
 
 export const Content = styled.View`

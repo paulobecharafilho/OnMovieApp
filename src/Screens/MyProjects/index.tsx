@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -6,7 +6,7 @@ import {
   RefreshControl,
   StyleSheet,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 
 import { BackButton } from "../../Components/BackButton";
 
@@ -41,6 +41,7 @@ import { ProjectDTO } from "../../dtos/ProjectDTO";
 import { ProjectListCard } from "../../Components/ProjectListCard";
 import { useTheme } from "styled-components";
 import api from "../../services/api";
+import { getProjects } from "../../services/getProjects";
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -51,7 +52,7 @@ interface ProjectProps extends ProjectDTO {
   highlightColor: string;
 }
 interface Params {
-  projects: ProjectProps[];
+  projects?: ProjectProps[];
   userId: number;
 }
 
@@ -67,7 +68,7 @@ export function MyProjects({ navigation }) {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
+    wait(100).then(() => setRefreshing(false));
   }, []);
 
   const statusList = [
@@ -83,92 +84,34 @@ export function MyProjects({ navigation }) {
   const [ProjectsInCreation, setProjectsInCreation] = useState<ProjectProps[]>([]);
   
 
-  useEffect(() => {
-    async function fetchProjects() {
-      try {
-        if (projects.length > 0) {
-          setProjectsInCreation([]);
-
-          projects.forEach((element) => {
-            switch (element.status_proj) {
-              case "Rascunho":
-                // element.new_satus_proj = "Criação";
-                // element.highlightColor = theme.colors.highlight;
-                setProjectsInCreation((oldArray) => [...oldArray, element]);
-                break;
-
-              default:
-                console.log(
-                  `Projeto id ${element.id_proj} com status ${element.status_proj} não ficou em nenhuma categoria`
-                );
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchProjects() {
+        await getProjects(userId, theme)
+          .then((result) => {
+            if (result.result === "Success") {
+              if (result.pedidos.length === 0) {
+                setNoneProjects(true);
+              } else {
+                setNoneProjects(false);
+                setProjectsInCreation(result.projectsInCreation);
+              }
+              setLoading(false);
+            } else {
+              console.log(`erro no if do result -> ${result.result}`);
             }
+          })
+          .catch((error) => {
+            Alert.alert(
+              `Não foi possível carregar os pedidos -> Erro: ${error}`
+            );
           });
-
-          setNoneProjects(false);
-          setLoading(false);
-        } else {
-          setNoneProjects(true);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.log(`erro -> ${error}`);
-        setLoading(false);
       }
-    }
 
-    fetchProjects();
-  }, []);
-
-
-  // useEffect(() => {
-  //   async function fetchProjects() {
-
-  //     api
-  //       .get(`list_projects_all.php?userId=${userId}`)
-  //       .then((response) => {
-  //         if (
-  //           response.data.response === "" ||
-  //           response.data.response === null ||
-  //           response.data.response === undefined
-  //         ) {
-  //           Alert.alert(`Erro -> Usuário não encontrado`);
-  //         } else if (response.data.response === "Success") {
-  //           setProjectsInCreation([]);
-  //           const lastProjectsAux = [];
-
-  //           response.data.projetos.forEach((item, i) => {
-  //             switch (item.status_proj) {
-  //               case "Rascunho":
-  //                 item.newStatusProj = "Criação";
-  //                 item.highlightColor = theme.colors.highlight;
-  //                 setProjectsInCreation((old) => [...old, item]);
-  //                 break;
-
-  //               default:
-  //                 console.log(
-  //                   `Projeto id ${item.id_proj} com status ${item.newStatusProj} não ficou em nenhuma categoria`
-  //                 );
-  //             }
-
-  //           });
-
-  //           setNoneProjects(false);
-  //           setLoading(false);
-  //         } else {
-  //           setLoading(false);
-  //           setNoneProjects(true);
-  //           // Alert.alert(`Erro -> ${response.data.response}`);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.log(`error na home -> ${error}`);
-  //       });
-  //   }
-
-  //   fetchProjects();
-  // }, [refreshing]);
-
-
+      fetchProjects();
+    }, [navigation, refreshing === true])
+  );
+ 
   function handleChangeStatus(status) {
     setStatusSelected(status);
   }
@@ -188,7 +131,7 @@ export function MyProjects({ navigation }) {
     return (
       <ProjectsList
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        data={projects}
+        data={ProjectsInCreation}
         showsVerticalScrollIndicator={false}
         keyExtractor={(e: ProjectProps) => e.id_proj}
         renderItem={({ item }) => {
@@ -203,14 +146,7 @@ export function MyProjects({ navigation }) {
   }
 
   return (
-    <Container
-      colors={[
-        theme.colors.background_gradient_01,
-        theme.colors.background_gradient_02,
-      ]}
-      start={[0, 0.4]}
-      end={[0, 1]}
-    >
+    <Container>
       <Header>
         <HeaderWrapper>
           <BackButton onPress={handleBackButton} />

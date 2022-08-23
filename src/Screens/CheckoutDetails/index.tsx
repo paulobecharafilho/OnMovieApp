@@ -1,7 +1,6 @@
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
-import { Alert, Button, StyleSheet, TextInput, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Alert, Button, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { useTheme } from "styled-components";
 import { BackButton } from "../../Components/BackButton";
 import { ButtonCustom } from "../../Components/ButtonCustom";
@@ -272,6 +271,7 @@ export function CheckoutDetails({ navigation }) {
             hasToggle={true}
             isToggleOn={selectEditorSelected}
             handleChangeToggle={handleChangeToggle}
+            disabled={true}
           />
 
           <TotalPriceWrapper>

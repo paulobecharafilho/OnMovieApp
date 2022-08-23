@@ -9,6 +9,7 @@ import {
   StatusBar,
   StyleSheet,
   TouchableWithoutFeedback,
+  View,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useTheme } from "styled-components";
@@ -59,6 +60,7 @@ import { FormatButton } from "../../Components/FormatButton";
 import { RFValue } from "react-native-responsive-fontsize";
 import { ProjectProps } from "../../utils/Interfaces";
 import { getProjectAudio } from "../../services/getProjectAudio";
+import { getBottomSpace } from "react-native-iphone-x-helper";
 
 interface Params {
   userId: number;
@@ -375,7 +377,7 @@ export function NewProject({ navigation }) {
         "Tem certeza que deseja enviar o projeto sem nenhuma descrição para o editor?",
         [
           {
-            text: "Enviar assim",
+            text: "Estou ciente!",
             onPress: () => setConfirmProjectDescriptionEmpty(true),
             style: "destructive",
           },
@@ -386,27 +388,27 @@ export function NewProject({ navigation }) {
           },
         ]
       );
-    }
-
-    if ((!audioUri || audioMoment === "none") && !confirmAudioEmpty) {
-      Alert.alert(
-        "Sem áudio",
-        "Tem certeza que deseja enviar o projeto sem nenhuma áudio descritivo para o editor?",
-        [
-          {
-            text: "Enviar assim",
-            onPress: () => setConfirmAudioEmpty(true),
-            style: "destructive",
-          },
-          {
-            text: "Voltar",
-            onPress: () => console.log(`Cancelar clicado`),
-            style: "cancel",
-          },
-        ]
-      );
     } else {
-      setPageForm(pageForm + 1);
+      if ((!audioUri || audioMoment === "none") && !confirmAudioEmpty) {
+        Alert.alert(
+          "Sem áudio",
+          "Tem certeza que deseja enviar o projeto sem nenhuma áudio descritivo para o editor?",
+          [
+            {
+              text: "Estou ciente!",
+              onPress: () => setConfirmAudioEmpty(true),
+              style: "destructive",
+            },
+            {
+              text: "Voltar",
+              onPress: () => console.log(`Cancelar clicado`),
+              style: "cancel",
+            },
+          ]
+        );
+      } else {
+        setPageForm(pageForm + 1);
+      }
     }
   }
 
@@ -421,7 +423,7 @@ export function NewProject({ navigation }) {
         "Tem certeza que deseja enviar o projeto sem nenhum link de vídeo referência para o editor?",
         [
           {
-            text: "Enviar assim",
+            text: "Estou ciente!",
             onPress: () => setConfirmProjctLinkEmpty(true),
             style: "destructive",
           },
@@ -705,7 +707,7 @@ export function NewProject({ navigation }) {
                   </InfoContent>
 
                   <FormContent>
-                    <TimeContent>
+                    <TimeContent style={Platform.OS === 'android' ? {width: '110%'} : null}>
                       <TitleWrapper>
                         <Subtitle>agora defina o</Subtitle>
                         <Title>Tempo final do vídeo?</Title>
@@ -719,7 +721,7 @@ export function NewProject({ navigation }) {
                         secondsUnit="s"
                         textColor={theme.colors.primary}
                       />
-                      <Title style={{ marginTop: 30, marginBottom: 20 }}>
+                      <Title style={Platform.OS === 'android' ? { marginTop: 100, marginBottom: 20 } : { marginTop: 30, marginBottom: 20 }}>
                         E ainda sobre o tempo do vídeo, ele será:
                       </Title>
                       <DurationCompFlatList
@@ -766,7 +768,7 @@ export function NewProject({ navigation }) {
               loading || loadingAfterButton ? (
                 <ActivityIndicator />
               ) : (
-                <ContentPage3>
+                <View style={{flex: 1, paddingHorizontal: 30, paddingTop: 10, paddingBottom: getBottomSpace()+20}}>
                   <InfoContent>
                     <InfoWrapper>
                       <InfoTitleWrapper>
@@ -809,7 +811,7 @@ export function NewProject({ navigation }) {
                       audioMomentStart={audioMoment}
                       audioUriStart={audioMoment != "none" ? audioUri : null}
                     />
-
+                    {audioMoment === 'recording' ? <Subtitle>Finalize a gravação do áudio no STOP para continuar</Subtitle> : null}
                     {/* <ButtonCustom
                       text={"Continuar"}
                       backgroundColor={audioMoment != 'recording' ? theme.colors.primary : theme.colors.inactive}
@@ -818,7 +820,7 @@ export function NewProject({ navigation }) {
                       disabled={audioMoment === 'recording'}
                     /> */}
                   </FormContent>
-                </ContentPage3>
+                </View>
               )
             ) : pageForm === 4 ? (
               <Content
@@ -976,20 +978,23 @@ export function NewProject({ navigation }) {
                 </Content>
               )
             ) : null}
-
-            <ButtonCustom
-              text={"Continuar"}
-              backgroundColor={theme.colors.primary}
-              highlightColor={theme.colors.shape}
-              style={{alignSelf: "center", backgroundColor: theme.colors.primary}}
-              onPress={
-                pageForm === 1 ? handleContinueToPage2 : 
-                pageForm === 2 ? handleContinueToPage3 :
-                pageForm === 3 ? handleContinueToPage4 :
-                pageForm === 4 ? handleContinueToPage5 :
-                pageForm === 5 ? goToUploadFiles : null
-              }
-            />
+            {loading || loadingAfterButton ?
+              <ActivityIndicator />
+            :
+              <ButtonCustom
+                text={"Continuar"}
+                highlightColor={theme.colors.shape}
+                disabled={audioMoment === 'recording'}
+                style={{alignSelf: "center", backgroundColor: audioMoment === 'recording' ? theme.colors.text : theme.colors.primary}}
+                onPress={
+                  pageForm === 1 ? handleContinueToPage2 : 
+                  pageForm === 2 ? handleContinueToPage3 :
+                  pageForm === 3 ? handleContinueToPage4 :
+                  pageForm === 4 ? handleContinueToPage5 :
+                  pageForm === 5 ? goToUploadFiles : null
+                }
+              />
+            }
           </FormContainer>
         </TouchableWithoutFeedback>
       )}

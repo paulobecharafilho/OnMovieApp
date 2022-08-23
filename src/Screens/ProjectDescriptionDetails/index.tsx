@@ -179,7 +179,7 @@ export function ProjectDescriptionDetails({ navigation }) {
                     ? theme.colors.primary
                     : theme.colors.text
                 }
-                highlightColor={theme.colors.primary}
+                highlightColor={theme.colors.shape}
                 disabled={project.status_proj === "Rascunho" ? false : true}
                 onPress={handleGoToEditDescription}
               />

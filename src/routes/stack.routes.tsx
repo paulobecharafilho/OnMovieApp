@@ -22,6 +22,7 @@ import { CheckoutScreen } from '../Screens/CheckoutScreen';
 import { Chat } from '../Screens/Chat';
 import { PaymentDetails } from '../Screens/PaymentDetails';
 import { Approve } from '../Screens/Approve';
+import { MyAccount } from '../Screens/MyAccount';
 
 interface Props {
     initialPage: string;
@@ -118,6 +119,11 @@ function InitialStackRoutes({initialPage, userId}: Props) {
             <Screen 
                 name='Approve'
                 component={Approve}
+            />
+            
+            <Screen 
+                name='MyAccount'
+                component={MyAccount}
             />
             
         </Navigator>

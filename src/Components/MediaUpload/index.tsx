@@ -58,7 +58,6 @@ export function MediaUpload({
     let mediaToUpload: MediaProps[] = [];
 
     await Promise.all(data.map( async (element, index) => {
-      console.log(`iniciando check com file: ${element.filename} e tipo ${element.duration}`);
 
       await api
         .get(

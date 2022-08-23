@@ -12,7 +12,7 @@ interface Params {
   files: DocumentProps[];
   setFileUploading: (file: DocumentProps) => void;
   userId: number;
-  projectId: number;
+  projectId?: number;
 }
 
 interface uploadingFileReturnProps {
@@ -25,6 +25,9 @@ interface uploadingFileReturnProps {
 export async function uploadFile(files, setFileUploading, userId, projectId ) {
 
   const uploadReturn: uploadingFileReturnProps[] =[];
+  if (!projectId) {
+    projectId = 0
+  }
   
   for (const element of files) {
 

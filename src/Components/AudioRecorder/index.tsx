@@ -223,6 +223,10 @@ export function AudioRecorder({ setAudioUriResult, setAudioMomentResult, audioMo
           <AudioView onPress={alertTrash}>
             <AudioIcon name="trash" style={{color: theme.colors.attention}} />
           </AudioView>
+        ) : audioMoment === "recorded" ? (
+          <AudioView onPress={alertTrash}>
+            <AudioIcon name="trash" style={{color: theme.colors.attention}} />
+          </AudioView>
         ) : null}
       </AudioContainerRow>
       {audioMoment === "recorded" ? (

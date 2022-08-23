@@ -10,6 +10,7 @@ import NewLogo from "../../assets/logos/newLogo.svg";
 import VectorMenuProfile from "../../assets/frames/VectorMenuProfile.svg";
 import VectorMenuDown from "../../assets/frames/VectorMenuDown.svg";
 const MenuProfilePhoto = require("../../assets/png/MenuProfilePhoto.png");
+const Avatar = require("../../assets/png/avatar.png");
 
 import {
   Container,
@@ -115,7 +116,9 @@ export function MenuPage({ navigation }) {
   }
 
   function handleCloudMovie() {
-    navigation.navigate('');
+    navigation.navigate('CloudMovie', {
+      userId: user.id_user
+    });
   }
 
   function handlePayments() {
@@ -127,7 +130,9 @@ export function MenuPage({ navigation }) {
   }
 
   function handleProfile() {
-    navigation.navigate('');
+    navigation.navigate('MyAccount', {
+      user: user
+    });
   }
 
   function handleSupport() {
@@ -153,7 +158,7 @@ export function MenuPage({ navigation }) {
         <Content>
           <ProfileContainer>
             <VectorMenuProfile width={"100%"} style={styles.profileVector} />
-            <Photo source={MenuProfilePhoto} />
+            <Photo source={user.avatar === 'avatar.jpg' ? Avatar : null} />
           </ProfileContainer>
 
           <ProfileTitleContainer>
@@ -203,7 +208,7 @@ export function MenuPage({ navigation }) {
             </ButtonsRow>
 
             <ButtonsRow>
-              <ButtonWrapper>
+              {/* <ButtonWrapper>
                 <ButtonHome
                   onPress={handlePayments}
                   style={{ backgroundColor: theme.colors.dark_inactive }}
@@ -212,6 +217,18 @@ export function MenuPage({ navigation }) {
                 </ButtonHome>
                 <ButtonTitleWrapper>
                   <ButtonTitle>Pagamentos</ButtonTitle>
+                </ButtonTitleWrapper>
+              </ButtonWrapper> */}
+              
+               <ButtonWrapper>
+                <ButtonHome
+                  onPress={handleSupport}
+                  style={{ backgroundColor: theme.colors.dark_inactive }}
+                >
+                  <ButtonIconIonicons name="ios-logo-whatsapp" />
+                </ButtonHome>
+                <ButtonTitleWrapper>
+                  <ButtonTitle>Suporte</ButtonTitle>
                 </ButtonTitleWrapper>
               </ButtonWrapper>
 
@@ -240,7 +257,7 @@ export function MenuPage({ navigation }) {
               </ButtonWrapper>
             </ButtonsRow>
 
-            <ButtonsRow style={{justifyContent: "flex-start"}}>
+            {/* <ButtonsRow style={{justifyContent: "flex-start"}}>
               <ButtonWrapper>
                 <ButtonHome
                   onPress={handleSupport}
@@ -253,7 +270,7 @@ export function MenuPage({ navigation }) {
                 </ButtonTitleWrapper>
               </ButtonWrapper>
 
-              {/* <ButtonWrapper>
+              <ButtonWrapper>
                 <ButtonHome
                   style={{ backgroundColor: theme.colors.dark_inactive }}
                 >
@@ -274,8 +291,8 @@ export function MenuPage({ navigation }) {
                 <ButtonTitleWrapper>
                   <ButtonTitle>Pedidos</ButtonTitle>
                 </ButtonTitleWrapper>
-              </ButtonWrapper> */}
-            </ButtonsRow>
+              </ButtonWrapper> 
+            </ButtonsRow> */}
           </ButtonsContainer>
           <VectorMenuDown style={styles.vectorDown} />
         </Content>

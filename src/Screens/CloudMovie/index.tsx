@@ -106,17 +106,19 @@ export function CloudMovie({ navigation }) {
           if (result.result === "Success") {
             setLibraryFiles([]);
             await result.libraryFiles.map((item) => {
-              if (project.files) {
-                let findItem = project.files.find(
-                  (element) => element.file_id === item.file_id
-                );
-                if (findItem) {
-                  item.isAttachedToProject = true;
+              if (project) {
+                if (project.files) {
+                  let findItem = project.files.find(
+                    (element) => element.file_id === item.file_id
+                  );
+                  if (findItem) {
+                    item.isAttachedToProject = true;
+                  } else {
+                    item.isAttachedToProject = false;
+                  }
                 } else {
-                  item.isAttachedToProject = false;
+                  project.files=[];
                 }
-              } else {
-                project.files=[];
               }
               setLibraryFiles((oldArray) => [...oldArray, item]);
               setLoading(false);
@@ -247,7 +249,7 @@ export function CloudMovie({ navigation }) {
     setModalAddButtonVisible(false);
     navigation.navigate("FilesUploading", {
       userId: userId,
-      projectId: project.id_proj,
+      projectId: project ? project.id_proj : null,
       type: type,
       files: type === "documents" ? files : null,
     });
@@ -440,7 +442,7 @@ export function CloudMovie({ navigation }) {
                     Remover do Projeto
                   </Text>
                 </TouchableOpacity>
-              ) : (
+              ) : project ? (
                 <TouchableOpacity
                   style={styles(theme).modalAtachButton}
                   onPress={handleAttachFile}
@@ -449,7 +451,8 @@ export function CloudMovie({ navigation }) {
                     Adicionar ao Projeto
                   </Text>
                 </TouchableOpacity>
-              ): null}
+              ): null 
+              : null}
             </View>
           </TouchableOpacity>
         </Modal>
@@ -459,8 +462,9 @@ export function CloudMovie({ navigation }) {
         {fileDetailsModalVisible ? (
           <FileDetailsModal
             file={choosedFile}
-            projectId={Number(project.id_proj)}
+            projectId={project ? Number(project.id_proj) : null}
             userId={userId}
+            projectStatus={project ? project.status_proj : null}
             from='CloudMovie'
             fileDetailsModalVisible={fileDetailsModalVisible}
             handleCloseFileDetailsModal={handleCloseFileDetailsModal}

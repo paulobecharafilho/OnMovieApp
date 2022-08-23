@@ -14,6 +14,8 @@ PODS:
     - ExpoModulesCore
   - EXConstants (13.1.1):
     - ExpoModulesCore
+  - EXDevice (4.2.0):
+    - ExpoModulesCore
   - EXDocumentPicker (10.2.1):
     - ExpoModulesCore
   - EXFileSystem (14.0.0):
@@ -126,7 +128,7 @@ PODS:
   - EXTaskManager (10.2.1):
     - ExpoModulesCore
     - UMAppLoader
-  - EXUpdates (0.13.3):
+  - EXUpdates (0.13.4):
     - ASN1Decoder (~> 1.8)
     - EASClient
     - EXManifests
@@ -143,8 +145,65 @@ PODS:
     - React-Core (= 0.68.2)
     - React-jsi (= 0.68.2)
     - ReactCommon/turbomodule/core (= 0.68.2)
+  - Firebase/CoreOnly (9.4.0):
+    - FirebaseCore (= 9.4.0)
+  - FirebaseCore (9.4.0):
+    - FirebaseCoreDiagnostics (~> 9.0)
+    - FirebaseCoreInternal (~> 9.0)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Logger (~> 7.7)
+  - FirebaseCoreDiagnostics (9.4.0):
+    - GoogleDataTransport (< 10.0.0, >= 9.1.4)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Logger (~> 7.7)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+  - FirebaseCoreInternal (9.4.0):
+    - "GoogleUtilities/NSData+zlib (~> 7.7)"
   - fmt (6.2.1)
   - glog (0.3.5)
+  - GoogleDataTransport (9.2.0):
+    - GoogleUtilities/Environment (~> 7.7)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities (7.7.0):
+    - GoogleUtilities/AppDelegateSwizzler (= 7.7.0)
+    - GoogleUtilities/Environment (= 7.7.0)
+    - GoogleUtilities/ISASwizzler (= 7.7.0)
+    - GoogleUtilities/Logger (= 7.7.0)
+    - GoogleUtilities/MethodSwizzler (= 7.7.0)
+    - GoogleUtilities/Network (= 7.7.0)
+    - "GoogleUtilities/NSData+zlib (= 7.7.0)"
+    - GoogleUtilities/Reachability (= 7.7.0)
+    - GoogleUtilities/SwizzlerTestHelpers (= 7.7.0)
+    - GoogleUtilities/UserDefaults (= 7.7.0)
+  - GoogleUtilities/AppDelegateSwizzler (7.7.0):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+  - GoogleUtilities/Environment (7.7.0):
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities/ISASwizzler (7.7.0)
+  - GoogleUtilities/Logger (7.7.0):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/MethodSwizzler (7.7.0):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/Network (7.7.0):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (7.7.0)"
+  - GoogleUtilities/Reachability (7.7.0):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/SwizzlerTestHelpers (7.7.0):
+    - GoogleUtilities/MethodSwizzler
+  - GoogleUtilities/UserDefaults (7.7.0):
+    - GoogleUtilities/Logger
+  - nanopb (2.30909.0):
+    - nanopb/decode (= 2.30909.0)
+    - nanopb/encode (= 2.30909.0)
+  - nanopb/decode (2.30909.0)
+  - nanopb/encode (2.30909.0)
+  - PromisesObjC (2.1.1)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
     - DoubleConversion
@@ -460,6 +519,9 @@ PODS:
     - React-Core
   - RNCPicker (2.4.0):
     - React-Core
+  - RNFBApp (15.3.0):
+    - Firebase/CoreOnly (= 9.4.0)
+    - React-Core
   - RNGestureHandler (2.2.1):
     - React-Core
   - RNReanimated (2.8.0):
@@ -494,27 +556,27 @@ PODS:
     - React-RCTImage
   - RNSVG (12.3.0):
     - React-Core
-  - Stripe (22.5.1):
-    - Stripe/Stripe3DS2 (= 22.5.1)
-    - StripeApplePay (= 22.5.1)
-    - StripeCore (= 22.5.1)
-    - StripeUICore (= 22.5.1)
-  - stripe-react-native (0.15.0):
+  - Stripe (22.0.0):
+    - Stripe/Stripe3DS2 (= 22.0.0)
+    - StripeApplePay (= 22.0.0)
+    - StripeCore (= 22.0.0)
+    - StripeUICore (= 22.0.0)
+  - stripe-react-native (0.6.1):
     - React-Core
-    - Stripe (~> 22.5.1)
-    - StripeFinancialConnections (~> 22.5.1)
-  - Stripe/Stripe3DS2 (22.5.1):
-    - StripeApplePay (= 22.5.1)
-    - StripeCore (= 22.5.1)
-    - StripeUICore (= 22.5.1)
-  - StripeApplePay (22.5.1):
-    - StripeCore (= 22.5.1)
-  - StripeCore (22.5.1)
-  - StripeFinancialConnections (22.5.1):
-    - StripeCore (= 22.5.1)
-    - StripeUICore (= 22.5.1)
-  - StripeUICore (22.5.1):
-    - StripeCore (= 22.5.1)
+    - Stripe (~> 22.0.0)
+    - StripeConnections (~> 22.0.0)
+  - Stripe/Stripe3DS2 (22.0.0):
+    - StripeApplePay (= 22.0.0)
+    - StripeCore (= 22.0.0)
+    - StripeUICore (= 22.0.0)
+  - StripeApplePay (22.0.0):
+    - StripeCore (= 22.0.0)
+  - StripeConnections (22.0.0):
+    - StripeCore (= 22.0.0)
+    - StripeUICore (= 22.0.0)
+  - StripeCore (22.0.0)
+  - StripeUICore (22.0.0):
+    - StripeCore (= 22.0.0)
   - UMAppLoader (3.1.0)
   - Yoga (1.14.0)
 
@@ -526,6 +588,7 @@ DEPENDENCIES:
   - EXAV (from `../node_modules/expo-av/ios`)
   - EXBackgroundFetch (from `../node_modules/expo-background-fetch/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
+  - EXDevice (from `../node_modules/expo-device/ios`)
   - EXDocumentPicker (from `../node_modules/expo-document-picker/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
@@ -553,6 +616,7 @@ DEPENDENCIES:
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - GoogleUtilities
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -585,6 +649,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
+  - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -596,11 +661,19 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - ASN1Decoder
+    - Firebase
+    - FirebaseCore
+    - FirebaseCoreDiagnostics
+    - FirebaseCoreInternal
     - fmt
+    - GoogleDataTransport
+    - GoogleUtilities
+    - nanopb
+    - PromisesObjC
     - Stripe
     - StripeApplePay
+    - StripeConnections
     - StripeCore
-    - StripeFinancialConnections
     - StripeUICore
 
 EXTERNAL SOURCES:
@@ -618,6 +691,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-background-fetch/ios"
   EXConstants:
     :path: "../node_modules/expo-constants/ios"
+  EXDevice:
+    :path: "../node_modules/expo-device/ios"
   EXDocumentPicker:
     :path: "../node_modules/expo-document-picker/ios"
   EXFileSystem:
@@ -732,6 +807,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCPicker:
     :path: "../node_modules/@react-native-picker/picker"
+  RNFBApp:
+    :path: "../node_modules/@react-native-firebase/app"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
@@ -756,6 +833,7 @@ SPEC CHECKSUMS:
   EXAV: 88f61c5af8415715b7ee51f084c1020235b85c56
   EXBackgroundFetch: f60cb23007beca0892997682d8ca40aca1e0c92e
   EXConstants: fdbe52259365b6a6faaa5e99a3b82cfa6bc2eb61
+  EXDevice: 0115b360059ccd32c1701744e374e3259ffbdd3c
   EXDocumentPicker: cd34632ff465bfef63c9ff92b05b747665e21996
   EXFileSystem: 2aa2d9289f84bca9532b9ccbd81504fa31eb1ded
   EXFont: 04235cc22e6fef86028feb67db452978dc6f240f
@@ -778,12 +856,20 @@ SPEC CHECKSUMS:
   EXSplashScreen: 34f460788db8d682883871708dddbfac72095bb7
   EXStructuredHeaders: 5d86829469399370a9fc7cb1e4391b09de87681d
   EXTaskManager: 80829d015808bbac6a292f9a3b7adf801c72cce6
-  EXUpdates: 084edfaac900e6bc77ab4027eaf7437a4236b8c3
+  EXUpdates: f8d0170faaf3032912284693ef07f4d57288e14e
   EXUpdatesInterface: 0b101ace1dbfa0f64260a5df31c71d03c66cca54
   FBLazyVector: a7a655862f6b09625d11c772296b01cd5164b648
   FBReactNativeSpec: 81ce99032d5b586fddd6a38d450f8595f7e04be4
+  Firebase: 7703fc4022824b6d6db1bf7bea58d13b8e17ec46
+  FirebaseCore: 9a2b10270a854731c4d4d8a97d0aa8380ec3458d
+  FirebaseCoreDiagnostics: aaa87098082c4d4bdd1a9557b1186d18ca85ce8c
+  FirebaseCoreInternal: a13302b0088fbf5f38b79b6ece49c2af7d3e05d6
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 476ee3e89abb49e07f822b48323c51c57124b572
+  GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
+  GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
+  nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
+  PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
   RCTRequired: 3e917ea5377751094f38145fdece525aa90545a0
   RCTTypeSafety: c43c072a4bd60feb49a9570b0517892b4305c45e
@@ -814,19 +900,20 @@ SPEC CHECKSUMS:
   ReactCommon: 095366164a276d91ea704ce53cb03825c487a3f2
   RNCAsyncStorage: 466b9df1a14bccda91da86e0b7d9a345d78e1673
   RNCPicker: 6d5d64e7b90c240c779ee0938ec433c11e2dd758
+  RNFBApp: 39904cebc3958e2d377dccf870b5c5d76cb089a9
   RNGestureHandler: 1dc1ea9d4b64f999042afafbaccf5b143f0b2fa2
   RNReanimated: 64573e25e078ae6bec03b891586d50b9ec284393
   RNScreens: 4d83613b50b74ed277026375dc0810893b0c347f
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
-  Stripe: 2b2decd03146e08a350960966d41f3028c2eac29
-  stripe-react-native: 5817de3b998cf6ca2ccd4b91ce007b377398ecdd
-  StripeApplePay: b14f06ac6fc24b56704c1e598149ed0cc45e166f
-  StripeCore: 4833738f2ca4336712f279f3c2867a0a7eb67c93
-  StripeFinancialConnections: 982115b82af429968d8aa78d329a42ed7ba3feab
-  StripeUICore: 08c1efbd7e3c54ee7fa74334a37a1d4c08ba944d
+  Stripe: ee32e594fa4dee4bdf2a8a3039f7fb07a21075dc
+  stripe-react-native: 2cb6a49cd41c6f5b9d40eeb41376336be0919ab8
+  StripeApplePay: e09964f3e2c6b318e53a05c12f3cb7efc592484d
+  StripeConnections: d3068bf688679a51932abb94d956d8a73c213bd7
+  StripeCore: 689b9605ccb78e507f59ddc5e677615e0af16583
+  StripeUICore: f5fe5ad283e132b40077b5eb85b625ebf7de034a
   UMAppLoader: 6185e8c45922f187002b85afae097961c4781df4
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
 
-PODFILE CHECKSUM: 471bb9fb1e4a9ea19af25f0ed176d1b1d1c7abc8
+PODFILE CHECKSUM: 57cda20fea6486e3ab3dfc7a26034a5af1583041
 
 COCOAPODS: 1.11.3

@@ -9,6 +9,10 @@ interface InputProps extends TextInputProps {
   text: string;
   visibleButton?: boolean;
   onVisibleButtonPress?: () => void;
+  backgroundColorCustom?: string;
+  borderColorCustom?: string;
+  buttonColor?: string;
+  customTextColor?: string
 }
 
 export function TextInputCustom({
@@ -16,21 +20,43 @@ export function TextInputCustom({
   text,
   visibleButton,
   onVisibleButtonPress,
+  backgroundColorCustom,
+  borderColorCustom,
+  buttonColor,
+  customTextColor,
   ...rest
 }: InputProps) {
   const theme = useTheme();
 
   return (
-    <Container>
-      {icon ? <Icon name={icon} /> : null}
+    <Container
+      style={{
+        backgroundColor: backgroundColorCustom
+          ? backgroundColorCustom
+          : borderColorCustom ? theme.colors.shape : theme.colors.inactive,
+        borderStyle: borderColorCustom
+          ? "solid"
+          : null,
+        borderWidth: borderColorCustom
+          ? 0.5
+          : null,
+        borderRadius: borderColorCustom
+          ? 10
+          : null,
+        borderColor: borderColorCustom
+          ? borderColorCustom
+          : null,
+      }}
+    >
+      {icon ? <Icon name={icon} style={{color: customTextColor ? customTextColor : theme.colors.text}}/> : null}
       <Input
         {...rest}
         placeholder={text}
-        placeholderTextColor={theme.colors.shape}
+        placeholderTextColor = {customTextColor ? customTextColor : theme.colors.text}
       />
       {visibleButton ? (
         <VisibleButton onPress={onVisibleButtonPress}>
-          <IconFinal name="eye" />
+          <IconFinal name="eye" style={{color: buttonColor ? buttonColor : theme.colors.shape}}/>
         </VisibleButton>
       ) : null}
     </Container>
