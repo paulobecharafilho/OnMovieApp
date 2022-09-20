@@ -90,12 +90,15 @@ export function MyProjects({ navigation }) {
         await getProjects(userId, theme)
           .then((result) => {
             if (result.result === "Success") {
-              if (result.pedidos.length === 0) {
+              if (result.projectsInCreation.length === 0) {
                 setNoneProjects(true);
               } else {
                 setNoneProjects(false);
                 setProjectsInCreation(result.projectsInCreation);
               }
+              setLoading(false);
+            } else if(result.result === 'Nenhum Projeto') {
+              setNoneProjects(true);
               setLoading(false);
             } else {
               console.log(`erro no if do result -> ${result.result}`);

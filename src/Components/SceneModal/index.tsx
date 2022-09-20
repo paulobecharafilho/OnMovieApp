@@ -74,7 +74,7 @@ export function SceneModal({
 
   useFocusEffect(
     useCallback(() => {
-      console.log(`scene.descrição -> ${scene.descricao}`);
+      // console.log(`scene.descrição -> ${scene.descricao}`);
       setDescriptionAux(scene.descricao ? scene.descricao : "");
       async function getFile() {
         await getFiles(userId)

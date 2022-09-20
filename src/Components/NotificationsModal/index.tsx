@@ -60,7 +60,7 @@ export function NotificationsModal({
           setNotifications(result.notificacoes);
           setLoading(false);
         } else {
-          console.log(`@NotificationsModal -> Erro no getNotifications -> ${JSON.stringify(result)}`);
+          // console.log(`@NotificationsModal -> Erro no getNotifications -> ${JSON.stringify(result)}`);
           setLoading(false);
         }
       })

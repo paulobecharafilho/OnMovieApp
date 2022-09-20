@@ -30,7 +30,7 @@ export function FirstPage({navigation}) {
         backgroundColor="transparent"
         translucent
       />
-      <VectorsFirstPageUp width={Dimensions.get('window').width} style={styles.vectorsUp} />
+      <VectorsFirstPageUp width={'120%'} style={styles.vectorsUp} />
       <Title>
         Encontre <TitleHighlight>editores</TitleHighlight>
         {"\n"}
@@ -46,7 +46,7 @@ export function FirstPage({navigation}) {
         <FooterTitle>Já tenho uma conta!</FooterTitle>
       </FooterTitleButton>
 
-      <VectorsFirstPageDown width={Dimensions.get('window').width} style={styles.vectorsDown} />
+      <VectorsFirstPageDown width={'120%'} style={styles.vectorsDown} />
     </Container>
   );
 }

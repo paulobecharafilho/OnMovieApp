@@ -160,8 +160,8 @@ export function Register({ navigation }) {
               autoCorrect={false}
               onChangeText={(t) => handleValidateEmail(t)}
               placeholderTextColor={theme.colors.shape_inactive}
-              placeholder="Digite aqui seu email"
-              value={email ? email : null}
+              placeholder={email ? email : "Digite aqui seu email"}
+              // value={email ? email : null}
               
             />
             {/* {emailIsValid ? null : <SubTitle>Por favor digite um email válido</SubTitle>} */}

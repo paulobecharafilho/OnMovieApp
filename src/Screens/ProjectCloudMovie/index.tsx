@@ -133,6 +133,9 @@ export function ProjectCloudMovie({ navigation }) {
             filesAux.push(file);
             setFilesToUpload((old) => [...old, file]);
           }
+          else {
+            Alert.alert(`Arquivo Existente`, `O arquivo ${element.name} já existe na sua biblioteca. Para adicionar ao projeto, basta anexá-lo no botão do CloudMovie`)
+          }
         })
         .catch((e) => console.log(`erro -> ${e}`));
     }

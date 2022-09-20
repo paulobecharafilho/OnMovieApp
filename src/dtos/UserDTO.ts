@@ -28,7 +28,7 @@ export interface UserDTO {
   uso_mb: number,
   usoPercentual: number,
   usoArred: number,
-  push_token: string,
+  push_token: string[],
   qtd_files: number,
   files: FilesProps,
 }

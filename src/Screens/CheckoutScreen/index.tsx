@@ -83,10 +83,11 @@ export function CheckoutScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [loadingForButton, setLoadingForButton] = useState(false);
 
-  const API_URL = `https://zrgpro.com/on_app/stripe`;
+  const API_URL = `https://onmovie.video/stripe`;
 
   useFocusEffect(
     useCallback(() => {
+
       let dateFormatted = format(
         new Date(params.dateSelected),
         `yyyy-MM-dd kk:mm:ss`
@@ -105,7 +106,7 @@ export function CheckoutScreen({ navigation }) {
           .get(`get_user.php?userId=${params.userId}`)
           .then(async (response) => {
             if (response.data.response === "Success") {
-              console.log;
+             
               await setUserInfo(response.data.user[0]);
               await getAssinaturas(params.userId);
               await checkoutProject(response.data.user[0]);
@@ -117,7 +118,6 @@ export function CheckoutScreen({ navigation }) {
         api.get(`get_assinaturas.php?userId=${userId}`)
         .then((response) => {
           if (response.data.response === 'Success') {
-            console.log(`@Home -> getAssinaturas -> ${response.data.qtd_franquias}`)
             setQtdFranquias(Number(response.data.qtd_franquias));
             qtdFranquiasAux = Number(response.data.qtd_franquias);
           } else {
@@ -138,6 +138,7 @@ export function CheckoutScreen({ navigation }) {
           params.selectEditorSelected
         )
           .then((result: CheckoutReturnProps) => {
+            // console.log(`@CheckoutScreen -> CheckoutInfoResult -> ${result.checkoutInfo}`);
             if ((result.result = "Success")) {
               setCheckoutInfo(result.checkoutInfo);
               if (result.checkoutInfo.payment_using_money <= 0) {
@@ -222,12 +223,10 @@ export function CheckoutScreen({ navigation }) {
     } else {
       // Alert.alert("Success", "Your order is confirmed!");
       await apiStripe
-        .post(`success.php?userId=${params.userId}`, {
+        .post(`success_app.php?userId=${params.userId}`, {
           paymentIntentId: paymentIntent,
         })
         .then(async (response) => {
-          console.log(`@CheckoutScreen - OnSuccess -> paymentRetrieve = ${JSON.stringify(response.data)}`)
-
           if (response.data.response === "Success") {
             refreshProject();
           } else if (response.data.response === "Already Paid") {
@@ -253,9 +252,6 @@ export function CheckoutScreen({ navigation }) {
         paymentCredito: checkoutInfo.payment_using_credits,
       })
       .then((response) => {
-        console.log(
-          `@CheckoutScreen: PaymentCredit -> ${JSON.stringify(response.data)}`
-        );
         if (response.data.response === "Success") {
           refreshProject();
         }
@@ -426,7 +422,7 @@ export function CheckoutScreen({ navigation }) {
 
               {paymentOnlyCredits ? (
                 <TouchableOpacity
-                  disabled={!loadingForButton}
+                  // disabled={!loadingForButton}
                   onPress={handlePayWithCredits}
                   style={[
                     styles.button,

@@ -39,6 +39,7 @@ import {
 import { format } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ProjectProps } from "../../utils/Interfaces";
+import { updateUserPushToken } from "../../services/updateUserPushToken";
 
 
 interface Params {
@@ -95,8 +96,21 @@ export function MenuPage({ navigation }) {
 
   async function handleLogout() {
     try {
-      await AsyncStorage.removeItem("@onmovieapp:userId");
-      navigation.navigate("FirstPage");
+      let atualToken = await AsyncStorage.getItem(`@onmovieapp:push_token`);
+      let userTokens:string[] = JSON.parse(user.push_token);
+      let newAllTokens = userTokens.filter(element => element != atualToken);
+      console.log(`BeforeTokens -> ${userTokens}, AtualToken -> ${atualToken} e newAllTokens -> ${newAllTokens}`);
+
+      await updateUserPushToken(user.id_user, newAllTokens)
+      .then(async (result) => {
+        if (result.result === 'Success') {
+          console.log(`token removido com sucesso!`)
+          await AsyncStorage.removeItem("@onmovieapp:userId");
+          navigation.navigate("FirstPage");
+        }
+      }).catch((err) => console.log(`Erro no catch do updateUserToken -> ${err}`))
+
+
     } catch (e) {
       navigation.navigate("FirstPage");
       console.log(`Erro ao remover Async -> ${e}`);
@@ -158,7 +172,8 @@ export function MenuPage({ navigation }) {
         <Content>
           <ProfileContainer>
             <VectorMenuProfile width={"100%"} style={styles.profileVector} />
-            <Photo source={user.avatar === 'avatar.jpg' ? Avatar : null} />
+            {/* <Photo source={user.avatar === 'avatar.jpg' ? Avatar : null} /> */}
+            <Photo source={Avatar} />
           </ProfileContainer>
 
           <ProfileTitleContainer>

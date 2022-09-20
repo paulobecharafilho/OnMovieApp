@@ -60,7 +60,7 @@ export function FileDetailsModal({
 
   useFocusEffect(
     useCallback(() => {
-      console.log(`@FileDetailsModal -> projectStatus -> ${projectStatus}`)
+      // console.log(`@FileDetailsModal -> projectStatus -> ${projectStatus}`)
       async function getFileDescription() {
         await getFiles(userId).then((result) => {
           if (result.result === "Success") {

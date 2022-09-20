@@ -51,7 +51,7 @@ export function AudioPlayer({ audioMomentStart, audioUriStart, setLoading }: Pro
 
   useEffect(() => {
     async function getAudio() {
-      console.log(`@AudioRecorder:59 -> com audioMomentStart: ${audioMomentStart} e audioUriStart -> ${audioUriStart}`)
+      // console.log(`@AudioRecorder:59 -> com audioMomentStart: ${audioMomentStart} e audioUriStart -> ${audioUriStart}`)
       const atualSound = await Audio.Sound.createAsync(
         {
           uri: audioUriStart
@@ -112,7 +112,7 @@ export function AudioPlayer({ audioMomentStart, audioUriStart, setLoading }: Pro
 
 
   async function playSound() {
-    console.log('Loading Sound');
+    // console.log('Loading Sound');
     // const { sound } = await Audio.Sound.createAsync(
     //    require('./assets/Hello.mp3')
     // );
@@ -121,7 +121,7 @@ export function AudioPlayer({ audioMomentStart, audioUriStart, setLoading }: Pro
     } else {
       await sound.setPositionAsync(positionPaused)
     }
-    console.log('Playing Sound');
+    // console.log('Playing Sound');
     await sound.playAsync();
     setAudioMoment('playing');
     sound.setOnPlaybackStatusUpdate((status)=> {
@@ -135,7 +135,7 @@ export function AudioPlayer({ audioMomentStart, audioUriStart, setLoading }: Pro
   }
 
   async function PauseSound() {
-    console.log(`pausing Sound`);
+    // console.log(`pausing Sound`);
 
     await sound.pauseAsync();
     setAudioMoment('paused');

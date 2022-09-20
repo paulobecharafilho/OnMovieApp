@@ -99,7 +99,6 @@ export function Home({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
 
   const [noneProjects, setNoneProjects] = useState(true);
-  const [projectsAll, setProjectsAll] = useState<ProjectProps[]>([]);
   const [projectsCreation, setProjectsCreation] = useState<ProjectProps[]>([]);
   const [pedidos, setPedidos] = useState<ProjectProps[]>([]);
   const [lastProjects, setLastProjects] = useState<ProjectProps[]>([]);
@@ -169,33 +168,52 @@ export function Home({ navigation }) {
     var userIdAux;
     AsyncStorage.getItem(`@onmovieapp:userId`).then((result) => {
       userIdAux = result;
+      // console.log(`Home -> userIdAux: ${result}`)
     });
 
     registerForPushNotificationsAsync().then(async (token) => {
-      console.log(`iniciando registerForPushNotificationAsync com token -> ${token}`)
+      AsyncStorage.setItem(`@onmovieapp:push_token`, token);
+      // console.log(`iniciando registerForPushNotificationAsync com token -> ${token}`)
       await setExpoPushToken(token);
 
       await api
         .get(`get_user.php?userId=${userIdAux}`)
         .then(async (response) => {
-          // console.log(`Response do GetUser -> ${JSON.stringify(response.data)}`)
+          if (response.data.response === 'Success') {
+            let allTokens: string[] = JSON.parse(response.data.user[0].push_token);
+            console.log(`@Home -> allTokens -> ${JSON.stringify(allTokens)}`);
 
-          console.log(`Success do response Data com push_token -> ${userIdAux} ${response.data.user[0].push_token}`)
-          if (response.data.response === "Success") {
-            if (!response.data.user[0].push_token) {
-              await updateUserPushToken(userIdAux, token).then((res) => {
-                console.log(`Iniciando updateUserPushToken com userId = ${userIdAux} e token ${token}`)
-                if (res.result === "Success") {
-                  console.log(`Token updated Successfully!`);
+            if (!allTokens || allTokens.length === 0) {
+              allTokens = [];
+              console.log(`@Home -> nenhum token registrado ainda. Iniciando processo de atualização com token -> ${token}`)
+              allTokens.push(token);
+              await updateUserPushToken(userIdAux, allTokens)
+              .then((result) => {
+                if (result.result === 'Success') {
+                  console.log(`@Home -> Token registrado com sucesso!`)
                 }
-              });
+              }).catch((err) => console.log(`@Home -> erro no response do updateUserToken: ${err}`))
             } else {
-              console.log(
-                `Usuário já possui push_token -> ${response.data.user[0].push_token}`
-              );
+              console.log(`@Home -> 197 -> allToken is array? ${Array.isArray(allTokens)}`)
+              let foundToken = allTokens.find(element => element === token);
+              if (foundToken) {
+                console.log(`@home -> token já registrado!`)
+              } else {
+                console.log(`@Home -> Token ainda não registrado nos tokens encontrados.`)
+                allTokens.push(token);
+                updateUserPushToken(userIdAux, allTokens)
+                .then((result) => {
+                  if (result.result === 'Success') {
+                    console.log(`Token adicionado com sucesso!`);
+                  }
+                }) .catch((err) => console.log(`Erro no UpdateToken quando já tinham outros -> ${err}`))
+              }
             }
-          }
+          };
+          
         });
+
+
     });
 
     notificationListener.current =
@@ -246,12 +264,17 @@ export function Home({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      setNoneProjects(true);
       setLoading(true);
       setLoadingProjects(true);
       // setUser({} as UserDTO);
 
       async function fetchUser() {
-        const userId = await AsyncStorage.getItem("@onmovieapp:userId");
+        let userId;
+        await AsyncStorage.getItem("@onmovieapp:userId")
+        .then((result) => {
+          userId = result;
+        })
         setUserId(Number(userId));
 
         api
@@ -262,6 +285,9 @@ export function Home({ navigation }) {
 
               if (userAux.usoArred > 100) {
                 userAux.usoArred = 100;
+              }
+              if (!userAux.avatar) {
+                userAux.avatar === 'avatar.jpg'
               }
               userAux.saldo = userAux.saldo.toFixed(2);
               setUser(userAux);
@@ -307,7 +333,7 @@ export function Home({ navigation }) {
 
       fetchUser();
       fetchProjects();
-    }, [refreshing, navigation])
+    }, [refreshing === true, navigation])
   );
 
   function handleNotifications() {
@@ -334,6 +360,8 @@ export function Home({ navigation }) {
   }
 
   function handleButtonProjetos() {
+    console.log(`Chamando Projects com userId -> ${userId}`)
+
     navigation.navigate("MyProjects", {
       userId: userId,
     });
@@ -396,6 +424,7 @@ export function Home({ navigation }) {
               <UserPhotoBackground>
                 <UserPhoto
                   source={user.avatar === "avatar.jpg" ? Avatar : null}
+                  // source={Avatar}
                   style={styles.userPhoto}
                 />
               </UserPhotoBackground>
@@ -509,7 +538,7 @@ export function Home({ navigation }) {
           handleCloseNotificationModal={handleCloseNotificationModal}
         />
       ) : null}
-      <VectorHomeDown style={styles.vectorsDown} />
+      {/* <VectorHomeDown style={styles.vectorsDown} /> */}
     </Container>
   );
 }
@@ -518,14 +547,15 @@ const styles = StyleSheet.create({
   vectorUp: {
     position: "absolute",
     top: -130,
-    left: -180,
+    // left: -180,
     zIndex: 0,
-    width: 200,
+    width: '150%',
   },
   vectorsDown: {
     position: "absolute",
     bottom: -140,
     alignSelf: "center",
+    width: '120%',
     zIndex: 0,
   },
   content: {

@@ -16,6 +16,7 @@ interface Props {
   projectId: number;
   setProgress: (progress: number) => void;
   setMediaUploading: (mediaUploading: MediaProps) => void;
+  setMediaUploadingTask: (mediaUploadingTask: any) => void;
   setUploadingMomment: (momment: string) => void;
 }
 
@@ -32,6 +33,7 @@ export async function uploadMedia({
   projectId,
   setProgress,
   setMediaUploading,
+  setMediaUploadingTask,
   setUploadingMomment,
 }: Props) {
   const uploadReturn: uploadingFileReturnProps[] = [];
@@ -77,6 +79,8 @@ export async function uploadMedia({
         // );
       }
     );
+  
+    setMediaUploadingTask(task);
 
     await task
       .uploadAsync()

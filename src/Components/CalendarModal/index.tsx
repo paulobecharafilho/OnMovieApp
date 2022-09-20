@@ -70,6 +70,7 @@ export function CalendarModal({dateSelected, dateAux, setDateSelected, handleClo
               confirmText="Selecionar"
               cancelText="Voltar" 
               style={styles(theme).datePickerStyle}
+              locale='pt-BR'
            />
           </Content>
           <TouchableOpacity

@@ -17,7 +17,7 @@ export async function checkoutService(userId, projectId, couponDiscount, project
     editorSelect: editorSelect
   })
   .then((response) => {
-    // console.log(`@checkoutProjetc -> ${JSON.stringify(response.data)}`)
+    console.log(`@checkoutProjetc -> ${JSON.stringify(response.data)}`)
     if (response.data.response === 'Success') {
       checkoutInfo = response.data.checkoutInfo[0];
       // console.log(`@checkoutProject -> CheckoutInfo = ${JSON.stringify(response.data.checkoutInfo[0])}`);

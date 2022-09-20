@@ -3,7 +3,8 @@ import { TouchableOpacityProps } from "react-native";
 import { ProjectDTO } from "../../dtos/ProjectDTO";
 import { ProgressBar } from "../ProgressBar";
 
-const ThumbExample = require("../../assets/png/image_thum_example.png");
+// const ThumbExample = require("../../assets/png/image_thum_example.png");
+const ThumbExample = require("../../assets/icons/FavIconBranco.png");
 
 import {
   Container,
@@ -36,7 +37,7 @@ export function LastProjectsCard({
 
   return (
     <Container {...rest }>
-      <ThumbImage source={ThumbExample} />
+      <ThumbImage source={ThumbExample} style={{width: 35, height: 35}} />
       <StatusView style={{ backgroundColor: project.highlightColor }}>
         <StatusTitle adjustsFontSizeToFit numberOfLines={1}>{project.newStatusProj}</StatusTitle>
       </StatusView>

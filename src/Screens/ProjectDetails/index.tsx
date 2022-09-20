@@ -9,7 +9,7 @@ import { BackButton } from "../../Components/BackButton";
 import { ProgressBar } from "../../Components/ProgressBar";
 import api from "../../services/api";
 
-const ThumbExample = require(`../../assets/png/ThumbsExampleBig.png`);
+const ThumbExample = require(`../../assets/icons/FavIconBranco.png`);
 
 import { 
   Container,

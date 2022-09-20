@@ -162,7 +162,7 @@ export function Approve({ navigation }) {
   );
 
   async function handleApproveProject() {
-    console.log(`stars => ${stars}`);
+    // console.log(`stars => ${stars}`);
     await api
       .post(
         `proc_aprova_servico.php?userId=${params.userId}&idProj=${projectRefreshed.id_proj}&fb=${stars}`
@@ -198,6 +198,8 @@ export function Approve({ navigation }) {
       const uri = `${finalFileBaseUrl}/${params.userId}/${projectRefreshed.id_proj}/${projectRefreshed.arquivo_final}`;
       let fileUri =
         FileSystem.documentDirectory + `${projectRefreshed.arquivo_final}`;
+
+        console.log(`uri -> ${uri}, FileSystem.documentDirectory -> ${FileSystem.documentDirectory} fileUri -> ${fileUri}`);
       // FileSystem.downloadAsync(uri, fileUri, )
       // .then(({ uri }) => {
       //     saveFile(uri);
@@ -251,7 +253,7 @@ export function Approve({ navigation }) {
       erroEdicao: erroEdicao ? 'editor' : 'usuario',
     })
     .then(async (response) => {
-      console.log(`@Approve CorrectProject -> ${JSON.stringify(response.data)}`)
+      // console.log(`@Approve CorrectProject -> ${JSON.stringify(response.data)}`)
       if (response.data.response === 'Success') {
         Alert.alert(`Sua Solicitação foi enviada com sucesso!`)
         await onRefresh();

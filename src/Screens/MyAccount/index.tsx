@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { Masks } from "react-native-mask-input";
+import { RFValue } from "react-native-responsive-fontsize";
 import { useTheme } from "styled-components";
 import { BackButton } from "../../Components/BackButton";
 import { ButtonCustom } from "../../Components/ButtonCustom";
@@ -61,7 +62,21 @@ export function MyAccount({ navigation }) {
   );
 
   function handleSaveUserInfo() {
-    console.log("chamou função de salvar");
+    api
+    .post(`proc_update_user_info.php?userId=${user.id_user}`, 
+    {
+      name: name,
+      phone: phone,
+    })
+    .then((response) => {
+      if (response.data.response === 'Success') {
+        Alert.alert(`Alterada com sucesso`, `As informações foram alteradas com sucesso!`);
+        navigation.navigate(`Home`);
+      }
+    })
+    .catch((err) => {
+      Alert.alert(`Erro`, `Houve um problema ao salvar as informações: ${err}`)
+    })
     setEditable(false);
   }
 
@@ -126,8 +141,8 @@ export function MyAccount({ navigation }) {
 
             <TitleWrapper>
               <Title>Email</Title>
-              <Title>{user.email}</Title>
-              <Subtitle style={{ color: theme.colors.secondary }}>
+              <Subtitle>{user.email}</Subtitle>
+              <Subtitle style={{color: theme.colors.text_highlight, fontSize: RFValue(11)}}>
                 Obs: Se precisar alterar o email, por favor entre em contato com
                 nosso suporte
               </Subtitle>
@@ -135,7 +150,13 @@ export function MyAccount({ navigation }) {
 
             <TitleWrapper>
               <Title>Nome</Title>
-              <TextInputCustom text={name} editable={editable} placeholderTextColor={theme.colors.shape_inactive}/>
+              <TextInputCustom 
+                text={name}
+                editable={editable}
+                customTextColor={editable ? theme.colors.shape : theme.colors.shape_inactive}
+                onChangeText={setName}  
+              />
+                
             </TitleWrapper>
 
             <TitleWrapper>
@@ -159,15 +180,14 @@ export function MyAccount({ navigation }) {
                   setPhone(masked);
                 }}
                 mask={Masks.BRL_PHONE}
-                placeholderTextColor={theme.colors.shape_inactive}
-                editable={true}
+                editable={editable}
               />
             </TitleWrapper>
           </UserInfo>
 
           <ButtonsContent>
             <ButtonCustom
-              text={editable ? "Salvar" : "Editar Informações"}
+              text={editable ? "Salvar" : "Habilitar edição"}
               highlightColor={theme.colors.shape}
               style={{
                 backgroundColor: theme.colors.secondary,

@@ -118,6 +118,10 @@ export function MyOrders({ navigation }) {
                 }
               }
               setLoading(false);
+            } else if(result.result === 'Nenhum Projeto') {
+              console.log(`@MyProjects -> Nenhum projeto`)
+              setNoneProjects(true);
+              setLoading(false);
             } else {
               console.log(`erro no if do result -> ${result.result}`);
             }

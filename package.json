@@ -1,6 +1,6 @@
 {
-  "name": "onmoviejobs",
-  "version": "1.0.0",
+  "name": "onmovie",
+  "version": "1.0.5",
   "main": "index.js",
   "scripts": {
     "start": "expo start --dev-client",

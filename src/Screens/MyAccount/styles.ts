@@ -62,13 +62,13 @@ export const Title = styled.Text`
 margin-bottom: 10px;
 font-family: ${({ theme }) => theme.fonts.poppins_semi_bold};
 font-size: ${RFValue(12)}px;
-color: ${({ theme }) => theme.colors.shape};
+color: ${({ theme }) => theme.colors.secondary};
 `;
 
 export const Subtitle = styled.Text`
 margin-bottom: 10px;
 font-family: ${({ theme }) => theme.fonts.poppins_medium};
-font-size: ${RFValue(11)}px;
+font-size: ${RFValue(12)}px;
 color: ${({ theme }) => theme.colors.shape};
 `;
 

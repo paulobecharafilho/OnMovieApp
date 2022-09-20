@@ -1,21 +1,21 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://zrgpro.com/on_app/user/'
+  baseURL: 'https://onmovie.video/app/'
 })
 
 export default api;
 
-export const baseUrl = 'https://zrgpro.com/on_app/user/';
+export const baseUrl = 'https://onmovie.video/app/';
 
-export const libraryBaseUrl = 'https://zrgpro.com/on_app/library/';
+export const libraryBaseUrl = 'https://onmovie.video/library/';
 
-export const finalFileBaseUrl = `https://zrgpro.com/on_app/arquivos_finalizados`;
+export const finalFileBaseUrl = `https://onmovie.video/arquivos_finalizados`;
 
 export const apiStripe = axios.create({
-  baseURL: 'https://zrgpro.com/on_app/stripe/'
+  baseURL: 'https://onmovie.video/stripe/'
 });
 
 export const apiFinalFile = axios.create({
-  baseURL: 'https://zrgpro.com/on_app/arquivos_finalizados/'
+  baseURL: 'https://onmovie.video/arquivos_finalizados/'
 })

@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
-
+import * as FileSystem from "expo-file-system";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import {
   View,
@@ -8,6 +9,7 @@ import {
   StatusBar,
   StyleSheet,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import { useTheme } from "styled-components";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
@@ -50,6 +52,7 @@ export function FilesUploading({ navigation }) {
 
   const [mediaToUpload, setMediaToUpload] = useState<MediaProps[]>([]);
   const [mediaUploading, setMediaUploading] = useState<MediaProps>();
+  const [mediaUploadingTask, setMediaUploadingTask] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [uploadingMomment, setUploadingMomment] = useState("");
   const [progress, setProgress] = useState(0);
@@ -62,7 +65,7 @@ export function FilesUploading({ navigation }) {
     useCallback(() => {
       async function startUploading() {
         if (!mediaToUpload[0] && type === "gallery") {
-          console.log(`Indo para galeria`);
+          // console.log(`Indo para galeria`);
           setFileType("gallery");
           setIsMediaSelected(false);
         } else if (type === "documents" && files) {
@@ -82,7 +85,7 @@ export function FilesUploading({ navigation }) {
             if (resultItem.error) {
               Alert.alert(
                 `Erro`,
-                `o arquivo ${resultItem.filename} não foi feito o upload pelo motivo ${resultItem.error}`
+                `Não foi possível fazer o upload do arquivo: ${resultItem.filename}`
               );
             }
           }
@@ -97,6 +100,7 @@ export function FilesUploading({ navigation }) {
             projectId,
             setProgress,
             setMediaUploading,
+            setMediaUploadingTask,
             setUploadingMomment,
           });
 
@@ -104,7 +108,7 @@ export function FilesUploading({ navigation }) {
             if (resultItem.error) {
               Alert.alert(
                 `Erro`,
-                `o arquivo ${resultItem.filename} não foi feito o upload pelo motivo ${resultItem.error}`
+                `Não foi possível fazer o upload do arquivo: ${resultItem.filename}`
               );
             }
           }
@@ -116,6 +120,7 @@ export function FilesUploading({ navigation }) {
       startUploading();
     }, [mediaToUpload])
   );
+
 
   function handleUploadMoreFiles() {
     setMediaToUpload([]);
@@ -146,23 +151,32 @@ export function FilesUploading({ navigation }) {
               </Text>
               {isMediaSelected && type === "gallery"
                 ? mediaToUpload.map((item, index) => (
-                    <View key={item.id}>
-                      <Text>{item.filename}</Text>
-                      <Progress.Bar
-                        color={theme.colors.highlight}
-                        progress={
-                          mediaUploading && mediaUploading.id === item.id
-                            ? mediaUploading.progress / 100
-                            : item.progress
-                        }
-                      />
+                    <View key={item.id} style={styles(theme).viewLine}>
+                      <View> 
+                        <Text style={{color: theme.colors.shape}}>{item.filename} - {item.progress}%</Text>
+                        <Progress.Bar
+                          color={theme.colors.highlight}
+                          progress={
+                            mediaUploading && mediaUploading.id === item.id
+                              ? mediaUploading.progress / 100
+                              : item.progress
+                          }
+                        />
+                      </View>
+                      {item.progress < 100 
+                        ? 
+                          <TouchableOpacity onPress={() => {mediaUploadingTask.cancelAsync()}}>
+                            <MaterialCommunityIcons name="window-close" size={25} style={{color: theme.colors.attention}}/>
+                          </TouchableOpacity>  
+                        :null
+                      }
                       <Text>{"\n"}</Text>
                     </View>
                   ))
                 : type === "documents"
                 ? files.map((item, index) => (
                     <View key={item.name}>
-                      <Text>{item.name}:</Text>
+                      <Text style={styles(theme).text}>{item.name}: {item.progress}%</Text>
                       <Progress.Bar
                         progress={
                           fileUploading && fileUploading.name === item.name
@@ -192,10 +206,16 @@ const styles = (theme: any) =>
     viewContainer: {
       flex: 1,
       backgroundColor: theme.colors.background_primary,
+      paddingHorizontal: 30,
     },
     text: {
       fontFamily: theme.fonts.poppins_medium,
       fontSize: 12,
       color: theme.colors.shape,
+    },
+    viewLine: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: 'space-between'
     }
   });

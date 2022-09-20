@@ -168,7 +168,7 @@ export const ButtonHome = styled(TouchableOpacity)`
   height: 55px;
 
   border-radius: 15px;
-
+  
   align-items: center;
   justify-content: center;
 `;

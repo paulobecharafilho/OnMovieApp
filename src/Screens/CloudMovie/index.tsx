@@ -81,6 +81,7 @@ export function CloudMovie({ navigation }) {
   const [choosedFile, setChoosedFile] = useState<FileAttatchedProps>();
   const [filesToUpload, setFilesToUpload] = useState<DocumentProps[]>([]);
   const [project, setProject] = useState<ProjectProps>(projectInit);
+  const [noneFiles, setNoneFiles] = useState(true);
 
   const [categorySelected, setCategorySelected] = useState("Todos");
 
@@ -105,6 +106,7 @@ export function CloudMovie({ navigation }) {
         await getFiles(userId).then(async (result) => {
           if (result.result === "Success") {
             setLibraryFiles([]);
+            setNoneFiles(false);
             await result.libraryFiles.map((item) => {
               if (project) {
                 if (project.files) {
@@ -123,6 +125,9 @@ export function CloudMovie({ navigation }) {
               setLibraryFiles((oldArray) => [...oldArray, item]);
               setLoading(false);
             });
+          } else if (result.result = '0') {
+            setNoneFiles(true);
+            setLoading(false);
           }
         });
       }
@@ -289,6 +294,9 @@ export function CloudMovie({ navigation }) {
             // console.log(`File -> ${file.name} checkado com token ${token} e uri -> ${file.fileCopyUri}`)
             filesAux.push(file);
             setFilesToUpload((old) => [...old, file]);
+          }
+          else {
+            Alert.alert(`Arquivo Existente`, `O arquivo ${element.name} já existe na sua biblioteca.`)
           }
         })
         .catch((e) => console.log(`erro -> ${e}`));

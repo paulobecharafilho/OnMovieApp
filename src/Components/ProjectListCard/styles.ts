@@ -29,6 +29,13 @@ export const Content = styled.View`
 
 export const InfoWrapper = styled.View``;
 
+export const TitleRow = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 5%;
+
+`;
+
 export const Title = styled.Text`
   font-family: ${({ theme }) => theme.fonts.poppins_medium};
   font-size: ${RFValue(12)}px;
@@ -36,7 +43,8 @@ export const Title = styled.Text`
 
   line-height: ${RFValue(18)}px;
 
-  margin-bottom: 8px;
+  margin-left: 5%;
+
 `;
 
 export const InfoRow = styled.View`

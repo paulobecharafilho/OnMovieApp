@@ -153,9 +153,7 @@ export const TimeContent = styled.View`
   width: 100%;
   padding-top: 50px;
   align-items: center;
-  justify-content: space-between;
-
-  margin-bottom: 30px;
+  justify-content: space-around;
   
 `;
 

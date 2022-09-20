@@ -140,7 +140,7 @@ export function Chat({ navigation }) {
         idPed: params.project.id_proj,
       })
       .then((response) => {
-        // console.log(`@Chat - OnSendMessage Response -> ${JSON.stringify(response.data)}`)
+        console.log(`@Chat - OnSendMessage Response -> ${JSON.stringify(response.data)}`)
         if (response.data.response === "Success") {
           setMessageToSend("");
           Keyboard.dismiss();

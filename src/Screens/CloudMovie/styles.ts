@@ -86,7 +86,7 @@ export const FilesContainer = styled.View`
   background-color: ${({ theme }) => theme.colors.background_secondary};
   width: ${Dimensions.get('window').width}px;
   padding: 20px 20px;
-  padding-bottom: ${Platform.OS === 'ios' ? getBottomSpace() + 100 : 120}px;
+  padding-bottom: 120px;
 
   border-radius: 50px;
 `;
@@ -105,7 +105,7 @@ export const NoneProjectTitle = styled.Text`
   margin-top: 20px;
   font-family: ${({ theme }) => theme.fonts.poppins_regular};
   font-size: ${RFValue(12)}px;
-  color: ${({ theme }) => theme.colors.text_highlight};
+  color: ${({ theme }) => theme.colors.secondary};
 `;
 
 export const ListContent = styled.View`

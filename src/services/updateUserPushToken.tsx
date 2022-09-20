@@ -1,7 +1,7 @@
 import React from 'react';
 import api from './api';
 
-export async function updateUserPushToken(userId, token) {
+export async function updateUserPushToken(userId, token:string[]) {
   let result = '';
 
   await api

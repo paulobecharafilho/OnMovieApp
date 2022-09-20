@@ -7,8 +7,6 @@ import {
   Container,
   Title,
   TitleHighlight,
-  FooterTitleButton,
-  FooterTitle,
 } from "./styles";
 import { ButtonCustom } from "../../Components/ButtonCustom";
 import { Alert, Dimensions, StatusBar, StyleSheet } from "react-native";

@@ -26,7 +26,7 @@ export const TitleBegin = styled.Text`
 
 export const FormContainer = styled.View`
   flex: 1;
-  padding-bottom: ${Platform.OS === 'ios' ? getBottomSpace() : 30}px;
+  padding-bottom: 30px;
 `;
 
 export const Header = styled.View`

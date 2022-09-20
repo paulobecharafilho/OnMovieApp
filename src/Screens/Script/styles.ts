@@ -37,7 +37,7 @@ export const HeaderIcon = styled(MaterialCommunityIcons)`
 
 export const Content = styled.View`
   flex: 1;
-  padding: 30px 30px ${Platform.OS==='ios' ? getBottomSpace() : 30}px 30px;
+  padding: 30px 30px 30px 30px;
 
   background-color: ${({ theme }) => theme.colors.background_secondary};
 

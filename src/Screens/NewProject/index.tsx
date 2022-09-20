@@ -493,7 +493,7 @@ export function NewProject({ navigation }) {
         );
         try {
           const response = await ky.post(
-            `https://zrgpro.com/on_app/user/proc_upload_audio.php?userId=${userId}}&projectId=${projectId}`,
+            `https://onmovie.video/app/proc_upload_audio.php?userId=${userId}}&projectId=${projectId}`,
             {
               body: fd,
             }
@@ -707,7 +707,7 @@ export function NewProject({ navigation }) {
                   </InfoContent>
 
                   <FormContent>
-                    <TimeContent style={Platform.OS === 'android' ? {width: '110%'} : null}>
+                    <TimeContent>
                       <TitleWrapper>
                         <Subtitle>agora defina o</Subtitle>
                         <Title>Tempo final do vídeo?</Title>
@@ -720,8 +720,9 @@ export function NewProject({ navigation }) {
                         minutesUnit="min"
                         secondsUnit="s"
                         textColor={theme.colors.primary}
+                      
                       />
-                      <Title style={Platform.OS === 'android' ? { marginTop: 100, marginBottom: 20 } : { marginTop: 30, marginBottom: 20 }}>
+                      <Title style={Platform.OS === 'android' ? { marginTop: 100, marginBottom: 20 } : null}>
                         E ainda sobre o tempo do vídeo, ele será:
                       </Title>
                       <DurationCompFlatList

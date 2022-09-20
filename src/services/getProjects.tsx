@@ -125,7 +125,11 @@ export async function getProjects(userId, theme) {
         
         result = 'Success';
         
-      } else {
+      } else if (response.data.response === 'Erro ao encontrar Projetos') {
+        result = 'Nenhum Projeto'
+      } 
+      
+      else {
         result='Não foi possível buscar os projetos'
       }
     })

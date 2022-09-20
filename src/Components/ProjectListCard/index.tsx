@@ -1,13 +1,15 @@
-import React from 'react';
-import { Image, TouchableOpacityProps } from 'react-native';
-import { ProgressBar } from '../ProgressBar';
-import ThumExample from '../../assets/png/image_thum_example.png';
+import React from "react";
+import { Image, TouchableOpacityProps } from "react-native";
+import { ProgressBar } from "../ProgressBar";
+// import ThumExample from '../../assets/png/image_thum_example.png';
+import ThumExample from "../../assets/icons/FavIconBranco.png";
 
 import {
   Container,
   ThumbnailsView,
   Content,
   InfoWrapper,
+  TitleRow,
   Title,
   InfoRow,
   StatusView,
@@ -15,31 +17,42 @@ import {
   Scenes,
   Date,
   Icon,
-} from './styles';
-import { useTheme } from 'styled-components';
-import { ProjectProps } from '../../utils/Interfaces';
-
+} from "./styles";
+import { useTheme } from "styled-components";
+import { ProjectProps } from "../../utils/Interfaces";
 
 interface Props extends TouchableOpacityProps {
-  project: ProjectProps,
-  highlightColor?: string,
-  newStatusProj?: string,
-
+  project: ProjectProps;
+  highlightColor?: string;
+  newStatusProj?: string;
 }
 
-export function ProjectListCard({project, highlightColor, newStatusProj, ...rest}: Props) {
+export function ProjectListCard({
+  project,
+  highlightColor,
+  newStatusProj,
+  ...rest
+}: Props) {
   const theme = useTheme();
 
   return (
     <Container {...rest}>
-      <ThumbnailsView>
-        <Image source={ThumExample}/>
-      </ThumbnailsView>
       <Content>
         <InfoWrapper>
-          <Title>{project.nome_proj}</Title>
+          <TitleRow>
+            <ThumbnailsView>
+              <Image source={ThumExample} style={{ width: 40, height: 40 }} />
+            </ThumbnailsView>
+            <Title>{project.nome_proj}</Title>
+          </TitleRow>
           <InfoRow>
-            <StatusView style={{backgroundColor: project.highlightColor ? project.highlightColor : theme.colors.attention_light}} >
+            <StatusView
+              style={{
+                backgroundColor: project.highlightColor
+                  ? project.highlightColor
+                  : theme.colors.attention_light,
+              }}
+            >
               <StatusText>{project.newStatusProj}</StatusText>
             </StatusView>
             <Scenes>Id projeto: {project.id_proj}</Scenes>
@@ -47,9 +60,17 @@ export function ProjectListCard({project, highlightColor, newStatusProj, ...rest
           </InfoRow>
         </InfoWrapper>
         {/* <ChevronRightIcon width={17} height={17} />  */}
-        <Icon name="chevron-right"/>
+        <Icon name="chevron-right" />
       </Content>
-      <ProgressBar progress={`${project.progresso}%`} widthCustom={'100%'} color={project.highlightColor ? project.highlightColor : theme.colors.highlight} />
+      <ProgressBar
+        progress={`${project.progresso}%`}
+        widthCustom={"100%"}
+        color={
+          project.highlightColor
+            ? project.highlightColor
+            : theme.colors.highlight
+        }
+      />
     </Container>
   );
 }

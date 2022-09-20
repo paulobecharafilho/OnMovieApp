@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   StatusBar,
   Text,
+  Alert,
 } from "react-native";
 import { AssetsSelector } from 'expo-images-picker'
 import { Ionicons } from "@expo/vector-icons";
@@ -68,8 +69,10 @@ export function MediaUpload({
           if (response.data.result[0].response === 0) {
             let token = response.data.result[0].token;
             element.token = token;
-            console.log(`element ${element.filename} com token ${element.token}`);
+            // console.log(`element ${element.filename} com token ${element.token}`);
             mediaToUpload.push(element);
+          } else if (response.data.result[0].response === 1 || response.data.result[0].response === 2 || response.data.result[0].response === 3) {
+            Alert.alert(`Arquivo já existente`, `o seu arquivo ${element.filename} já está na sua biblioteca. Para adicionar ao seu projeto, acesse seu CloudMovie!`)
           }
         })
         .catch((e) => console.log(`erro -> ${e}`));

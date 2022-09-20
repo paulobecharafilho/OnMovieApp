@@ -15,7 +15,6 @@ export function Routes() {
 
   
   useEffect(() => {
-    console.log(`Iniciando Routes`)
     let userIdAux = 0;
     async function getUserFromStorage() {
       await AsyncStorage.getItem("@onmovieapp:userId").then((result) => {
