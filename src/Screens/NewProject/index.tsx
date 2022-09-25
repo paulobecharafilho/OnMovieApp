@@ -811,6 +811,8 @@ export function NewProject({ navigation }) {
                       setAudioMomentResult={setAudioMoment}
                       audioMomentStart={audioMoment}
                       audioUriStart={audioMoment != "none" ? audioUri : null}
+                      userId={userId}
+                      projectId={projectId}
                     />
                     {audioMoment === 'recording' ? <Subtitle>Finalize a gravação do áudio no STOP para continuar</Subtitle> : null}
                     {/* <ButtonCustom

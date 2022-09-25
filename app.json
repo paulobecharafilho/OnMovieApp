@@ -2,7 +2,7 @@
   "expo": {
     "name": "OnMovieApp",
     "slug": "OnMovieApp",
-    "version": "5",
+    "version": "1.1.0",
     "scheme":"onmovieapp",
     "icon":"./src/assets/icons/icon.png",
     "assetBundlePatterns": [

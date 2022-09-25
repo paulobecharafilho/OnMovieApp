@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import MaskInput, { Masks } from 'react-native-mask-input';
+import MaskInput, { Masks } from "react-native-mask-input";
 import {
   Dimensions,
   TouchableWithoutFeedback,
@@ -7,6 +7,9 @@ import {
   Platform,
   Alert,
   StatusBar,
+  Switch,
+  Text,
+  Linking,
 } from "react-native";
 
 import { ProgressBar } from "../../Components/ProgressBar";
@@ -26,6 +29,7 @@ import {
   TitleWrapper,
   SubTitle,
   Title,
+  TermContent,
 } from "./styles";
 import { PageInput } from "../../Components/PageInput";
 import { MaskInputCustom } from "../../Components/MaskInputCustom";
@@ -50,13 +54,14 @@ export function Register({ navigation }) {
   const [password, setPassword] = useState("");
   const [passwordIsValid, setPasswordIsValid] = useState(false);
 
+  const [isTermAccepted, setIsTermAccepted] = useState(false);
 
   function handleBackButton() {
     if (pageForm === 1) {
       navigation.goBack();
     } else {
       if (pageForm === 4) {
-        setPassword(passwordAux)
+        setPassword(passwordAux);
       }
       setPageForm(pageForm - 1);
       setProgress(progress - 25);
@@ -79,27 +84,27 @@ export function Register({ navigation }) {
       setPasswordIsValid(false);
       return false;
     } else {
-      setPasswordIsValid(true)
-      setPasswordAux(password)
+      setPasswordIsValid(true);
+      setPasswordAux(password);
     }
   }
 
   function handlePressContinue() {
-    if (pageForm === 1 ) {
-      setEmail(emailAux)
+    if (pageForm === 1) {
+      setEmail(emailAux);
     }
     setPageForm(pageForm + 1);
     setProgress(progress + 25);
   }
 
   function handleFinishRegister() {
-    setPassword(password)
+    setPassword(password);
     api
       .post(`register.php`, {
         email: email,
         name: name,
         password: passwordAux,
-        phone: phone
+        phone: phone,
       })
       .then((response) => {
         if (
@@ -110,7 +115,7 @@ export function Register({ navigation }) {
           Alert.alert(`Algum erro desconhecido`);
         } else if (response.data.result[0].response === "Success") {
           console.log(`Cadastro realizado com sucesso`);
-          navigation.navigate('Typ', {
+          navigation.navigate("Typ", {
             password: passwordAux,
             email: email,
           });
@@ -127,7 +132,7 @@ export function Register({ navigation }) {
   return (
     <Container behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <StatusBar
-        barStyle='light-content'
+        barStyle="light-content"
         backgroundColor="transparent"
         translucent
       />
@@ -152,7 +157,11 @@ export function Register({ navigation }) {
                 <SubTitle>Vamos começar</SubTitle>
                 <Title>qual seu e-mail?</Title>
               </TitleWrapper>
-              {emailIsValid ? <Check width={25} height={25} /> : <CheckDisabled width={25} height={25} />}
+              {emailIsValid ? (
+                <Check width={25} height={25} />
+              ) : (
+                <CheckDisabled width={25} height={25} />
+              )}
             </ContentHeader>
             <PageInput
               keyboardType="email-address"
@@ -162,16 +171,18 @@ export function Register({ navigation }) {
               placeholderTextColor={theme.colors.shape_inactive}
               placeholder={email ? email : "Digite aqui seu email"}
               // value={email ? email : null}
-              
             />
             {/* {emailIsValid ? null : <SubTitle>Por favor digite um email válido</SubTitle>} */}
             {emailIsValid ? (
               <ButtonCustom onPress={handlePressContinue} text={"Avançar"} />
             ) : (
-              <ButtonCustom text={"Avançar"} disabled={true} highlightColor={theme.colors.primary_light}/>
+              <ButtonCustom
+                text={"Avançar"}
+                disabled={true}
+                highlightColor={theme.colors.primary_light}
+              />
             )}
           </Content>
-
         ) : pageForm === 2 ? (
           <Content>
             <ContentHeader>
@@ -179,24 +190,30 @@ export function Register({ navigation }) {
                 <SubTitle>e o seu</SubTitle>
                 <Title>nome completo?</Title>
               </TitleWrapper>
-              {name ? <Check width={25} height={25} /> : <CheckDisabled width={25} height={25} />}
+              {name ? (
+                <Check width={25} height={25} />
+              ) : (
+                <CheckDisabled width={25} height={25} />
+              )}
             </ContentHeader>
             <PageInput
               autoCapitalize="words"
               autoCorrect={false}
               onChangeText={setName}
               value={name}
-              placeholder='Digite seu nome'
+              placeholder="Digite seu nome"
               placeholderTextColor={theme.colors.shape_inactive}
-
             />
             {name ? (
               <ButtonCustom onPress={handlePressContinue} text={"Avançar"} />
             ) : (
-              <ButtonCustom text={"Avançar"} disabled={true} highlightColor={theme.colors.primary_light}/>
+              <ButtonCustom
+                text={"Avançar"}
+                disabled={true}
+                highlightColor={theme.colors.primary_light}
+              />
             )}
           </Content>
-
         ) : pageForm === 3 ? (
           <Content>
             <ContentHeader>
@@ -204,14 +221,18 @@ export function Register({ navigation }) {
                 <SubTitle>também precisamos do</SubTitle>
                 <Title>seu telefone:</Title>
               </TitleWrapper>
-              {phoneIsValid ? <Check width={25} height={25} /> : <CheckDisabled width={25} height={25} />}
+              {phoneIsValid ? (
+                <Check width={25} height={25} />
+              ) : (
+                <CheckDisabled width={25} height={25} />
+              )}
             </ContentHeader>
             <MaskInputCustom
               keyboardType="phone-pad"
               value={phone}
               onChangeText={(masked, unmasked) => {
-                if (masked.length===14){
-                  setPhoneIsValid(true)
+                if (masked.length === 14) {
+                  setPhoneIsValid(true);
                 }
                 setPhone(masked);
               }}
@@ -221,10 +242,13 @@ export function Register({ navigation }) {
             {phoneIsValid ? (
               <ButtonCustom onPress={handlePressContinue} text={"Avançar"} />
             ) : (
-              <ButtonCustom text={"Avançar"} disabled={true} highlightColor={theme.colors.primary_light}/>
+              <ButtonCustom
+                text={"Avançar"}
+                disabled={true}
+                highlightColor={theme.colors.primary_light}
+              />
             )}
           </Content>
-
         ) : pageForm === 4 ? (
           <Content>
             <ContentHeader>
@@ -240,16 +264,54 @@ export function Register({ navigation }) {
               onChangeText={(t) => handleValidatePassword(t)}
               secureTextEntry={passwordSecurity}
               visibleButton={true}
-              onVisibleButtonPress={() => setPasswordSecurity(!passwordSecurity)}
+              onVisibleButtonPress={() =>
+                setPasswordSecurity(!passwordSecurity)
+              }
               placeholder="Digite aqui sua senha"
               placeholderTextColor={theme.colors.shape_inactive}
               value={password ? password : null}
             />
+
+            <TermContent>
+              <Switch
+                trackColor={{
+                  false: theme.colors.inactive,
+                  true: theme.colors.highlight,
+                }}
+                thumbColor={theme.colors.shape}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={() => setIsTermAccepted(!isTermAccepted)}
+                value={isTermAccepted}
+                style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+              />
+              <SubTitle>
+                Eu aceito os {' '}
+                <Text
+                  style={{
+                    color: theme.colors.secondary,
+                    textDecorationLine: "underline",
+                  }}
+                  onPress={() =>
+                    Linking.openURL("http://onmovie.video/user_term.html")
+                  }
+                >
+                  Termos de Uso e Privacidade
+                </Text>
+                {' '} da OnMovie!
+              </SubTitle>
+            </TermContent>
             {/* {emailIsValid ? null : <SubTitle>Por favor digite um email válido</SubTitle>} */}
-            {passwordIsValid ? (
-              <ButtonCustom onPress={handleFinishRegister} text={"Criar minha conta"} />
+            {passwordIsValid && isTermAccepted ? (
+              <ButtonCustom
+                onPress={handleFinishRegister}
+                text={"Criar minha conta"}
+              />
             ) : (
-              <ButtonCustom text={"Criar minha conta"} disabled={true} highlightColor={theme.colors.primary_light}/>
+              <ButtonCustom
+                text={"Criar minha conta"}
+                disabled={true}
+                highlightColor={theme.colors.primary_light}
+              />
             )}
           </Content>
         ) : null}

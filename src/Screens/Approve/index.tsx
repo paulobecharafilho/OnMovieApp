@@ -33,7 +33,7 @@ import {
 } from "./styles";
 import { ProgressBar } from "../../Components/ProgressBar";
 import { CorrectModal } from "../../Components/CorrectModal";
-import { boolean } from "yup";
+import { getProjectById } from "../../services/getProjectById";
 
 const marcaDagua = require("../../assets/png/MarcaDagua.png");
 
@@ -70,6 +70,7 @@ export function Approve({ navigation }) {
   const [erroEdicao, setErroEdicao] = useState(false);
 
   const [isVideoApproved, setIsVideoApproved] = useState(false);
+
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -189,11 +190,19 @@ export function Approve({ navigation }) {
   }
 
   async function downlaodVideo() {
-    console.log(`permissionStatus -> ${permissionStatus.granted}`)
+    
 
-    if (!permissionStatus) {
-      requestPermission
+    if (!permissionStatus.granted) {
+      console.log(`Dentro do If !PermissionStatus -> ${JSON.stringify(permissionStatus)}`)
+      
+      MediaLibrary.requestPermissionsAsync();
+      
+      console.log(`Dentro do If !PermissionStatus DEPOIS do REQUEST -> ${permissionStatus.granted}`)
+      // requestPermission();
+      
     } else {
+      console.log(`Dentro do ELSE !PermissionStatus -> ${JSON.stringify(permissionStatus)}`)
+
       setDownloadLoading(true);
       const uri = `${finalFileBaseUrl}/${params.userId}/${projectRefreshed.id_proj}/${projectRefreshed.arquivo_final}`;
       let fileUri =
@@ -225,6 +234,7 @@ export function Approve({ navigation }) {
 
   async function saveFile(fileUri: string) {
 
+
     if (MediaLibrary.PermissionStatus.GRANTED) {
       const asset = await MediaLibrary.createAssetAsync(fileUri);
       await MediaLibrary.createAlbumAsync("Download", asset, false);
@@ -241,6 +251,28 @@ export function Approve({ navigation }) {
           },
         ]
       );
+    } else {
+      await MediaLibrary.requestPermissionsAsync();
+
+      if (MediaLibrary.PermissionStatus.GRANTED) {
+        const asset = await MediaLibrary.createAssetAsync(fileUri);
+        await MediaLibrary.createAlbumAsync("Download", asset, false);
+  
+        setDownloadLoading(false);
+        Alert.alert(
+          `Ihuu! Seu download foi realizado com sucesso!`,
+          `Agora seu vídeo está na sua galeria!`,
+          [
+            {
+              text: "Ok",
+              onPress: () => handleGoBackToProjectDetails(),
+              style: "cancel",
+            },
+          ]
+        );
+      } else {
+        Alert.alert(`Não foi possível salvar sua imagem.`, `Por favor, libere a permissão do app à sua biblioteca`)
+      }
     }
   }
 
@@ -253,13 +285,10 @@ export function Approve({ navigation }) {
       erroEdicao: erroEdicao ? 'editor' : 'usuario',
     })
     .then(async (response) => {
-      // console.log(`@Approve CorrectProject -> ${JSON.stringify(response.data)}`)
+      console.log(`@Approve CorrectProject -> ${JSON.stringify(response.data)}`)
       if (response.data.response === 'Success') {
         Alert.alert(`Sua Solicitação foi enviada com sucesso!`)
-        await onRefresh();
-        navigation.navigate(`ProjectDetails`, {
-          project: projectRefreshed
-        })
+        refreshProject();
       }
     })
     .catch((err) => {
@@ -272,6 +301,22 @@ export function Approve({ navigation }) {
       project: projectRefreshed,
     });
   }
+
+
+  async function refreshProject() {
+    await getProjectById(params.userId, projectRefreshed.id_proj, theme)
+    .then((result) => {
+      if (result.result === 'Success') {
+        // console.log(`Refresh Done Successfully -> ${JSON.stringify(result.projectResult)}`);
+        let projectRefreshed = result.projectResult;
+        navigation.navigate('ProjectDetails', {
+          project: projectRefreshed,
+          userId: params.userId
+        })
+      }
+    })
+  }
+
 
   return (
     <Container>

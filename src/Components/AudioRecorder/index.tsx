@@ -18,6 +18,8 @@ import { ProgressBar } from '../ProgressBar';
 import { Subtitle } from '../../Screens/NewProject/styles';
 import { useTheme } from 'styled-components';
 import { Alert } from 'react-native';
+import api from '../../services/api';
+import { ProjectDescriptionDetails } from '../../Screens/ProjectDescriptionDetails';
 
 
 interface Props {
@@ -25,9 +27,11 @@ interface Props {
   setAudioMomentResult: (text: string) => void;
   audioMomentStart: string;
   audioUriStart?: string;
+  userId?: number;
+  projectId?: number;
 }
 
-export function AudioRecorder({ setAudioUriResult, setAudioMomentResult, audioMomentStart, audioUriStart }: Props) {
+export function AudioRecorder({ setAudioUriResult, setAudioMomentResult, audioMomentStart, audioUriStart, userId, projectId }: Props) {
   const theme = useTheme();
 
   const [sound, setSound] = useState<Sound>();
@@ -80,7 +84,7 @@ export function AudioRecorder({ setAudioUriResult, setAudioMomentResult, audioMo
       }); 
       console.log('Starting recording..');
       const { recording, status} = await Audio.Recording.createAsync(
-         Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY
+         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
       );
       setRecordingStatus(status)
       setAudioMoment('recording');
@@ -150,11 +154,41 @@ export function AudioRecorder({ setAudioUriResult, setAudioMomentResult, audioMo
   }
 
   async function handleTrashAudio() {
-    await sound.unloadAsync();
-    setSoundUri('');
-    setAudioUriResult('');
-    setAudioMoment('none');
-    setAudioMomentResult('none');
+
+    if (audioUriStart) {
+
+      // await api
+      // .post(``)
+      let fileName = audioUriStart.split(`audios/`)[1];
+
+      await api.post(`proc_apaga_audio.php?userId=${userId}`, 
+      {
+        projId: projectId,
+        fileName: fileName
+      })
+      .then(async (response) => {
+        if (response.data.response === 'Success') {
+          console.log(`Áudio deletado com Sucesso`)
+          await sound.unloadAsync();
+          setSoundUri('');
+          setAudioUriResult('');
+          setAudioMoment('none');
+          setAudioMomentResult('none');
+        } else {
+          Alert.alert(`Não foi possível Remover o áudio`)
+        }
+      })
+      .catch((err) => Alert.alert(`Não foi possível remover o áudio`, `Erro -> ${err}`));
+    
+    } else {
+      await sound.unloadAsync();
+      setSoundUri('');
+      setAudioUriResult('');
+      setAudioMoment('none');
+      setAudioMomentResult('none');
+    }
+    
+    // Excluir do banco de Dados e do Servidor.
   }
 
   function alertTrash() {

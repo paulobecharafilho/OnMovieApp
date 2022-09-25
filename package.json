@@ -20,7 +20,7 @@
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
     "@react-navigation/stack": "^6.2.1",
-    "@stripe/stripe-react-native": "0.6.1",
+    "@stripe/stripe-react-native": "^0.19.0",
     "@types/axios": "^0.14.0",
     "@types/resolve": "^1.20.2",
     "@types/styled-components": "^5.1.25",

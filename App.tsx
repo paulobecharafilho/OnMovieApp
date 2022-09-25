@@ -56,7 +56,7 @@ export default function App() {
 
   return (
     <StripeProvider
-      publishableKey={stripePkTest}
+      publishableKey={stripePk}
       urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
       merchantIdentifier="merchant.com.onmovieapp" // required for Apple Pay
     >

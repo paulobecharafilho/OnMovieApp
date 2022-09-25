@@ -129,7 +129,7 @@ export function Home({ navigation }) {
   }, []);
 
   async function registerForPushNotificationsAsync() {
-    let token;
+    let token: string;
     if (Device.isDevice) {
       const { status: existingStatus } =
         await Notifications.getPermissionsAsync();

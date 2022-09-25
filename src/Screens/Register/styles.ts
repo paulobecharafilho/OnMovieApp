@@ -53,3 +53,9 @@ export const Title = styled.Text`
 
   line-height: ${RFValue(30)}px;
 `;
+
+export const TermContent = styled.View`
+  flex-direction: row;
+  margin-bottom: 40px;
+  padding: 0 30px 0 30px;
+`;

@@ -401,7 +401,7 @@ export function CheckoutScreen({ navigation }) {
             <View style={{ width: "100%", alignItems: "center" }}>
               {qtdFranquias > 0 ? (
                 <TouchableOpacity
-                disabled={!loadingForButton}
+                // disabled={!loadingForButton}
                 onPress={handlePayWithAssinaturas}
                 style={[
                   styles.button,
