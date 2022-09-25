@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import {
+  ActivityIndicator,
   Alert,
   Dimensions,
   Keyboard,
@@ -26,22 +27,24 @@ import {
   ButtonTitle,
   FooterTitleButton,
   FooterTitle,
-} from './styles';
-import { useForm } from 'react-hook-form';
-import { InputForm } from '../../Components/InputForm';
-import { BackButton } from '../../Components/BackButton';
+} from "./styles";
+import { useForm } from "react-hook-form";
+import { InputForm } from "../../Components/InputForm";
+import { BackButton } from "../../Components/BackButton";
+import { useTheme } from "styled-components";
 
 interface FormData {
-  email: string
+  email: string;
 }
 
 const schema = Yup.object().shape({
   email: Yup.string()
     .email("Por favor utilize um email válido")
-    .required("Email é obrigatório")
+    .required("Email é obrigatório"),
 });
 
-export function ForgotPassword({navigation}) {
+export function ForgotPassword({ navigation }) {
+  const theme = useTheme();
   const NewLogoMargin = (Dimensions.get("window").width - 73) / 2;
 
   const {
@@ -50,10 +53,12 @@ export function ForgotPassword({navigation}) {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
+  const [loading, setLoading] = useState(false);
+
   function handleComeBackToLogin() {
-    navigation.navigate('Login')
+    navigation.navigate("Login");
   }
-  
+
   function handleBackButton() {
     navigation.goBack();
   }
@@ -63,6 +68,7 @@ export function ForgotPassword({navigation}) {
   }
 
   async function recoverPassword({ email }: FormData) {
+    setLoading(true);
     api
       .post(`recoverpassword.php`, {
         email: email,
@@ -75,23 +81,25 @@ export function ForgotPassword({navigation}) {
         ) {
           Alert.alert(`Nenhum response.data`);
         } else if (response.data.result[0].response === "Success") {
+          setLoading(false);
           Alert.alert(
             "Enviado com Sucesso",
             "Por favor, confira seu email para recuperar a senha",
-            [{
-              text: 'Ok',
-              onPress: ()=> navigation.navigate('Login'),
-              style: 'default'
-            }]
-          )
-        } else {
-          Alert.alert(
-            'Erro!',
-            `${response.data.result[0].response}`
+            [
+              {
+                text: "Ok",
+                onPress: () => navigation.navigate("Login"),
+                style: "default",
+              },
+            ]
           );
+        } else {
+          setLoading(false);
+          Alert.alert("Erro!", `${response.data.result[0].response}`);
         }
       })
       .catch((error) => {
+        setLoading(false);
         console.log(`error -> ${error}`);
         console.log(`error.response -> ${error.message}`);
       });
@@ -100,7 +108,7 @@ export function ForgotPassword({navigation}) {
   return (
     <Container>
       <StatusBar
-        barStyle='light-content'
+        barStyle="light-content"
         backgroundColor="transparent"
         translucent
       />
@@ -116,38 +124,43 @@ export function ForgotPassword({navigation}) {
       </Header>
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <Content>
-          <TitleWrapper>
-            <Title>Vamos recuperar sua senha</Title>
-            <SubTitle>Por favor digite seu email.</SubTitle>
-          </TitleWrapper>
+        {loading ? (
+          <ActivityIndicator />
+        ) : (
+          <Content>
+            <TitleWrapper>
+              <Title>Vamos recuperar sua senha</Title>
+              <SubTitle>Por favor digite seu email.</SubTitle>
+            </TitleWrapper>
 
-          <InputWrapper>
-            <InputForm
-              name="email"
-              control={control}
-              error={errors.email && errors.email.message}
-              text="E-mail"
-              icon="email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              secureTextEntry={false}
-              onSubmitEditing={handleSubmit(handlePressRecoveryButton)}
-            />
-          </InputWrapper>
+            <InputWrapper>
+              <InputForm
+                name="email"
+                control={control}
+                error={errors.email && errors.email.message}
+                text="E-mail"
+                icon="email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                secureTextEntry={false}
+                onSubmitEditing={handleSubmit(handlePressRecoveryButton)}
+                customTextColor={theme.colors.shape}
+              />
+            </InputWrapper>
 
-          <ForgotButton
-            onPress={handleSubmit(handlePressRecoveryButton)}
-            style={{ marginTop: 45 }}
-          >
-            <ButtonTitle>Recuperar Senha</ButtonTitle>
-          </ForgotButton>
+            <ForgotButton
+              onPress={handleSubmit(handlePressRecoveryButton)}
+              style={{ marginTop: 45 }}
+            >
+              <ButtonTitle>Recuperar Senha</ButtonTitle>
+            </ForgotButton>
 
-          <FooterTitleButton onPress={handleComeBackToLogin}>
-            <FooterTitle>Voltar para Login</FooterTitle>
-          </FooterTitleButton>
-        </Content>
+            <FooterTitleButton onPress={handleComeBackToLogin}>
+              <FooterTitle>Voltar para Login</FooterTitle>
+            </FooterTitleButton>
+          </Content>
+        )}
       </TouchableWithoutFeedback>
     </Container>
   );

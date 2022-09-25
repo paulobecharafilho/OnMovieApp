@@ -9,6 +9,7 @@ import {
   Text,
   Switch,
   View,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useTheme } from "styled-components";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -22,8 +23,6 @@ import {
   Title,
   Subtitle,
 } from "./styles";
-
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 interface CorrectModalProps {
   handleCloseCorrectModal: () => void;
@@ -70,7 +69,6 @@ export function CorrectModal({
         >
           <ContentInit>
             <TouchableWithoutFeedback
-              containerStyle={{ flex: 1 }}
               style={{ flex: 1 }}
               onPress={Keyboard.dismiss}
             >

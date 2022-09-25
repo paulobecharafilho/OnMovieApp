@@ -490,6 +490,7 @@ export function Home({ navigation }) {
               <ButtonWrapper>
                 <ButtonHome
                   style={{ backgroundColor: theme.colors.dark_inactive }}
+                  onPress={() => Linking.openURL(`https://saibamais.onmovie.com.br/tutoriais`)}
                 >
                   <ButtonIconIonicons name="school-outline" />
                 </ButtonHome>
