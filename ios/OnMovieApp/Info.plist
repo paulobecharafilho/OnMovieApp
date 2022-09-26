@@ -56,16 +56,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to take photos and videos</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to access your microphone</string>
+	<string>Allow $(PRODUCT_NAME) to access your microphone to record audio explanation for video's editor.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to access your photos</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>location</string>
-		<string>fetch</string>
-	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

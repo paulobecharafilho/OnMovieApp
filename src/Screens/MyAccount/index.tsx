@@ -4,7 +4,9 @@ import {
   Alert,
   Keyboard,
   TextInput,
+  Text,
   TouchableWithoutFeedback,
+  Linking,
 } from "react-native";
 import { Masks } from "react-native-mask-input";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -187,7 +189,7 @@ export function MyAccount({ navigation }) {
 
           <ButtonsContent>
             <ButtonCustom
-              text={editable ? "Salvar" : "Habilitar edição"}
+              text={editable ? "Salvar" : "Editar"}
               highlightColor={theme.colors.shape}
               style={{
                 backgroundColor: theme.colors.secondary,
@@ -207,6 +209,23 @@ export function MyAccount({ navigation }) {
               onPress={() => setPassowrdModalVisible(true)}
             />
           </ButtonsContent>
+              <Text
+                style={{
+                  marginTop: 20,
+                  color: theme.colors.shape,
+                  textDecorationLine: "underline",
+                  textAlign: 'center'
+                }}
+                onPress={() =>
+                  navigation.navigate(`RemoveAccount`, 
+                  {
+                    user: user
+                  }
+                  )
+                }
+              >
+                Clique Aqui para excluir sua conta!
+              </Text>
         </Content>
       </TouchableWithoutFeedback>
 
