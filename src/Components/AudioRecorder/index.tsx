@@ -84,7 +84,7 @@ export function AudioRecorder({ setAudioUriResult, setAudioMomentResult, audioMo
       }); 
       console.log('Starting recording..');
       const { recording, status} = await Audio.Recording.createAsync(
-         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+         Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
       setRecordingStatus(status)
       setAudioMoment('recording');
@@ -155,7 +155,11 @@ export function AudioRecorder({ setAudioUriResult, setAudioMomentResult, audioMo
 
   async function handleTrashAudio() {
 
-    if (audioUriStart) {
+    let audioStartString = audioUriStart.split('/')[0];
+    console.log(`AudioStartString -> ${audioStartString}`)
+    if (audioStartString === 'https:' || audioStartString === 'http:') {
+      console.log(`@AudioRecorder -> Entered in If(AudioUriStart) => ${audioUriStart.split('/')[0]}}`)
+
 
       // await api
       // .post(``)
@@ -181,6 +185,7 @@ export function AudioRecorder({ setAudioUriResult, setAudioMomentResult, audioMo
       .catch((err) => Alert.alert(`Não foi possível remover o áudio`, `Erro -> ${err}`));
     
     } else {
+      console.log(`Entrou no ELSE`)
       await sound.unloadAsync();
       setSoundUri('');
       setAudioUriResult('');
