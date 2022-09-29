@@ -191,6 +191,7 @@ export function Home({ navigation }) {
               .then((result) => {
                 if (result.result === 'Success') {
                   console.log(`@Home -> Token registrado com sucesso!`)
+                  onRefresh();
                 }
               }).catch((err) => console.log(`@Home -> erro no response do updateUserToken: ${err}`))
             } else {

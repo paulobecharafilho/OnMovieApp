@@ -97,7 +97,9 @@ export function MenuPage({ navigation }) {
   async function handleLogout() {
     try {
       let atualToken = await AsyncStorage.getItem(`@onmovieapp:push_token`);
+      console.log(`atualToken ->${atualToken} e userId-> ${user.id_user}`)
       let userTokens:string[] = JSON.parse(user.push_token);
+      console.log(`BeforeTokens -> ${userTokens}`);
       let newAllTokens = userTokens.filter(element => element != atualToken);
       console.log(`BeforeTokens -> ${userTokens}, AtualToken -> ${atualToken} e newAllTokens -> ${newAllTokens}`);
 
@@ -112,7 +114,7 @@ export function MenuPage({ navigation }) {
 
 
     } catch (e) {
-      navigation.navigate("FirstPage");
+      // navigation.navigate("FirstPage");
       console.log(`Erro ao remover Async -> ${e}`);
     }
   }
