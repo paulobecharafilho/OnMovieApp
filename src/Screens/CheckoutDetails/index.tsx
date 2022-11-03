@@ -9,7 +9,6 @@ import { CheckoutDetailsCard } from "../../Components/CheckoutDetailsCard";
 import api from "../../services/api";
 import { getPaymentInfo } from "../../services/getPaymentInfo";
 import { PaymentInfoProps, ProjectProps } from "../../utils/Interfaces";
-import DatePicker, { DatePickerProps } from 'react-native-date-picker'
 
 
 import {
@@ -127,6 +126,7 @@ export function CheckoutDetails({ navigation }) {
     })
     .then((response) => {
       if (response.data.response === 'Success') {        
+        console.log(`CupomResponse -> ${JSON.stringify(response.data.couponInfo[0])}`);
         if (response.data.couponInfo[0].perc_desconto > 0) {
           let perc_desconto = response.data.couponInfo[0].perc_desconto;
           let discount = ((paymentInfo.val_edicao * perc_desconto)/100);

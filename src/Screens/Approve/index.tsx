@@ -277,6 +277,7 @@ export function Approve({ navigation }) {
   }
 
   async function handleCorrectProject() {
+    console.log(`Iniciou processo de correção`);
     api.post(`proc_corr_serv.php?userId=${params.userId}`, {
       idProj: projectRefreshed.id_proj,
       descri: correctDescription,
@@ -429,9 +430,9 @@ export function Approve({ navigation }) {
       <CorrectModal
         handleCorrectProject = {handleCorrectProject}
         handleCloseCorrectModal = {handleCloseCorrectModal}
+        correctDescription = {correctDescription}
         setCorrectDescription = {setCorrectDescription}
         correctModalIsVisible = {correctModalIsVisilble}
-        correctDescription = {correctDescription}
         erroEdicao = {erroEdicao}
         setErroEdicao = {setErroEdicao}
       /> 

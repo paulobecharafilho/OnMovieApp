@@ -72,23 +72,25 @@ export function CorrectModal({
               style={{ flex: 1 }}
               onPress={Keyboard.dismiss}
             >
-              <TitleWrapper>
-                <Title>Solicitar Correção</Title>
-                <Subtitle>
-                  Por favor, descreva o que você deseja alterar no vídeo.
-                </Subtitle>
-              </TitleWrapper>
+              <>
+                <TitleWrapper>
+                  <Title>Solicitar Correção</Title>
+                  <Subtitle>
+                    Por favor, descreva o que você deseja alterar no vídeo.
+                  </Subtitle>
+                </TitleWrapper>
 
-              <TextInput
-                style={styles(theme).textInput}
-                autoCapitalize="sentences"
-                onChangeText={setCorrectDescription}
-                maxLength={800}
-                multiline
-                value={correctDescription}
-                placeholder="Descreva aqui o que você deseja alterar no vídeo"
-                placeholderTextColor={theme.colors.primary_light}
-              />
+                <TextInput
+                  style={styles(theme).textInput}
+                  autoCapitalize="sentences"
+                  onChangeText={setCorrectDescription}
+                  maxLength={800}
+                  multiline
+                  value={correctDescription}
+                  placeholder="Descreva aqui o que você deseja alterar no vídeo"
+                  placeholderTextColor={theme.colors.primary_light}
+                />
+              </>
             </TouchableWithoutFeedback>
           </ContentInit>
 
