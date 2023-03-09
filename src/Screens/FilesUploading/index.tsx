@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import * as FileSystem from "expo-file-system";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import {
   View,
@@ -21,6 +21,9 @@ import { MediaUpload } from "../../Components/MediaUpload";
 import { DocumentPickerResponse } from "react-native-document-picker";
 import { uploadFile } from "../../services/uploadFile";
 import { uploadMedia } from "../../services/uploadMedia";
+import * as ImagePicker from "expo-image-picker";
+import api from "../../services/api";
+import { checkFileExists } from "../../services/checkFileExists";
 
 interface DocumentProps extends DocumentPickerResponse {
   token?: string;
@@ -34,7 +37,7 @@ interface Params {
   files?: DocumentProps[];
 }
 
-interface MediaProps extends AssetInfo {
+interface MediaProps extends ImagePicker.ImageInfo {
   progress?: number;
   isUploaded?: boolean;
   token?: string;
@@ -45,13 +48,19 @@ const ForceInset = {
   bottom: "never",
 };
 
+interface CheckExistsResult {
+  result: string;
+  token?: string;
+  error?: string;
+}
+
 export function FilesUploading({ navigation }) {
   const theme = useTheme();
   const route = useRoute();
   const { userId, projectId, files, type } = route.params as Params;
 
   const [mediaToUpload, setMediaToUpload] = useState<MediaProps[]>([]);
-  const [mediaUploading, setMediaUploading] = useState<MediaProps>();
+  const [mediaUploading, setMediaUploading] = useState<ImagePicker.ImageInfo>();
   const [mediaUploadingTask, setMediaUploadingTask] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [uploadingMomment, setUploadingMomment] = useState("");
@@ -68,6 +77,8 @@ export function FilesUploading({ navigation }) {
           // console.log(`Indo para galeria`);
           setFileType("gallery");
           setIsMediaSelected(false);
+
+          pickImage();
         } else if (type === "documents" && files) {
           setIsMediaSelected(true);
           setUploadingMomment("uploading");
@@ -94,26 +105,25 @@ export function FilesUploading({ navigation }) {
           setIsMediaSelected(true);
           setUploadingMomment("uploading");
 
-          const result = await uploadMedia({
-            mediaToUpload,
-            userId,
-            projectId,
-            setProgress,
-            setMediaUploading,
-            setMediaUploadingTask,
-            setUploadingMomment,
-          });
+          // const result = await uploadMedia({
+          //   mediaToUpload,
+          //   userId,
+          //   projectId,
+          //   setProgress,
+          //   setMediaUploadingTask,
+          //   setUploadingMomment,
+          // });
 
-          for (let resultItem of result) {
-            if (resultItem.error) {
-              Alert.alert(
-                `Erro`,
-                `Não foi possível fazer o upload do arquivo: ${resultItem.filename}`
-              );
-            }
-          }
+          // for (let resultItem of result) {
+          //   if (resultItem.error) {
+          //     Alert.alert(
+          //       `Erro`,
+          //       `Não foi possível fazer o upload do arquivo: ${resultItem.filename}`
+          //     );
+          //   }
+          // }
 
-          navigation.goBack();
+          // navigation.goBack();
         }
       }
 
@@ -121,9 +131,137 @@ export function FilesUploading({ navigation }) {
     }, [mediaToUpload])
   );
 
-
   function handleUploadMoreFiles() {
     setMediaToUpload([]);
+  }
+
+  async function pickImage() {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsMultipleSelection: true,
+      allowsEditing: false,
+      aspect: [5, 4],
+      quality: 1,
+    });
+
+    // console.log(result);
+
+    if (!result.cancelled) {
+      let mediaUploadingAtMoment: MediaProps = null;
+      setMediaToUpload(result.selected);
+      
+
+      //  console.log(`Images Picked from ImagePicker -> `, result.selected);
+
+      /*
+      result.selected.map(async (item: MediaProps, index) => {
+        // console.log(`Image Picked -> `, item);
+
+        await checkFileExists(
+          userId,
+          projectId,
+          item.fileName,
+          item.assetId.split("/")[0]
+        ).then(async (response) => {
+          console.log(`Response -> `, response)
+          if (response.result === "Success") {
+            mediaUploadingAtMoment = item;
+            mediaUploadingAtMoment.token = response.token;
+            
+            console.log(
+              `@FilesUploading -> chamando função MediaUpload do arquivo ${item.fileName}`
+            );
+
+            await uploadMedia({
+              mediaToUpload: mediaUploadingAtMoment,
+              userId,
+              projectId,
+              index,
+              setProgress,
+              setMediaUploading,
+              setMediaUploadingTask,
+            })
+            .then((resposta) => {
+              if (resposta.response === 'Success') {
+                console.log(`Upload realizado com sucesso -> `, resposta)
+              } else {
+                console.log(`algum erro aconteceu -> `, resposta)
+              }
+            })
+            .catch(e => console.log(`Algum erro aconteceu no Upload Media -> ${e}`))
+
+
+          } else if (response.result === "FileExists") {
+            console.log(
+              `O arquivo ${item.fileName} já existe na sua biblioteca. Por favor adicione pelo CloudMovie`
+            );
+          } else {
+            console.log(`Algum erro existiu: ${response.error}`);
+          }
+        });
+      });
+
+      */
+
+
+      for (let [index, item] of result.selected.entries()) {
+        await checkFileExists(
+          userId,
+          projectId,
+          item.fileName,
+          item.assetId.split("/")[0]
+        ).then(async (response) => {
+          console.log(`Response -> `, response)
+          if (response.result === "Success") {
+            mediaUploadingAtMoment = item;
+            mediaUploadingAtMoment.token = response.token;
+            
+            console.log(
+              `@FilesUploading -> chamando função MediaUpload do arquivo ${item.fileName}`
+            );
+
+            await uploadMedia({
+              mediaToUpload: mediaUploadingAtMoment,
+              userId,
+              projectId,
+              index: index,
+              setProgress,
+              setMediaUploading,
+              setMediaUploadingTask,
+            })
+            .then((resposta) => {
+              if (resposta.response === 'Success') {
+                console.log(`Upload realizado com sucesso -> `, resposta)
+                
+                if (index === result.selected.length - 1) {
+                  console.log(`Último arquivo finalizado!`)
+                  navigation.goBack();
+                }
+              } else {
+                console.log(`algum erro aconteceu -> `, resposta)
+              }
+            })
+            .catch(e => console.log(`Algum erro aconteceu no Upload Media -> ${e}`))
+
+
+          } else if (response.result === "FileExists") {
+            Alert.alert(`Arquivo Existente`, `Este arquivo já existe na sua biblioteca. Por favor, adicione ao projeto pelo CloudMovie`);
+            if (index === result.selected.length -1) {
+              console.log(`Último arquivo já existia`);
+              navigation.goBack();
+            }
+
+            
+          } else {
+            console.log(`Algum erro existiu: ${response.error}`);
+          }
+        });
+      }
+
+      setIsMediaSelected(true);
+    } else {
+      navigation.goBack();
+    }
   }
 
   return (
@@ -136,12 +274,13 @@ export function FilesUploading({ navigation }) {
         />
         <View style={styles(theme).container}>
           {!isMediaSelected && fileType === "gallery" ? (
-            <MediaUpload
-              userId={userId}
-              projectId={projectId}
-              setImagesToUpload={setMediaToUpload}
-              onHandleBack={() => navigation.goBack()}
-            />
+            // <MediaUpload
+            //   userId={userId}
+            //   projectId={projectId}
+            //   setImagesToUpload={setMediaToUpload}
+            //   onHandleBack={() => navigation.goBack()}
+            // />
+            <Text>Imagens Selecionadas!</Text>
           ) : (
             <View style={styles(theme).viewContainer}>
               {/* <Button title="UploadMoreFiles" onPress={handleUploadMoreFiles} /> */}
@@ -151,32 +290,42 @@ export function FilesUploading({ navigation }) {
               </Text>
               {isMediaSelected && type === "gallery"
                 ? mediaToUpload.map((item, index) => (
-                    <View key={item.id} style={styles(theme).viewLine}>
-                      <View> 
-                        <Text style={{color: theme.colors.shape}}>{item.filename} - {item.progress}%</Text>
+                    <View key={item.assetId} style={styles(theme).viewLine}>
+                      <View>
+                        <Text style={{ color: theme.colors.shape }}>
+                          {item.fileName} - {item.progress}%
+                        </Text>
                         <Progress.Bar
                           color={theme.colors.highlight}
                           progress={
-                            mediaUploading && mediaUploading.id === item.id
+                            mediaUploading && mediaUploading.assetId === item.assetId
                               ? mediaUploading.progress / 100
                               : item.progress
                           }
                         />
                       </View>
-                      {item.progress < 100 
-                        ? 
-                          <TouchableOpacity onPress={() => {mediaUploadingTask.cancelAsync()}}>
-                            <MaterialCommunityIcons name="window-close" size={25} style={{color: theme.colors.attention}}/>
-                          </TouchableOpacity>  
-                        :null
-                      }
+                      {item.progress < 100 ? (
+                        <TouchableOpacity
+                          onPress={() => {
+                            mediaUploadingTask.cancelAsync();
+                          }}
+                        >
+                          <MaterialCommunityIcons
+                            name="window-close"
+                            size={25}
+                            style={{ color: theme.colors.attention }}
+                          />
+                        </TouchableOpacity>
+                      ) : null}
                       <Text>{"\n"}</Text>
                     </View>
                   ))
                 : type === "documents"
                 ? files.map((item, index) => (
                     <View key={item.name}>
-                      <Text style={styles(theme).text}>{item.name}: {item.progress}%</Text>
+                      <Text style={styles(theme).text}>
+                        {item.name}: {item.progress}%
+                      </Text>
                       <Progress.Bar
                         progress={
                           fileUploading && fileUploading.name === item.name
@@ -216,6 +365,6 @@ const styles = (theme: any) =>
     viewLine: {
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: 'space-between'
-    }
+      justifyContent: "space-between",
+    },
   });

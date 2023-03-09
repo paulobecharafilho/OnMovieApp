@@ -2,183 +2,129 @@ import React from "react";
 import * as FileSystem from "expo-file-system";
 import api, { baseUrl } from "../services/api";
 import { AssetInfo } from "expo-media-library";
-import { Platform } from "react-native";
+import { ImageInfo } from 'expo-image-picker';
 
-interface MediaProps extends AssetInfo {
+interface MediaProps extends ImageInfo {
   progress?: number;
   isUploaded?: boolean;
   token?: string;
 }
 
 interface Props {
-  mediaToUpload: MediaProps[];
+  mediaToUpload: MediaProps;
   userId: number;
   projectId: number;
+  index: number;
   setProgress: (progress: number) => void;
   setMediaUploading: (mediaUploading: MediaProps) => void;
   setMediaUploadingTask: (mediaUploadingTask: any) => void;
-  setUploadingMomment: (momment: string) => void;
+  setUploadingMomment?: (momment: string) => void;
 }
 
 interface uploadingFileReturnProps {
   response?: string;
   error?: string;
-  filename?: string;
+  fileName?: string;
   duration?: number;
+  index?: number;
 }
 
 export async function uploadMedia({
   mediaToUpload,
   userId,
   projectId,
+  index,
   setProgress,
   setMediaUploading,
   setMediaUploadingTask,
-  setUploadingMomment,
 }: Props) {
   console.log(`@uploadMedia -> iniciando função uploadMedia`);
-  const uploadReturn: uploadingFileReturnProps[] = [];
-  let mediaUploadedAux: MediaProps[] = [];
 
-  for (const element of mediaToUpload) {
-    const filename = element.filename;
-    const duracao = element.duration.toFixed(2);
-    console.log(
-      `@uploadMedia -> element.filename = ${element.filename}, duração = ${duracao}`
-    );
-    const fd = new FormData();
-    fd.append(
-      "Filedata",
-      JSON.parse(
-        JSON.stringify({
-          uri: element.localUri,
-          type: element.mediaType,
-          name: filename,
-        })
-      )
-    );
+  let returnMedia: uploadingFileReturnProps = null;
 
-    if (Platform.OS === "ios") {
-      await api
-        .post(
-          `proc_upload_fr_start.php?userId=${userId}&projectId=${projectId}&token_key=${element.creationTime}&duration=${duracao}`,
-          fd,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              token: element.token,
-            },
-            onUploadProgress: (event) => {
-              let progress: number = Math.round(
-                (event.loaded * 100) / event.total
-              );
-              element.progress = progress;
-              setProgress(progress);
-              setMediaUploading(element);
-              console.log(
-                `UploadProgress -> ${
-                  (event.loaded * 100) / event.total
-                } ${"\n"}`
-              );
-            },
-          }
-        )
-        .then((result) => {
-          console.log(`result -> ${result.data}`);
-          let res2 = result.data;
-          console.log(`res2 -> ${res2}`);
+  // const fileName = mediaToUpload.fileName;
+  const duracao = mediaToUpload.duration ? mediaToUpload.duration.toFixed(2) : 0;
+ 
+  const xrh = new XMLHttpRequest();
 
-          if (res2.result[0].response === "Success") {
-            console.log(`media ${element.filename} uploaded Successfully.`);
-            mediaUploadedAux.push(element);
 
-            const response: uploadingFileReturnProps = {
-              filename: res2.filename,
-              response: res2.response,
-            };
+  const fd = new FormData();
+  fd.append(
+    "Filedata",
+    JSON.parse(
+      JSON.stringify({
+        uri: mediaToUpload.uri,
+        type: mediaToUpload.type,
+        name: mediaToUpload.fileName,
+      })
+    )
+  );
 
-            uploadReturn.push(response);
 
-            if (mediaUploadedAux.length === mediaToUpload.length) {
-              setUploadingMomment("done");
-            }
-          } else {
-            const response: uploadingFileReturnProps = {
-              filename: res2.filename,
-              response: res2.response,
-            };
 
-            uploadReturn.push(response);
-          }
-        })
-        .catch((error) => {
-          console.log(`error -> ${error}`);
-          const response: uploadingFileReturnProps = {
-            filename: element.filename,
-            error: error,
-          };
-        });
-    } else {
-      const task = await FileSystem.createUploadTask(
-        `${baseUrl}/proc_upload_fr_start.php?userId=${userId}&projectId=${projectId}&token_key=${element.creationTime}&duration=${duracao}`,
-        element.uri,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            token: element.token,
-          },
-          uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-          sessionType: FileSystem.FileSystemSessionType.BACKGROUND,
-          httpMethod: "POST",
-          fieldName: `Filedata`,
-        },
-        (data) => {
-          let progress: number = Math.round(
-            (data.totalByteSent * 100) / data.totalBytesExpectedToSend
-          );
-          element.progress = progress;
-          setProgress(progress);
-          setMediaUploading(element);
-          // console.log(
-          //   `DataSent -> ${data.totalByteSent}, DataTotal -> ${data.totalBytesExpectedToSend} -> progress: ${progress}%`
-          // );
-        }
+  const task = await FileSystem.createUploadTask(
+    `${baseUrl}/proc_upload_fr_start.php?userId=${userId}&projectId=${projectId}&token_key=${mediaToUpload.assetId.split('/')[0]}&duration=${duracao}`,
+    mediaToUpload.uri,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        token: mediaToUpload.token,
+        name: mediaToUpload.fileName
+      },
+      uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+      sessionType: FileSystem.FileSystemSessionType.BACKGROUND,
+      httpMethod: "POST",
+      fieldName: `Filedata`,
+    },
+    (data) => {
+      let progress: number = Math.round(
+        (data.totalByteSent * 100) / data.totalBytesExpectedToSend
       );
-      setMediaUploadingTask(task);
-      await task
-        .uploadAsync()
-        .then((result) => {
-          console.log(`result -> ${result.body}`);
-          let res2 = JSON.parse(result.body);
-          console.log(`res2 -> ${res2}`);
-          if (res2.result[0].response === "Success") {
-            console.log(`media ${element.filename} uploaded Successfully.`);
-            mediaUploadedAux.push(element);
-            const response: uploadingFileReturnProps = {
-              filename: res2.filename,
-              response: res2.response,
-            }
-            uploadReturn.push(response);
-            if (mediaUploadedAux.length === mediaToUpload.length) {
-              setUploadingMomment("done");
-            }
-          } else {
-            const response: uploadingFileReturnProps = {
-              filename: res2.filename,
-              response: res2.response,
-            }
-            uploadReturn.push(response);
-          }
-        })
-        .catch((error) => {
-          console.log(`error -> ${error}`)
-          const response: uploadingFileReturnProps = {
-            filename: element.filename,
-            error: error
-          }
-      });
+      mediaToUpload.progress = progress;
+      setProgress(progress);
+      setMediaUploading(mediaToUpload);
+      console.log(
+        `DataSent -> ${data.totalByteSent}, DataTotal -> ${data.totalBytesExpectedToSend} -> progress: ${progress}%`
+      );
     }
-  } // fechamento do For();
+  );
+  setMediaUploadingTask(task);
 
-  return uploadReturn;
+  await task
+    .uploadAsync()
+    .then((result) => {
+      // console.log(`result of uploadAsync (task) -> ${result.body}`);
+      let res2 = JSON.parse(result.body);
+      // console.log(`Result do Upload Async -> res2 -> `, res2)
+
+      if (res2.result[0].response === "Success") {
+        // console.log(`media ${mediaToUpload.fileName} uploaded Successfully.`);
+        console.log(`Resultado do UploadAsync foi Sucesso. Informações: `, res2.result[0])
+        returnMedia = {
+          fileName: res2.result[0].file_name,
+          response: res2.result[0].response,
+          index: index
+        }
+
+        
+      } else {
+        console.log(`media ${mediaToUpload.fileName} wasn't upload.`);
+        returnMedia = {
+          fileName: res2.result[0].file_name,
+          response: res2.result[0].response,
+          index: index
+        }
+        
+      }
+    })
+    .catch((error) => {
+      console.log(`error -> ${error}`)
+      returnMedia = {
+        fileName: mediaToUpload.fileName,
+        error: error,
+        index: index
+      }
+  });
+
+  return returnMedia;
 }

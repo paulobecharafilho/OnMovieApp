@@ -91,10 +91,15 @@ export function ProjectDetails({navigation}) {
   }
 
   function handleGoToCheckoutDetails() {
-    navigation.navigate(`CheckoutDetails`, {
-      userId: userId,
-      projectReceived: project
-    })
+
+    if (descriptionComplete) {
+      navigation.navigate(`CheckoutDetails`, {
+        userId: userId,
+        projectReceived: project
+      })
+    } else {
+      Alert.alert(`Descrição Incompleta`, `A descrição do projeto não está completa. Por favor, preenchar a descrição completamente para podermos calcular o valor.`)
+    }
   }
 
   function handleGoToPaymentDetails() {
