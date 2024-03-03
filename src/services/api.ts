@@ -1,21 +1,21 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://onmovie.video/app/'
+  baseURL: 'https://onmovie.com.br/on_movie/app/'
 })
 
 export default api;
 
-export const baseUrl = 'https://onmovie.video/app/';
+export const baseUrl = 'https://onmovie.com.br/on_movie/app/';
 
-export const libraryBaseUrl = 'https://onmovie.video/library/';
+export const libraryBaseUrl = 'https://onmovie.com.br/on_movie/library/';
 
-export const finalFileBaseUrl = `https://onmovie.video/arquivos_finalizados`;
+export const finalFileBaseUrl = `https://onmovie.com.br/on_movie/arquivos_finalizados`;
 
 export const apiStripe = axios.create({
-  baseURL: 'https://onmovie.video/stripe/'
+  baseURL: 'https://onmovie.com.br/on_movie/stripe/'
 });
 
 export const apiFinalFile = axios.create({
-  baseURL: 'https://onmovie.video/arquivos_finalizados/'
+  baseURL: 'https://onmovie.com.br/on_movie/arquivos_finalizados/'
 })

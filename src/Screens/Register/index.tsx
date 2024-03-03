@@ -98,6 +98,7 @@ export function Register({ navigation }) {
   }
 
   function handleFinishRegister() {
+    console.log(`Starting register`)
     setPassword(password);
     api
       .post(`register.php`, {
